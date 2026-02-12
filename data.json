@@ -1,0 +1,5 @@
+[
+  { "word": "dog",    "cat": "animal", "img": "images/dog.png" },
+  { "word": "banana", "cat": "food",   "img": "images/banana.png" },
+  { "word": "nose",   "cat": "body",   "img": "images/nose.png" }
+]
