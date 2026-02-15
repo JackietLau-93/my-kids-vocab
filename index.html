@@ -3,13 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>TinyVocab V9</title>
+<title>TinyVocab Flip</title>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Zen+Maru+Gothic:wght@500;700&display=swap" rel="stylesheet">
 <style>
     :root {
         --c-animal: #7CB342; --c-food: #FDD835; --c-body: #42A5F5; 
         --c-home: #EF5350; --c-act: #AB47BC;
         --bg: #F2F2F2; --card-bg: #FFFFFF;
+        
+        /* Gender Colors */
+        --g-masc: #2196F3; /* Blue */
+        --g-fem: #E91E63;  /* Pink */
+        --g-neut: #4CAF50; /* Green */
     }
 
     body { 
@@ -36,7 +41,7 @@
         font-family: 'Zen Maru Gothic'; font-weight: bold; color: #333; background: white; outline: none;
     }
 
-    /* TOGGLE SWITCH STYLES */
+    /* TOGGLE SWITCHES */
     .toggle-group { display: flex; align-items: center; gap: 6px; font-size: 0.85rem; font-weight: bold; color: #555; cursor: pointer; background: #fff; padding: 4px 8px; border-radius: 15px; border: 1px solid #eee; transition: opacity 0.3s; }
     .switch { position: relative; display: inline-block; width: 36px; height: 20px; }
     .switch input { opacity: 0; width: 0; height: 0; }
@@ -44,22 +49,56 @@
     .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; }
     input:checked + .slider { background-color: #333; }
     input:checked + .slider:before { transform: translateX(16px); }
-    
-    /* Disabled State */
     .toggle-group.disabled { opacity: 0.4; pointer-events: none; filter: grayscale(1); }
 
-    /* --- GRID --- */
+    /* --- 3D FLIP CARD CONTAINER --- */
     .container { max-width: 1200px; margin: 0 auto; padding: 30px 20px; }
     .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 25px; }
     
     .vocab-card {
-        aspect-ratio: 3/4; background: var(--card-bg); border-radius: 16px; 
-        overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.06);
-        transition: transform 0.3s ease; display: flex; flex-direction: column;
-        cursor: pointer; position: relative;
+        aspect-ratio: 3/4; 
+        background-color: transparent;
+        perspective: 1000px; /* Essential for 3D effect */
+        cursor: pointer;
     }
-    .vocab-card:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
 
+    .card-inner {
+        position: relative;
+        width: 100%; height: 100%;
+        text-align: center;
+        transition: transform 0.6s;
+        transform-style: preserve-3d;
+        border-radius: 16px; 
+        box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+    }
+
+    .vocab-card.flipped .card-inner {
+        transform: rotateY(180deg);
+    }
+
+    .card-front, .card-back {
+        position: absolute;
+        width: 100%; height: 100%;
+        -webkit-backface-visibility: hidden; /* Safari */
+        backface-visibility: hidden;
+        border-radius: 16px; 
+        overflow: hidden;
+        background: var(--card-bg);
+        display: flex; flex-direction: column;
+    }
+
+    .card-front {
+        /* Default front style */
+    }
+
+    .card-back {
+        transform: rotateY(180deg);
+        background: #fdfdfd;
+        padding: 15px; box-sizing: border-box;
+        display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+    }
+
+    /* --- FRONT CONTENT --- */
     .card-art { flex: 1; width: 100%; display: flex; align-items: center; justify-content: center; padding: 15px; box-sizing: border-box; }
     .card-art img { max-width: 100%; max-height: 100%; object-fit: contain; filter: brightness(1.03) contrast(1.03); mix-blend-mode: multiply; }
 
@@ -69,6 +108,38 @@
     .word { font-family: 'Fredoka One'; font-size: 1.6rem; color: #333; text-align: center; line-height: 1.1; margin-bottom: 2px;}
     .sub-word { font-size: 0.9rem; color: #777; font-family: 'Zen Maru Gothic'; text-align: center; font-weight: 500;}
     .gender-badge { font-size: 0.75rem; color: #999; font-style: italic; margin-top: 2px; }
+
+    /* FLIP BUTTON */
+    .flip-btn {
+        position: absolute; top: 10px; right: 10px;
+        width: 32px; height: 32px; border-radius: 50%;
+        background: rgba(255,255,255,0.9); border: 1px solid #eee;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.2rem; cursor: pointer; z-index: 10;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        transition: transform 0.2s;
+    }
+    .flip-btn:hover { transform: scale(1.1); background: white; }
+
+    /* --- BACK CONTENT (COMPARISON TABLE) --- */
+    .back-title { font-family: 'Fredoka One'; font-size: 1.1rem; color: #333; margin-bottom: 15px; margin-top: 10px; }
+    .comp-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; text-align: left; }
+    .comp-table tr { border-bottom: 1px solid #eee; }
+    .comp-table td { padding: 8px 4px; }
+    .comp-flag { font-size: 1.2rem; width: 30px; }
+    .comp-art { font-weight: bold; width: 30px; }
+    .comp-word { font-weight: 500; color: #555; }
+    
+    /* Gender Highlights */
+    .g-masc { color: var(--g-masc); }
+    .g-fem { color: var(--g-fem); }
+    .g-neut { color: var(--g-neut); }
+    
+    .close-flip {
+        margin-top: auto; padding: 8px 20px; border-radius: 20px;
+        background: #eee; border: none; font-family: 'Fredoka One'; color: #555;
+        cursor: pointer;
+    }
 
     /* --- CHILD MODE --- */
     #child-mode { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #fff; z-index: 200; display: flex; flex-direction: column; align-items: center; justify-content: center; }
@@ -125,8 +196,7 @@
         </div>
     </div>
     
-    <div class="controls-row" id="toggle-container">
-        </div>
+    <div class="controls-row" id="toggle-container"></div>
 </header>
 
 <div class="container">
@@ -158,179 +228,175 @@
     let currentIndex = 0;
     let currentLang = 'en';
 
-    // --- CONFIGURATION ---
-    // Note: Reordered 'article' before 'plural'
+    // Configs
     const langConfig = {
         'en': { toggles: ['article', 'plural'] },
         'fr': { toggles: ['article', 'plural', 'gender'] },
         'de': { toggles: ['article', 'plural', 'gender'] },
         'it': { toggles: ['article', 'plural', 'gender'] },
-        'ru': { toggles: ['plural', 'gender', 'latin'] }, // Article removed
-        'zh': { toggles: ['traditional', 'pinyin'] },     // Traditional Added
+        'ru': { toggles: ['plural', 'gender', 'latin'] },
+        'zh': { toggles: ['traditional', 'pinyin'] },
         'ja': { toggles: ['hiragana'] },
         'ko': { toggles: ['hanja'] }
     };
 
-    const toggleLabels = {
-        'plural': 'Plural',
-        'article': 'Article',
-        'gender': 'Gender',
-        'pinyin': 'Pinyin',
-        'latin': 'Latin',
-        'hiragana': 'Hiragana',
-        'hanja': 'Hanja',
-        'traditional': 'Traditional'
-    };
-
-    let toggleState = {
-        plural: false, article: false, gender: false, 
-        pinyin: false, latin: false, hiragana: false, hanja: false, traditional: false
-    };
-
+    const toggleLabels = { 'plural':'Plural', 'article':'Article', 'gender':'Gender', 'pinyin':'Pinyin', 'latin':'Latin', 'hiragana':'Hiragana', 'hanja':'Hanja', 'traditional':'Traditional' };
+    let toggleState = { plural:false, article:false, gender:false, pinyin:false, latin:false, hiragana:false, hanja:false, traditional:false };
     const colors = { animal: '#7CB342', food: '#FDD835', body: '#42A5F5', home: '#EF5350', act: '#AB47BC' };
 
+    // Initialization
     fetch('data.json').then(res => res.json()).then(data => { 
-        deck = data; 
-        updateControls();
-        renderGrid(); 
+        deck = data; updateControls(); renderGrid(); 
     }).catch(err => console.error(err));
 
-    const langSelect = document.getElementById('lang-select');
-    langSelect.addEventListener('change', (e) => {
+    document.getElementById('lang-select').addEventListener('change', (e) => {
         currentLang = e.target.value;
-        // Reset all states
         Object.keys(toggleState).forEach(k => toggleState[k] = false);
-        updateControls();
-        renderGrid();
+        updateControls(); renderGrid();
     });
 
-    // --- DYNAMIC CONTROL BUILDER ---
+    // --- CONTROLS UI ---
     function updateControls() {
         const container = document.getElementById('toggle-container');
-        container.innerHTML = ''; 
-        
+        container.innerHTML = '';
         const config = langConfig[currentLang];
-        
         config.toggles.forEach(key => {
-            const label = toggleLabels[key];
             const html = `
                 <label class="toggle-group" id="lbl-${key}">
                     <span class="switch">
                         <input type="checkbox" id="chk-${key}" onchange="toggleFeature('${key}', this.checked)" ${toggleState[key] ? 'checked' : ''}>
                         <span class="slider"></span>
                     </span>
-                    ${label}
-                </label>
-            `;
+                    ${toggleLabels[key]}
+                </label>`;
             container.insertAdjacentHTML('beforeend', html);
         });
-        
-        // Run dependency check immediately after building
         checkDependency();
     }
 
-    // --- INTERACTION LOGIC ---
     window.toggleFeature = function(key, isChecked) {
         toggleState[key] = isChecked;
-        
-        // If user just toggled Plural, check dependencies
-        if (key === 'plural') {
-            checkDependency();
-        }
-
+        if(key==='plural') checkDependency();
         renderGrid();
         if(document.getElementById('child-mode').style.display === 'flex') updateDisplay();
     };
 
-    // Fix: Disable Article if Plural is ON
     function checkDependency() {
-        // Only applies if both controls exist
         const pluralChk = document.getElementById('chk-plural');
         const artChk = document.getElementById('chk-article');
-        const artLbl = document.getElementById('lbl-article');
-
         if (pluralChk && artChk) {
             if (pluralChk.checked) {
-                // Plural is ON -> Disable Article
-                artChk.checked = false;
-                artChk.disabled = true;
-                toggleState.article = false; // Sync state
-                artLbl.classList.add('disabled');
+                artChk.checked = false; artChk.disabled = true; toggleState.article = false;
+                document.getElementById('lbl-article').classList.add('disabled');
             } else {
-                // Plural is OFF -> Enable Article
                 artChk.disabled = false;
-                artLbl.classList.remove('disabled');
+                document.getElementById('lbl-article').classList.remove('disabled');
             }
         }
     }
 
-    // --- TEXT GENERATION LOGIC ---
+    // --- TEXT LOGIC ---
     function getTextDisplay(card) {
-        let raw = card.translations[currentLang];
-        if (!raw) raw = card.translations['en']; 
-        if (!raw) return { main: '?', sub: '', gender: '' };
-        if (typeof raw === 'string') return { main: raw, sub: '', gender: '' };
+        let raw = card.translations[currentLang] || card.translations['en']; 
+        if (!raw || typeof raw === 'string') return { main: raw || '?', sub: '', gender: '' };
 
-        let mainText = raw.n || '?';
+        let mainText = (currentLang === 'zh' && toggleState.traditional && raw.t) ? raw.t : (raw.n || '?');
+        if (toggleState.plural && raw.p) mainText = raw.p;
+        if (toggleState.article && !toggleState.plural && raw.art) mainText = `${raw.art} ${mainText}`;
+
         let subText = '';
-        let genderText = '';
-
-        // 1. Chinese Traditional Logic (Swap Noun)
-        if (currentLang === 'zh' && toggleState.traditional && raw.t) {
-            mainText = raw.t;
-        }
-
-        // 2. Plural Logic
-        if (toggleState.plural && raw.p) {
-            mainText = raw.p;
-        }
-
-        // 3. Article Logic (Only if enabled AND Plural is OFF - double safety)
-        if (toggleState.article && !toggleState.plural && raw.art) {
-            mainText = `${raw.art} ${mainText}`;
-        }
-
-        // 4. Gender Logic
-        if (toggleState.gender && raw.g) {
-            genderText = raw.g;
-        }
-
-        // 5. Transliterations
         if (toggleState.pinyin && raw.py) subText = raw.py;
         if (toggleState.latin && raw.lt) subText = raw.lt;
+        if (currentLang === 'ja' && toggleState.hiragana && raw.r) subText = `(${raw.r})`;
+        if (currentLang === 'ko' && toggleState.hanja && raw.hj) { subText = `(${mainText})`; mainText = raw.hj; }
 
-        // 6. Japanese/Korean Logic
-        if (currentLang === 'ja') {
-             if(toggleState.hiragana && raw.r) subText = `(${raw.r})`;
-        }
-        if (currentLang === 'ko') {
-            if (toggleState.hanja && raw.hj) {
-                subText = `(${mainText})`; 
-                mainText = raw.hj;
-            }
-        }
+        let genderText = (toggleState.gender && raw.g) ? raw.g : '';
 
         return { main: mainText, sub: subText, gender: genderText };
     }
 
-    // --- RENDERERS ---
+    // --- COMPARISON LOGIC ---
+    function getGenderClass(g) {
+        if(!g) return '';
+        if(g.includes('masc')) return 'g-masc';
+        if(g.includes('fem')) return 'g-fem';
+        if(g.includes('neut')) return 'g-neut';
+        return '';
+    }
+
+    function buildCompRow(card, langCode, flag) {
+        const data = card.translations[langCode];
+        if(!data) return '';
+        const art = data.art || '';
+        const word = data.n || '';
+        const gen = data.g || '';
+        const gClass = getGenderClass(gen);
+        
+        return `
+            <tr>
+                <td class="comp-flag">${flag}</td>
+                <td class="comp-art ${gClass}">${art}</td>
+                <td class="comp-word ${gClass}">${word}</td>
+            </tr>
+        `;
+    }
+
+    // --- RENDER GRID (FLIP CARD) ---
     function renderGrid() {
         document.getElementById('grid').innerHTML = deck.map(card => {
             const txt = getTextDisplay(card);
             const col = colors[card.cat] || '#ccc';
+            
+            // Build Back Content (Comparison)
+            const comparisonHTML = `
+                <table class="comp-table">
+                    ${buildCompRow(card, 'fr', '🇫🇷')}
+                    ${buildCompRow(card, 'de', '🇩🇪')}
+                    ${buildCompRow(card, 'it', '🇮🇹')}
+                    ${buildCompRow(card, 'ru', '🇷🇺')}
+                </table>
+            `;
+
             return `
             <div class="vocab-card" onclick="startChildAt('${card.id}')">
-                <div class="card-art"><img src="${card.img}" onerror="this.src='https://via.placeholder.com/300'" loading="lazy"></div>
-                <div class="card-obi">
-                    <div class="word">${txt.main}</div>
-                    ${txt.sub ? `<div class="sub-word">${txt.sub}</div>` : ''}
-                    ${txt.gender ? `<div class="gender-badge">${txt.gender}</div>` : ''}
-                    <div class="color-stroke" style="background:${col}"></div>
+                <div class="card-inner" id="card-${card.id}">
+                    <div class="card-front">
+                        <div class="flip-btn" onclick="flipCard(event, '${card.id}')">🔄</div>
+                        <div class="card-art"><img src="${card.img}" onerror="this.src='https://via.placeholder.com/300'" loading="lazy"></div>
+                        <div class="card-obi">
+                            <div class="word">${txt.main}</div>
+                            ${txt.sub ? `<div class="sub-word">${txt.sub}</div>` : ''}
+                            ${txt.gender ? `<div class="gender-badge">${txt.gender}</div>` : ''}
+                            <div class="color-stroke" style="background:${col}"></div>
+                        </div>
+                    </div>
+                    <div class="card-back">
+                        <div class="back-title">Gender Compare</div>
+                        ${comparisonHTML}
+                        <button class="close-flip" onclick="flipCard(event, '${card.id}')">Close</button>
+                    </div>
                 </div>
             </div>`;
         }).join('');
     }
 
+    // Flip Logic
+    window.flipCard = function(e, id) {
+        e.stopPropagation(); // Stop it from opening Child Mode
+        const cardInner = document.getElementById(`card-${id}`);
+        const parent = cardInner.parentElement;
+        
+        // Toggle class
+        if (parent.classList.contains('flipped')) {
+            parent.classList.remove('flipped');
+        } else {
+            // Close others (optional, keeps it clean)
+            document.querySelectorAll('.vocab-card').forEach(c => c.classList.remove('flipped'));
+            parent.classList.add('flipped');
+        }
+    };
+
+    // --- CHILD MODE & PRINTING (Same as before) ---
     function startChildAt(id) { currentIndex = deck.findIndex(c => c.id === id); startChild(); }
     function startChild() { if(deck.length>0){ document.getElementById('child-mode').style.display = 'flex'; updateDisplay(); } }
     function exitChild() { document.getElementById('child-mode').style.display = 'none'; window.speechSynthesis.cancel(); }
@@ -339,7 +405,6 @@
         const card = deck[currentIndex];
         const txt = getTextDisplay(card);
         const col = colors[card.cat] || '#333';
-        
         document.getElementById('c-img').src = card.img;
         document.getElementById('c-word').innerText = txt.main;
         document.getElementById('c-sub').innerText = txt.sub;
@@ -351,11 +416,8 @@
     function speakDrill() {
         const card = deck[currentIndex];
         const raw = card.translations[currentLang] || card.translations['en'];
-        
-        // Smart Speak: If plural is ON, speak plural text. Otherwise singular.
         let textToSpeak = raw.n; 
         if(toggleState.plural && raw.p) textToSpeak = raw.p;
-        // If Article is ON, add it to speech
         if(toggleState.article && !toggleState.plural && raw.art) textToSpeak = `${raw.art} ${textToSpeak}`;
 
         const locales = { 'en':'en-GB', 'fr':'fr-FR', 'de':'de-DE', 'it':'it-IT', 'ru':'ru-RU', 'zh':'zh-CN', 'ja':'ja-JP', 'ko':'ko-KR' };
@@ -373,14 +435,7 @@
         document.getElementById('print-area').className = 'grid-poker';
         document.getElementById('print-area').innerHTML = deck.map(c => {
             const txt = getTextDisplay(c);
-            return `<div class="cut-guide"><img src="${c.img}">
-                <div class="txt">
-                    <div>${txt.main}</div>
-                    ${txt.sub ? `<div style="font-size:0.6em; color:#666;">${txt.sub}</div>` : ''}
-                    ${txt.gender ? `<div style="font-size:0.5em; color:#999; font-style:italic;">${txt.gender}</div>` : ''}
-                </div>
-                <div class="bar" style="background:${colors[c.cat] || '#ccc'}"></div>
-            </div>`;
+            return `<div class="cut-guide"><img src="${c.img}"><div class="txt"><div>${txt.main}</div>${txt.sub ? `<div style="font-size:0.6em; color:#666;">${txt.sub}</div>` : ''}</div><div class="bar" style="background:${colors[c.cat]||'#ccc'}"></div></div>`;
         }).join('');
         window.print();
     }
@@ -388,13 +443,7 @@
         document.getElementById('print-area').className = 'layout-a4';
         document.getElementById('print-area').innerHTML = deck.map(c => {
             const txt = getTextDisplay(c);
-            return `<div class="page"><div class="cut-guide"><img src="${c.img}"><div class="bar" style="background:${colors[c.cat] || '#ccc'}"></div>
-                <div class="txt">
-                    <div>${txt.main}</div>
-                    ${txt.sub ? `<div style="font-size:0.4em; color:#666;">${txt.sub}</div>` : ''}
-                    ${txt.gender ? `<div style="font-size:0.3em; color:#999; font-style:italic;">${txt.gender}</div>` : ''}
-                </div>
-            </div></div>`;
+            return `<div class="page"><div class="cut-guide"><img src="${c.img}"><div class="bar" style="background:${colors[c.cat]||'#ccc'}"></div><div class="txt"><div>${txt.main}</div>${txt.sub ? `<div style="font-size:0.4em; color:#666;">${txt.sub}</div>` : ''}</div></div></div>`;
         }).join('');
         window.print();
     }
