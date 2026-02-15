@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>TinyVocab Linguist</title>
+<title>TinyVocab V9</title>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Zen+Maru+Gothic:wght@500;700&display=swap" rel="stylesheet">
 <style>
     :root {
@@ -37,14 +37,16 @@
     }
 
     /* TOGGLE SWITCH STYLES */
-    .toggle-group { display: flex; align-items: center; gap: 6px; font-size: 0.85rem; font-weight: bold; color: #555; cursor: pointer; background: #fff; padding: 4px 8px; border-radius: 15px; border: 1px solid #eee; }
+    .toggle-group { display: flex; align-items: center; gap: 6px; font-size: 0.85rem; font-weight: bold; color: #555; cursor: pointer; background: #fff; padding: 4px 8px; border-radius: 15px; border: 1px solid #eee; transition: opacity 0.3s; }
     .switch { position: relative; display: inline-block; width: 36px; height: 20px; }
     .switch input { opacity: 0; width: 0; height: 0; }
     .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
     .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; }
     input:checked + .slider { background-color: #333; }
     input:checked + .slider:before { transform: translateX(16px); }
-    .hidden { display: none !important; }
+    
+    /* Disabled State */
+    .toggle-group.disabled { opacity: 0.4; pointer-events: none; filter: grayscale(1); }
 
     /* --- GRID --- */
     .container { max-width: 1200px; margin: 0 auto; padding: 30px 20px; }
@@ -157,19 +159,18 @@
     let currentLang = 'en';
 
     // --- CONFIGURATION ---
-    // Defines which toggles appear for which language
+    // Note: Reordered 'article' before 'plural'
     const langConfig = {
-        'en': { toggles: ['plural', 'article'] },
-        'fr': { toggles: ['plural', 'article', 'gender'] },
-        'de': { toggles: ['plural', 'article', 'gender'] },
-        'it': { toggles: ['plural', 'article', 'gender'] },
-        'ru': { toggles: ['plural', 'article', 'gender', 'latin'] }, // 'article' kept per request, though usually empty
-        'zh': { toggles: ['pinyin'] },
+        'en': { toggles: ['article', 'plural'] },
+        'fr': { toggles: ['article', 'plural', 'gender'] },
+        'de': { toggles: ['article', 'plural', 'gender'] },
+        'it': { toggles: ['article', 'plural', 'gender'] },
+        'ru': { toggles: ['plural', 'gender', 'latin'] }, // Article removed
+        'zh': { toggles: ['traditional', 'pinyin'] },     // Traditional Added
         'ja': { toggles: ['hiragana'] },
         'ko': { toggles: ['hanja'] }
     };
 
-    // Defines the Label for each toggle ID
     const toggleLabels = {
         'plural': 'Plural',
         'article': 'Article',
@@ -177,18 +178,17 @@
         'pinyin': 'Pinyin',
         'latin': 'Latin',
         'hiragana': 'Hiragana',
-        'hanja': 'Hanja'
+        'hanja': 'Hanja',
+        'traditional': 'Traditional'
     };
 
-    // State of toggles
     let toggleState = {
         plural: false, article: false, gender: false, 
-        pinyin: false, latin: false, hiragana: false, hanja: false
+        pinyin: false, latin: false, hiragana: false, hanja: false, traditional: false
     };
 
     const colors = { animal: '#7CB342', food: '#FDD835', body: '#42A5F5', home: '#EF5350', act: '#AB47BC' };
 
-    // --- INIT ---
     fetch('data.json').then(res => res.json()).then(data => { 
         deck = data; 
         updateControls();
@@ -198,8 +198,8 @@
     const langSelect = document.getElementById('lang-select');
     langSelect.addEventListener('change', (e) => {
         currentLang = e.target.value;
-        // Reset specific toggles when switching lang
-        toggleState = { plural: false, article: false, gender: false, pinyin: false, latin: false, hiragana: false, hanja: false };
+        // Reset all states
+        Object.keys(toggleState).forEach(k => toggleState[k] = false);
         updateControls();
         renderGrid();
     });
@@ -207,16 +207,16 @@
     // --- DYNAMIC CONTROL BUILDER ---
     function updateControls() {
         const container = document.getElementById('toggle-container');
-        container.innerHTML = ''; // Clear existing
+        container.innerHTML = ''; 
         
         const config = langConfig[currentLang];
         
         config.toggles.forEach(key => {
             const label = toggleLabels[key];
             const html = `
-                <label class="toggle-group">
+                <label class="toggle-group" id="lbl-${key}">
                     <span class="switch">
-                        <input type="checkbox" onchange="toggleFeature('${key}', this.checked)" ${toggleState[key] ? 'checked' : ''}>
+                        <input type="checkbox" id="chk-${key}" onchange="toggleFeature('${key}', this.checked)" ${toggleState[key] ? 'checked' : ''}>
                         <span class="slider"></span>
                     </span>
                     ${label}
@@ -224,15 +224,47 @@
             `;
             container.insertAdjacentHTML('beforeend', html);
         });
+        
+        // Run dependency check immediately after building
+        checkDependency();
     }
 
+    // --- INTERACTION LOGIC ---
     window.toggleFeature = function(key, isChecked) {
         toggleState[key] = isChecked;
+        
+        // If user just toggled Plural, check dependencies
+        if (key === 'plural') {
+            checkDependency();
+        }
+
         renderGrid();
         if(document.getElementById('child-mode').style.display === 'flex') updateDisplay();
     };
 
-    // --- TEXT LOGIC ---
+    // Fix: Disable Article if Plural is ON
+    function checkDependency() {
+        // Only applies if both controls exist
+        const pluralChk = document.getElementById('chk-plural');
+        const artChk = document.getElementById('chk-article');
+        const artLbl = document.getElementById('lbl-article');
+
+        if (pluralChk && artChk) {
+            if (pluralChk.checked) {
+                // Plural is ON -> Disable Article
+                artChk.checked = false;
+                artChk.disabled = true;
+                toggleState.article = false; // Sync state
+                artLbl.classList.add('disabled');
+            } else {
+                // Plural is OFF -> Enable Article
+                artChk.disabled = false;
+                artLbl.classList.remove('disabled');
+            }
+        }
+    }
+
+    // --- TEXT GENERATION LOGIC ---
     function getTextDisplay(card) {
         let raw = card.translations[currentLang];
         if (!raw) raw = card.translations['en']; 
@@ -243,43 +275,45 @@
         let subText = '';
         let genderText = '';
 
-        // 1. Plural Logic
+        // 1. Chinese Traditional Logic (Swap Noun)
+        if (currentLang === 'zh' && toggleState.traditional && raw.t) {
+            mainText = raw.t;
+        }
+
+        // 2. Plural Logic
         if (toggleState.plural && raw.p) {
             mainText = raw.p;
         }
 
-        // 2. Article Logic (Prepend)
-        if (toggleState.article && raw.art) {
+        // 3. Article Logic (Only if enabled AND Plural is OFF - double safety)
+        if (toggleState.article && !toggleState.plural && raw.art) {
             mainText = `${raw.art} ${mainText}`;
         }
 
-        // 3. Gender Logic
+        // 4. Gender Logic
         if (toggleState.gender && raw.g) {
             genderText = raw.g;
         }
 
-        // 4. Romanization Logic (Chinese Pinyin / Russian Latin)
+        // 5. Transliterations
         if (toggleState.pinyin && raw.py) subText = raw.py;
         if (toggleState.latin && raw.lt) subText = raw.lt;
 
-        // 5. Alt Script Logic (Japanese / Korean)
-        // Japanese: Kanji Main, Hiragana Sub
+        // 6. Japanese/Korean Logic
         if (currentLang === 'ja') {
              if(toggleState.hiragana && raw.r) subText = `(${raw.r})`;
         }
-        
-        // Korean: If Hanja ON -> Main: Hanja, Sub: Hangul
-        //         If Hanja OFF -> Main: Hangul
         if (currentLang === 'ko') {
             if (toggleState.hanja && raw.hj) {
-                subText = `(${mainText})`; // Move Hangul to sub
-                mainText = raw.hj; // Set Main to Hanja
+                subText = `(${mainText})`; 
+                mainText = raw.hj;
             }
         }
 
         return { main: mainText, sub: subText, gender: genderText };
     }
 
+    // --- RENDERERS ---
     function renderGrid() {
         document.getElementById('grid').innerHTML = deck.map(card => {
             const txt = getTextDisplay(card);
@@ -297,7 +331,6 @@
         }).join('');
     }
 
-    // --- CHILD MODE ---
     function startChildAt(id) { currentIndex = deck.findIndex(c => c.id === id); startChild(); }
     function startChild() { if(deck.length>0){ document.getElementById('child-mode').style.display = 'flex'; updateDisplay(); } }
     function exitChild() { document.getElementById('child-mode').style.display = 'none'; window.speechSynthesis.cancel(); }
@@ -315,15 +348,15 @@
     }
     function move(dir) { window.speechSynthesis.cancel(); currentIndex = (currentIndex + dir + deck.length) % deck.length; updateDisplay(); }
 
-    // --- SPEECH ---
     function speakDrill() {
         const card = deck[currentIndex];
         const raw = card.translations[currentLang] || card.translations['en'];
-        // Speak the natural noun form, not the Kanji/Hanja unless specifically desired.
-        // Usually better to speak the pronunciation (n) or plural (p).
+        
+        // Smart Speak: If plural is ON, speak plural text. Otherwise singular.
         let textToSpeak = raw.n; 
         if(toggleState.plural && raw.p) textToSpeak = raw.p;
-        if(toggleState.article && raw.art) textToSpeak = `${raw.art} ${textToSpeak}`;
+        // If Article is ON, add it to speech
+        if(toggleState.article && !toggleState.plural && raw.art) textToSpeak = `${raw.art} ${textToSpeak}`;
 
         const locales = { 'en':'en-GB', 'fr':'fr-FR', 'de':'de-DE', 'it':'it-IT', 'ru':'ru-RU', 'zh':'zh-CN', 'ja':'ja-JP', 'ko':'ko-KR' };
         const target = locales[currentLang] || 'en-US';
@@ -336,7 +369,6 @@
         window.speechSynthesis.speak(u);
     }
 
-    // --- PRINTING ---
     function printPoker() {
         document.getElementById('print-area').className = 'grid-poker';
         document.getElementById('print-area').innerHTML = deck.map(c => {
@@ -352,7 +384,6 @@
         }).join('');
         window.print();
     }
-
     function printA4() {
         document.getElementById('print-area').className = 'layout-a4';
         document.getElementById('print-area').innerHTML = deck.map(c => {

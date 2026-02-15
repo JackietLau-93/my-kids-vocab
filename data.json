@@ -5,13 +5,13 @@
     "img": "images/dog.png",
     "translations": {
       "en": { "n": "dog", "art": "a", "p": "dogs" },
-      "zh": { "n": "狗", "py": "gǒu" },
+      "zh": { "n": "狗", "t": "狗", "py": "gǒu" },
       "fr": { "n": "chien", "art": "le", "p": "les chiens", "g": "masc." },
       "de": { "n": "Hund", "art": "der", "p": "die Hunde", "g": "masc." },
       "it": { "n": "cane", "art": "il", "p": "i cani", "g": "masc." },
       "ru": { "n": "собака", "p": "собаки", "g": "fem.", "lt": "sobaka" },
       "ja": { "n": "犬", "r": "いぬ" },
-      "ko": { "n": "개", "hj": "犬" }
+      "ko": { "n": "개", "hj": "" }
     }
   },
   {
@@ -20,7 +20,7 @@
     "img": "images/banana.png",
     "translations": {
       "en": { "n": "banana", "art": "a", "p": "bananas" },
-      "zh": { "n": "香蕉", "py": "xiāngjiāo" },
+      "zh": { "n": "香蕉", "t": "香蕉", "py": "xiāngjiāo" },
       "fr": { "n": "banane", "art": "la", "p": "les bananes", "g": "fem." },
       "de": { "n": "Banane", "art": "die", "p": "die Bananen", "g": "fem." },
       "it": { "n": "banana", "art": "la", "p": "le banane", "g": "fem." },
@@ -35,13 +35,13 @@
     "img": "images/nose.png",
     "translations": {
       "en": { "n": "nose", "art": "a", "p": "noses" },
-      "zh": { "n": "鼻子", "py": "bízi" },
+      "zh": { "n": "鼻子", "t": "鼻子", "py": "bízi" },
       "fr": { "n": "nez", "art": "le", "p": "les nez", "g": "masc." },
       "de": { "n": "Nase", "art": "die", "p": "die Nasen", "g": "fem." },
       "it": { "n": "naso", "art": "il", "p": "i nasi", "g": "masc." },
       "ru": { "n": "нос", "p": "носы", "g": "masc.", "lt": "nos" },
       "ja": { "n": "鼻", "r": "はな" },
-      "ko": { "n": "코", "hj": "鼻" }
+      "ko": { "n": "코", "hj": "" }
     }
   }
 ]
