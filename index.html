@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>TinyVocab Organized</title>
+<title>TinyVocab Master</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,14 +15,14 @@
         --c-animal: #7CB342; --c-food: #FDD835; --c-body: #42A5F5; 
         --c-home: #EF5350; --c-act: #AB47BC;
         
-        /* Rainbow Grammar */
+        /* Grammar Colors */
         --pos-noun: #2196F3; --pos-verb: #F44336; --pos-adj: #4CAF50;
         --pos-adv: #F9A825; --pos-pron: #9C27B0; --pos-prep: #E91E63; --pos-conj: #FF9800;
         
         --bg: #F2F2F2; --card-bg: #FFFFFF;
         
         /* Level Colors */
-        --lvl-1: #4CAF50; --lvl-2: #FF9800; --lvl-3: #F44336;
+        --lvl-1: #4CAF50; --lvl-2: #FF9800; --lvl-3: #F44336; --lvl-4: #9C27B0; --lvl-5: #212121;
     }
 
     body { font-family: 'Zen Maru Gothic', sans-serif; background: var(--bg); margin: 0; color: #333; -webkit-font-smoothing: antialiased; }
@@ -50,24 +50,20 @@
     /* LEVEL SLIDER */
     .level-container { display: flex; align-items: center; gap: 15px; width: 100%; padding: 5px 0; border-top: 1px solid #eee; }
     .level-label { font-family: 'Fredoka One'; font-size: 0.9rem; color: #555; width: 60px; }
-    input[type=range] {
-        flex: 1; -webkit-appearance: none; width: 100%; height: 6px; background: #ddd; border-radius: 5px; outline: none;
-    }
-    input[type=range]::-webkit-slider-thumb {
-        -webkit-appearance: none; appearance: none; width: 24px; height: 24px; border-radius: 50%; 
-        background: var(--lvl-1); cursor: pointer; transition: background 0.3s;
-    }
+    input[type=range] { flex: 1; -webkit-appearance: none; width: 100%; height: 6px; background: #ddd; border-radius: 5px; outline: none; }
+    input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 24px; height: 24px; border-radius: 50%; background: var(--lvl-1); cursor: pointer; transition: background 0.3s; }
+    
     .lvl-1::-webkit-slider-thumb { background: var(--lvl-1) !important; }
     .lvl-2::-webkit-slider-thumb { background: var(--lvl-2) !important; }
     .lvl-3::-webkit-slider-thumb { background: var(--lvl-3) !important; }
+    .lvl-4::-webkit-slider-thumb { background: var(--lvl-4) !important; }
+    .lvl-5::-webkit-slider-thumb { background: var(--lvl-5) !important; }
 
-    /* CONTROLS GROUPS */
+    /* CONTROLS */
     .controls-container { display: flex; flex-direction: column; gap: 5px; width: 100%; }
     .control-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 2px 0; }
     .control-row:not(:last-child) { border-bottom: 1px dashed #eee; }
-    .row-label { font-size: 0.7rem; font-weight: bold; color: #999; text-transform: uppercase; margin-right: 5px; min-width: 40px;}
 
-    /* TOGGLES */
     .toggle-group { display: flex; align-items: center; gap: 6px; font-size: 0.75rem; font-weight: bold; color: #555; cursor: pointer; background: #fff; padding: 3px 8px; border-radius: 12px; border: 1px solid #eee; transition: all 0.3s; }
     .switch { position: relative; display: inline-block; width: 28px; height: 16px; }
     .switch input { opacity: 0; width: 0; height: 0; }
@@ -100,7 +96,7 @@
     .pos-badge { font-size: 0.6rem; color: white; padding: 3px 8px; border-radius: 10px; font-family: 'Zen Maru Gothic'; font-weight: bold; letter-spacing: 0.5px; text-transform: lowercase; margin-top: 4px; display: none; }
     .pos-noun { background: var(--pos-noun); } .pos-verb { background: var(--pos-verb); } .pos-adj { background: var(--pos-adj); } .pos-pron { background: var(--pos-pron); }
     .show-pos .pos-badge { display: inline-block; }
-
+    
     .flip-btn { position: absolute; top: 10px; right: 10px; width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.9); border: 1px solid #eee; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; cursor: pointer; z-index: 10; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
 
     /* BACK TABLE */
@@ -127,7 +123,6 @@
     @media print {
         header, .container, #child-mode { display: none !important; }
         #print-area { display: block !important; width: 100%; height: 100%; }
-        .cut-guide { border: 1px dashed #e0e0e0; box-sizing: border-box; background: white; position: relative; display: flex; flex-direction: column; border-radius: 6px; }
         .grid-poker { display: grid; grid-template-columns: repeat(3, 63.5mm); grid-template-rows: repeat(3, 88.9mm); padding: 10mm; gap: 2mm; }
         .grid-poker img { flex: 1; width: 100%; object-fit: contain; padding: 10px; }
         .grid-poker .txt { height: 25mm; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 18pt; color: #333; margin-bottom: 2mm; text-align: center;}
@@ -162,7 +157,7 @@
     
     <div class="level-container">
         <div class="level-label" id="lvl-txt">Level 1</div>
-        <input type="range" min="1" max="3" value="1" class="lvl-1" id="level-slider" oninput="updateLevel(this.value)">
+        <input type="range" min="1" max="5" value="1" class="lvl-1" id="level-slider" oninput="updateLevel(this.value)">
     </div>
 
     <div class="controls-container" id="header-toggles"></div>
@@ -174,9 +169,7 @@
 
 <div id="child-mode" style="display:none;">
     <button onclick="exitChild()" style="position:absolute; top:30px; right:30px; border:none; background:none; font-size:2rem; opacity:0.3; cursor:pointer;">✕</button>
-    
     <div id="child-toggles" class="child-toggles"></div>
-    
     <div class="focus-card" id="focus-display">
         <img id="c-img" src="">
         <div class="word-box">
@@ -206,19 +199,19 @@
     // Define Groups (Labels for UI)
     const groups = [
         { id: 'phon', label: 'Sound', keys: ['ipa', 'latin', 'pinyin', 'hiragana', 'hanja', 'traditional'] },
-        { id: 'meta', label: 'Meta',  keys: ['pos', 'gender'] }, // Renamed Grammar -> pos
+        { id: 'meta', label: 'Meta',  keys: ['pos', 'gender'] },
         { id: 'noun', label: 'Noun',  keys: ['article', 'plural_noun'] },
-        { id: 'verb', label: 'Verb',  keys: ['conjugate'] },
-        { id: 'adj',  label: 'Adj',   keys: ['fem', 'neut', 'plural_adj'] }
+        { id: 'verb', label: 'Verb',  keys: ['conjugate', 'past', 'future', 'imperative', 'conditional'] },
+        { id: 'adj',  label: 'Adj',   keys: ['fem', 'neut', 'plural_adj', 'acc', 'dat', 'gen', 'ins', 'pre'] }
     ];
 
     // Allowed Toggles per Language
     const langConfig = {
-        'en': ['pos', 'article', 'plural_noun', 'plural_adj', 'ipa', 'conjugate'],
-        'fr': ['pos', 'article', 'plural_noun', 'plural_adj', 'gender', 'ipa', 'fem', 'conjugate'],
-        'de': ['pos', 'article', 'plural_noun', 'plural_adj', 'gender', 'ipa', 'fem', 'neut', 'conjugate'],
-        'it': ['pos', 'article', 'plural_noun', 'plural_adj', 'gender', 'ipa', 'fem', 'conjugate'],
-        'ru': ['pos', 'plural_noun', 'plural_adj', 'gender', 'latin', 'ipa', 'fem', 'neut', 'conjugate'],
+        'en': ['pos', 'article', 'plural_noun', 'plural_adj', 'ipa', 'conjugate', 'past', 'future', 'imperative', 'conditional'],
+        'fr': ['pos', 'article', 'plural_noun', 'plural_adj', 'gender', 'ipa', 'fem', 'conjugate', 'past', 'future', 'imperative', 'conditional'],
+        'de': ['pos', 'article', 'plural_noun', 'plural_adj', 'gender', 'ipa', 'fem', 'neut', 'conjugate', 'past', 'future', 'imperative', 'conditional', 'acc', 'dat', 'gen'],
+        'it': ['pos', 'article', 'plural_noun', 'plural_adj', 'gender', 'ipa', 'fem', 'conjugate', 'past', 'future', 'imperative', 'conditional'],
+        'ru': ['pos', 'plural_noun', 'plural_adj', 'gender', 'latin', 'ipa', 'fem', 'neut', 'conjugate', 'past', 'future', 'imperative', 'conditional', 'acc', 'dat', 'gen', 'ins', 'pre'],
         'zh': ['pos', 'traditional', 'pinyin'],
         'ja': ['pos', 'hiragana'],
         'ko': ['pos', 'hanja']
@@ -228,22 +221,24 @@
     const levelConfig = {
         'ipa': 1, 'pinyin': 1, 'latin': 1, 'hiragana': 1, 'hanja': 1, 'traditional': 1, 'gender': 1,
         'pos': 2, 'article': 2, 'plural_noun': 2, 
-        'plural_adj': 3, 'fem': 3, 'neut': 3, 'conjugate': 3
+        'plural_adj': 3, 'fem': 3, 'neut': 3, 'conjugate': 3,
+        'past': 4, 'future': 4, 'acc': 4, 'dat': 4, 'gen': 4,
+        'imperative': 5, 'conditional': 5, 'ins': 5, 'pre': 5
     };
 
     const toggleLabels = { 
         'pos': 'Part of Speech', 'gender':'Gender', 
         'article':'Article', 'plural_noun':'Plural (N)',
-        'conjugate': 'Action',
-        'plural_adj': 'Plural (Adj)', 'fem': 'Feminine', 'neut': 'Neuter',
+        'conjugate': 'Present', 'past': 'Past', 'future': 'Future', 'imperative': 'Cmd', 'conditional': 'Cond',
+        'plural_adj': 'Plural (Adj)', 'fem': 'Fem', 'neut': 'Neut',
+        'acc': 'Acc', 'dat': 'Dat', 'gen': 'Gen', 'ins': 'Ins', 'pre': 'Pre',
         'pinyin':'Pinyin', 'latin':'Latin', 'ipa':'IPA', 'hiragana':'Hiragana', 'hanja':'Hanja', 'traditional':'Traditional'
     };
 
     let toggleState = { 
-        pos: false, gender: false,
-        article: false, plural_noun: false,
-        conjugate: false,
-        plural_adj: false, fem: false, neut: false,
+        pos: false, gender: false, article: false, plural_noun: false,
+        conjugate: false, past: false, future: false, imperative: false, conditional: false,
+        plural_adj: false, fem: false, neut: false, acc: false, dat: false, gen: false, ins: false, pre: false,
         pinyin: false, latin: false, ipa: false, hiragana: false, hanja: false, traditional: false
     };
 
@@ -277,32 +272,22 @@
         return 'font-en';
     }
 
-    // --- GROUPED CONTROLS BUILDER ---
+    // --- CONTROLS ---
     function updateControls(containerId) {
         const container = document.getElementById(containerId);
         container.innerHTML = '';
         const allowed = langConfig[currentLang];
 
         groups.forEach(grp => {
-            // Filter keys that are allowed for this lang AND meet level req
             const validKeys = grp.keys.filter(k => allowed.includes(k) && currentLevel >= levelConfig[k]);
-            
             if (validKeys.length > 0) {
-                const row = document.createElement('div');
-                row.className = 'control-row';
-                
-                // Optional Label (Compact)
-                // const lbl = document.createElement('div'); lbl.className = 'row-label'; lbl.innerText = grp.label; row.appendChild(lbl);
-
+                const row = document.createElement('div'); row.className = 'control-row';
                 validKeys.forEach(key => {
                     const inputID = `chk-${containerId}-${key}`;
                     const html = `
                         <label class="toggle-group" id="lbl-${containerId}-${key}">
-                            <span class="switch">
-                                <input type="checkbox" id="${inputID}" data-key="${key}" onchange="toggleFeature('${key}', this.checked)" ${toggleState[key]?'checked':''}>
-                                <span class="slider"></span>
-                            </span>
-                            ${toggleLabels[key]}
+                            <span class="switch"><input type="checkbox" id="${inputID}" data-key="${key}" onchange="toggleFeature('${key}', this.checked)" ${toggleState[key]?'checked':''}>
+                            <span class="slider"></span></span>${toggleLabels[key]}
                         </label>`;
                     row.insertAdjacentHTML('beforeend', html);
                 });
@@ -314,11 +299,23 @@
 
     window.toggleFeature = function(key, isChecked) {
         toggleState[key] = isChecked;
-        if(key === 'fem' && isChecked) toggleState.neut = false;
-        if(key === 'neut' && isChecked) toggleState.fem = false;
         
+        // Exclusivity Logic
+        if(isChecked) {
+            // Adjective Gender/Case Exclusivity
+            const adjMut = ['fem', 'neut', 'acc', 'dat', 'gen', 'ins', 'pre'];
+            if(adjMut.includes(key)) adjMut.forEach(k => { if(k !== key) toggleState[k] = false; });
+            
+            // Verb Tense Exclusivity
+            const verbMut = ['conjugate', 'past', 'future', 'imperative', 'conditional'];
+            if(verbMut.includes(key)) verbMut.forEach(k => { if(k !== key) toggleState[k] = false; });
+        }
+
         // Sync Inputs
-        document.querySelectorAll(`input[data-key="${key}"]`).forEach(el => el.checked = isChecked);
+        document.querySelectorAll(`input[data-key]`).forEach(el => {
+            const k = el.getAttribute('data-key');
+            el.checked = toggleState[k];
+        });
 
         if(key==='plural_noun') checkDependency();
         renderGrid();
@@ -326,21 +323,17 @@
     };
 
     function checkDependency() {
-        // Noun Plural disables Article
         const isPlural = toggleState.plural_noun;
         const artInputs = document.querySelectorAll(`input[data-key="article"]`);
-        const artLabels = document.querySelectorAll(`label[id*="-article"]`);
         if (isPlural) {
             toggleState.article = false;
             artInputs.forEach(el => { el.checked = false; el.disabled = true; });
-            artLabels.forEach(el => el.classList.add('disabled'));
         } else {
             artInputs.forEach(el => { el.disabled = false; });
-            artLabels.forEach(el => el.classList.remove('disabled'));
         }
     }
 
-    // --- TEXT LOGIC ---
+    // --- TEXT GENERATION ---
     function getTextDisplay(card) {
         let raw = card.translations[currentLang] || card.translations['en']; 
         if (!raw || typeof raw === 'string') return { main: raw || '?', sub: '', gender: '' };
@@ -349,28 +342,38 @@
         let genderText = (toggleState.gender && raw.g) ? raw.g : '';
         let subText = '';
 
-        // NOUN LOGIC
+        // NOUN
         if (card.pos === 'noun') {
             if (toggleState.plural_noun && raw.p) mainText = raw.p;
             if (toggleState.article && !toggleState.plural_noun && raw.art) mainText = `${raw.art} ${mainText}`;
         }
 
-        // VERB LOGIC
+        // VERB (Hierarchy: Mood > Tense > Present)
         if (card.pos === 'verb') {
-            if (toggleState.conjugate && raw.pres) mainText = raw.pres;
+            if (toggleState.conditional && raw.cond) mainText = raw.cond;
+            else if (toggleState.imperative && raw.imp) mainText = raw.imp;
+            else if (toggleState.future && raw.fut) mainText = raw.fut;
+            else if (toggleState.past && raw.past) mainText = raw.past;
+            else if (toggleState.conjugate && raw.pres) mainText = raw.pres;
         }
 
-        // ADJ LOGIC
+        // ADJECTIVE (Hierarchy: Case > Plural > Gender)
         if (card.pos === 'adj') {
-            if (toggleState.plural_adj) {
+             // Case Overrides (Level 4/5)
+            if (toggleState.acc && raw.acc) mainText = raw.acc;
+            else if (toggleState.dat && raw.dat) mainText = raw.dat;
+            else if (toggleState.gen && raw.gen) mainText = raw.gen;
+            else if (toggleState.ins && raw.ins) mainText = raw.ins;
+            else if (toggleState.pre && raw.pre) mainText = raw.pre;
+            // Plural
+            else if (toggleState.plural_adj) {
                 if (toggleState.fem && raw.fp) mainText = raw.fp;
                 else if (raw.mp) mainText = raw.mp;
                 else if (raw.p) mainText = raw.p;
-            } else if (toggleState.fem && raw.f) {
-                mainText = raw.f;
-            } else if (toggleState.neut && raw.nt) {
-                mainText = raw.nt;
-            }
+            } 
+            // Gender
+            else if (toggleState.fem && raw.f) mainText = raw.f;
+            else if (toggleState.neut && raw.nt) mainText = raw.nt;
         }
 
         // SUBTEXT
@@ -467,7 +470,6 @@
         u1.onend=()=>setTimeout(()=>window.speechSynthesis.speak(u2),600); u2.onend=()=>setTimeout(()=>window.speechSynthesis.speak(u3),600); window.speechSynthesis.speak(u1);
     }
     
-    // Print logic assumed
     function printPoker() {
         const f = getFontClass(); document.getElementById('print-area').className='grid-poker';
         document.getElementById('print-area').innerHTML=deck.map(c=>{const t=getTextDisplay(c); return `<div class="cut-guide"><img src="${c.img}"><div class="txt"><div class="${f}">${t.main}</div>${t.sub?`<div style="font-size:0.6em;color:#666;">${t.sub}</div>`:''}</div><div class="bar" style="background:${colors[c.cat]||'#ccc'}"></div></div>`;}).join(''); window.print();

@@ -53,12 +53,12 @@
     "pos": "verb",
     "img": "images/eat.png",
     "translations": {
-      "en": { "n": "eat", "pres": "eats", "ipa": "/iːt/" },
+      "en": { "n": "eat", "pres": "eats", "past": "ate", "fut": "will eat", "imp": "eat!", "cond": "would eat", "ipa": "/iːt/" },
       "zh": { "n": "吃", "py": "chī" },
-      "fr": { "n": "manger", "pres": "il mange", "ipa": "/mɑ̃.ʒe/" },
-      "de": { "n": "essen", "pres": "er isst", "ipa": "/ˈɛsn̩/" },
-      "it": { "n": "mangiare", "pres": "lui mangia", "ipa": "/manˈdʒa.re/" },
-      "ru": { "n": "есть", "pres": "он ест", "lt": "yest'", "ipa": "/jesʲtʲ/" },
+      "fr": { "n": "manger", "pres": "il mange", "past": "il a mangé", "fut": "il mangera", "imp": "mange!", "cond": "il mangerait", "ipa": "/mɑ̃.ʒe/" },
+      "de": { "n": "essen", "pres": "er isst", "past": "er aß", "fut": "er wird essen", "imp": "iss!", "cond": "er würde essen", "ipa": "/ˈɛsn̩/" },
+      "it": { "n": "mangiare", "pres": "lui mangia", "past": "ha mangiato", "fut": "mangerà", "imp": "mangia!", "cond": "mangerebbe", "ipa": "/manˈdʒa.re/" },
+      "ru": { "n": "есть", "pres": "он ест", "past": "он ел", "fut": "он будет есть", "imp": "ешь!", "cond": "он бы ел", "lt": "yest'", "ipa": "/jesʲtʲ/" },
       "ja": { "n": "食べる", "r": "たべる" },
       "ko": { "n": "먹다", "hj": "" }
     }
@@ -72,9 +72,17 @@
       "en": { "n": "big", "ipa": "/bɪɡ/" },
       "zh": { "n": "大", "py": "dà" },
       "fr": { "n": "grand", "f": "grande", "mp": "grands", "fp": "grandes", "ipa": "/ɡʁɑ̃/" },
-      "de": { "n": "großer", "f": "große", "nt": "großes", "p": "große", "ipa": "/ˈɡʁoːsɐ/" },
+      "de": { 
+          "n": "großer", "f": "große", "nt": "großes", "p": "große", 
+          "acc": "großen", "dat": "großem", "gen": "großen",
+          "ipa": "/ˈɡʁoːsɐ/" 
+      },
       "it": { "n": "grande", "f": "grande", "p": "grandi", "ipa": "/ˈɡran.de/" },
-      "ru": { "n": "большой", "f": "большая", "nt": "большое", "p": "большие", "lt": "bolshoy", "ipa": "/bɐlʲˈʂoj/" },
+      "ru": { 
+          "n": "большой", "f": "большая", "nt": "большое", "p": "большие", 
+          "acc": "большого", "dat": "большому", "gen": "большого", "ins": "большим", "pre": "большом",
+          "lt": "bolshoy", "ipa": "/bɐlʲˈʂoj/" 
+      },
       "ja": { "n": "大きい", "r": "おおきい" },
       "ko": { "n": "크다", "hj": "" }
     }
@@ -84,7 +92,7 @@
     "cat": "act",
     "pos": "verb",
     "img": "images/run.png",
-    "translations": { "en": { "n": "run", "pres": "runs", "ipa": "/rʌn/" } }
+    "translations": { "en": { "n": "run", "pres": "runs", "past": "ran", "fut": "will run", "ipa": "/rʌn/" } }
   },
   {
     "id": "he",
