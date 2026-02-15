@@ -3,157 +3,85 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>TinyVocab Seamless</title>
+<title>TinyVocab Polyglot</title>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Zen+Maru+Gothic:wght@500;700&display=swap" rel="stylesheet">
 <style>
     :root {
-        --c-animal: #7CB342; /* Matcha */
-        --c-food:   #FDD835; /* Yuzu */
-        --c-body:   #42A5F5; /* Sky */
-        --c-home:   #EF5350; /* Shrine */
-        --c-act:    #AB47BC; /* Iris */
-        
-        --bg: #F2F2F2; 
-        --card-bg: #FFFFFF; /* Pure White is critical here */
+        --c-animal: #7CB342; --c-food: #FDD835; --c-body: #42A5F5; 
+        --c-home: #EF5350; --c-act: #AB47BC;
+        --bg: #F2F2F2; --card-bg: #FFFFFF;
     }
 
     body { 
-        font-family: 'Zen Maru Gothic', sans-serif; 
-        background: var(--bg); 
-        margin: 0; 
-        color: #333;
-        -webkit-font-smoothing: antialiased;
+        font-family: 'Zen Maru Gothic', sans-serif; background: var(--bg); 
+        margin: 0; color: #333; -webkit-font-smoothing: antialiased;
     }
 
-    /* --- HEADER --- */
+    /* --- HEADER & CONTROLS --- */
     header { 
-        background: rgba(255,255,255,0.95);
-        padding: 15px 20px; 
+        background: rgba(255,255,255,0.95); padding: 15px 20px; 
         display: flex; justify-content: space-between; align-items: center; 
         position: sticky; top: 0; z-index: 100;
         box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        flex-wrap: wrap; gap: 10px;
     }
-    .btn { padding: 8px 16px; border: 1px solid #ddd; border-radius: 20px; cursor: pointer; background: white; font-family: 'Fredoka One'; color: #555; }
+    .header-group { display: flex; gap: 8px; align-items: center; }
+    
+    .btn { padding: 8px 16px; border: 1px solid #ddd; border-radius: 20px; cursor: pointer; background: white; font-family: 'Fredoka One'; color: #555; font-size: 0.85rem;}
     .btn-primary { background: #333; color: white; border-color: #333; }
+    
+    /* Language Select Dropdown */
+    #lang-select {
+        padding: 8px 12px; border: 1px solid #ddd; border-radius: 20px;
+        font-family: 'Zen Maru Gothic'; font-weight: bold; color: #333;
+        background: white; cursor: pointer; outline: none;
+    }
 
-    /* --- GRID --- */
+    /* --- GRID & CARD --- */
     .container { max-width: 1200px; margin: 0 auto; padding: 30px 20px; }
     .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 25px; }
     
-    /* --- SEAMLESS CARD DESIGN --- */
     .vocab-card {
-        aspect-ratio: 3/4;
-        background: var(--card-bg); 
-        border-radius: 16px; 
-        overflow: hidden;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.06); /* Soft lift */
-        transition: transform 0.3s ease;
-        display: flex; flex-direction: column;
-        cursor: pointer;
-        position: relative;
+        aspect-ratio: 3/4; background: var(--card-bg); border-radius: 16px; 
+        overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+        transition: transform 0.3s ease; display: flex; flex-direction: column;
+        cursor: pointer; position: relative;
     }
     .vocab-card:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
 
-    /* SEAMLESS MAGIC: 
-       We remove drop-shadow filters on the image itself.
-       We use mix-blend-mode: multiply to make white pixels transparent.
-    */
-    .card-art {
-        flex: 1; 
-        width: 100%;
-        display: flex; align-items: center; justify-content: center;
-        padding: 15px; box-sizing: border-box;
-        background: var(--card-bg);
-    }
-    
-    .card-art img { 
-        max-width: 100%; max-height: 100%; 
-        object-fit: contain; 
-        /* NEW: This pushes light grey pixels to pure white */
-        filter: brightness(1.03) contrast(1.03);
-        /* Then this blends them away completely */
-        mix-blend-mode: multiply; 
-    }
+    .card-art { flex: 1; width: 100%; display: flex; align-items: center; justify-content: center; padding: 15px; box-sizing: border-box; background: var(--card-bg); }
+    .card-art img { max-width: 100%; max-height: 100%; object-fit: contain; filter: brightness(1.03) contrast(1.03); mix-blend-mode: multiply; }
 
-    .card-obi {
-        height: 60px; 
-        display: flex; align-items: center; justify-content: center;
-        background: var(--card-bg);
-        position: relative;
-    }
-    
-    .color-stroke {
-        position: absolute; bottom: 0; left: 0; width: 100%; height: 6px;
-    }
-    
-    .word { 
-        font-family: 'Fredoka One'; 
-        font-size: 1.6rem; 
-        color: #333; 
-        text-transform: lowercase; 
-        margin-bottom: 6px; 
-    }
+    .card-obi { height: 60px; display: flex; align-items: center; justify-content: center; background: var(--card-bg); position: relative; }
+    .color-stroke { position: absolute; bottom: 0; left: 0; width: 100%; height: 6px; }
+    .word { font-family: 'Fredoka One'; font-size: 1.6rem; color: #333; margin-bottom: 6px; }
 
     /* --- CHILD MODE --- */
-    #child-mode { 
-        position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
-        background: #fff; z-index: 200; 
-        display: flex; flex-direction: column; align-items: center; justify-content: center; 
-    }
-    .focus-card {
-        width: 85vw; max-width: 400px; aspect-ratio: 3/4;
-        background: white; border-radius: 30px;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.1);
-        display: flex; flex-direction: column; overflow: hidden;
-    }
-    .focus-card img { 
-        flex: 1; object-fit: contain; padding: 40px; 
-        /* Apply the same fix here */
-        filter: brightness(1.03) contrast(1.03);
-        mix-blend-mode: multiply;
-    }
+    #child-mode { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #fff; z-index: 200; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .focus-card { width: 85vw; max-width: 400px; aspect-ratio: 3/4; background: white; border-radius: 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.1); display: flex; flex-direction: column; overflow: hidden; }
+    .focus-card img { flex: 1; object-fit: contain; padding: 40px; filter: brightness(1.03) contrast(1.03); mix-blend-mode: multiply; }
     .focus-card .word-box { height: 100px; display: flex; align-items: center; justify-content: center; }
     .focus-card h1 { font-family: 'Fredoka One'; font-size: 3.5rem; margin: 0; color: #333; }
     .focus-stripe { height: 10px; width: 100%; }
-
     .controls { margin-top: 30px; display: flex; gap: 20px; }
     .nav-btn { width: 70px; height: 70px; border-radius: 50%; border: none; font-size: 2rem; background: #f5f5f5; cursor: pointer; color: #333; }
     .play-btn { width: 90px; height: 90px; font-size: 3rem; background: #333; color: white; }
 
     /* --- PRINT STYLES --- */
     #print-area { display: none; }
-    
     @media print {
         @page { margin: 0; }
         body { background: white; -webkit-print-color-adjust: exact; }
         header, .container, #child-mode { display: none !important; }
         #print-area { display: block !important; width: 100%; height: 100%; }
-        
-        .cut-guide {
-            border: 1px dashed #e0e0e0; /* Faint cut line */
-            box-sizing: border-box;
-            background: white;
-            position: relative;
-            display: flex; flex-direction: column;
-            border-radius: 6px;
-        }
-
-        /* POKER LAYOUT */
-        .grid-poker { 
-            display: grid; grid-template-columns: repeat(3, 63.5mm); grid-template-rows: repeat(3, 88.9mm); 
-            padding: 10mm; gap: 2mm; 
-        }
+        .cut-guide { border: 1px dashed #e0e0e0; box-sizing: border-box; background: white; position: relative; display: flex; flex-direction: column; border-radius: 6px; }
+        .grid-poker { display: grid; grid-template-columns: repeat(3, 63.5mm); grid-template-rows: repeat(3, 88.9mm); padding: 10mm; gap: 2mm; }
         .grid-poker .cut-guide { width: 63.5mm; height: 88.9mm; }
         .grid-poker img { flex: 1; width: 100%; object-fit: contain; padding: 10px; }
         .grid-poker .txt { height: 20mm; display: flex; align-items: center; justify-content: center; font-family: 'Fredoka One'; font-size: 16pt; color: #333; margin-bottom: 2mm;}
         .grid-poker .bar { height: 3mm; width: 100%; position: absolute; bottom: 0; left: 0; }
-
-        /* A4 LAYOUT */
         .layout-a4 .page { break-after: page; width: 100vw; height: 100vh; display: flex; align-items: center; justify-content: center; }
-        .layout-a4 .cut-guide { 
-            width: 260mm; height: 180mm; 
-            border: none; flex-direction: row; 
-        }
+        .layout-a4 .cut-guide { width: 260mm; height: 180mm; border: none; flex-direction: row; }
         .layout-a4 img { flex: 2; object-fit: contain; padding: 0; }
         .layout-a4 .txt { flex: 1; display: flex; align-items: center; justify-content: center; font-family: 'Fredoka One'; font-size: 90pt; color: #333; }
         .layout-a4 .bar { width: 15px; height: 100%; position: static; }
@@ -163,8 +91,22 @@
 <body>
 
 <header>
-    <div style="font-weight:bold; font-size:1.2rem; color:#333; font-family:'Fredoka One'">🦁 TinyVocab</div>
-    <div style="display:flex; gap:8px">
+    <div class="header-group" style="font-weight:bold; font-size:1.2rem; color:#333; font-family:'Fredoka One'">
+        🦁 TinyVocab
+    </div>
+    
+    <div class="header-group">
+        <select id="lang-select">
+            <option value="en">🇬🇧 English</option>
+            <option value="zh">🇨🇳 Chinese</option>
+            <option value="fr">🇫🇷 French</option>
+            <option value="de">🇩🇪 German</option>
+            <option value="it">🇮🇹 Italian</option>
+            <option value="ru">🇷🇺 Russian</option>
+            <option value="ja">🇯🇵 Japanese</option>
+            <option value="ko">🇰🇷 Korean</option>
+        </select>
+        
         <button class="btn" onclick="printA4()">Poster</button>
         <button class="btn" onclick="printPoker()">Cards</button>
         <button class="btn btn-primary" onclick="startChild()">▶ Child Mode</button>
@@ -194,69 +136,154 @@
 <script>
     let deck = [];
     let currentIndex = 0;
+    let currentLang = 'en'; // Default language
+
+    // Language & Voice Configuration
+    const langConfig = {
+        'en': { locale: 'en-GB' }, // UK English
+        'zh': { locale: 'zh-CN' }, // Mainland China
+        'fr': { locale: 'fr-FR' }, // France
+        'de': { locale: 'de-DE' }, // Germany
+        'it': { locale: 'it-IT' }, // Italy
+        'ru': { locale: 'ru-RU' }, // Russia
+        'ja': { locale: 'ja-JP' }, // Standard Japanese
+        'ko': { locale: 'ko-KR' }  // South Korea
+    };
+
     const colors = { animal: '#7CB342', food: '#FDD835', body: '#42A5F5', home: '#EF5350', act: '#AB47BC' };
 
-    fetch('data.json').then(res => res.json()).then(data => { deck = data; renderGrid(); });
+    // Load Data
+    fetch('data.json').then(res => res.json()).then(data => { 
+        deck = data; 
+        renderGrid(); 
+    });
 
+    // Handle Language Change
+    document.getElementById('lang-select').addEventListener('change', (e) => {
+        currentLang = e.target.value;
+        renderGrid(); // Re-render the main grid
+        if(document.getElementById('child-mode').style.display === 'flex') {
+            updateDisplay(); // Update child mode if open
+        }
+    });
+
+    // Render Main Grid based on selected language
     function renderGrid() {
         const grid = document.getElementById('grid');
         grid.innerHTML = deck.map(card => {
             const col = colors[card.cat] || '#ccc';
+            // Get the word in the current language, fallback to English if missing
+            const displayWord = card.translations[currentLang] || card.translations['en'];
             return `
-            <div class="vocab-card" onclick="startChildAt('${card.word}')">
+            <div class="vocab-card" onclick="startChildAt('${card.id}')">
                 <div class="card-art"><img src="${card.img}" loading="lazy"></div>
                 <div class="card-obi">
-                    <div class="word">${card.word}</div>
+                    <div class="word">${displayWord}</div>
                     <div class="color-stroke" style="background:${col}"></div>
                 </div>
             </div>`;
         }).join('');
     }
 
-    function startChildAt(word) { currentIndex = deck.findIndex(c => c.word === word); startChild(); }
+    // --- Child Mode Logic ---
+    function startChildAt(id) { currentIndex = deck.findIndex(c => c.id === id); startChild(); }
     function startChild() { if(deck.length>0){ document.getElementById('child-mode').style.display = 'flex'; updateDisplay(); } }
     function exitChild() { document.getElementById('child-mode').style.display = 'none'; window.speechSynthesis.cancel(); }
+    
     function updateDisplay() {
         const card = deck[currentIndex];
         const col = colors[card.cat] || '#333';
+        const displayWord = card.translations[currentLang] || card.translations['en'];
+        
         document.getElementById('c-img').src = card.img;
-        document.getElementById('c-word').innerText = card.word;
+        document.getElementById('c-word').innerText = displayWord;
         document.getElementById('c-stripe').style.background = col;
+        
+        // Adjust font size for some languages if needed
+        const wordBox = document.getElementById('c-word');
+        wordBox.style.fontSize = (currentLang === 'zh' || currentLang === 'ja' || currentLang === 'ko') ? '4rem' : '3.5rem';
     }
     function move(dir) { window.speechSynthesis.cancel(); currentIndex = (currentIndex + dir + deck.length) % deck.length; updateDisplay(); }
     
-    // SPEECH DRILL
-    function getUKVoice() { return window.speechSynthesis.getVoices().find(v => v.lang === 'en-GB' || v.lang === 'en_GB') || window.speechSynthesis.getVoices()[0]; }
+    // --- Smart Voice Selection ---
+    function getVoice(langCode) {
+        const targetLocale = langConfig[langCode].locale;
+        const voices = window.speechSynthesis.getVoices();
+        
+        // 1. Try to find an exact locale match (e.g., 'fr-FR')
+        // Some browsers use underscores instead of dashes, so we check both.
+        let voice = voices.find(v => v.lang === targetLocale || v.lang.replace('_', '-') === targetLocale);
+        
+        // 2. If no exact match, fallback to any voice in that language (e.g., any 'fr')
+        if (!voice) {
+            const shortLang = targetLocale.split('-')[0];
+            voice = voices.find(v => v.lang.startsWith(shortLang));
+        }
+        
+        // 3. Final fallback to the first available voice (rarely needed on modern devices)
+        return voice || voices[0];
+    }
+
+    // Multilingual Speech Drill
     function speakDrill() {
-        const text = deck[currentIndex].word;
-        const voice = getUKVoice();
+        const card = deck[currentIndex];
+        // Get text in current language
+        const text = card.translations[currentLang] || card.translations['en'];
+        // Find the best voice for the current language
+        const voice = getVoice(currentLang);
+        
         window.speechSynthesis.cancel();
         
+        // Normal Speed
         const u1 = new SpeechSynthesisUtterance(text); u1.voice = voice; u1.rate = 1.0;
-        const u2 = new SpeechSynthesisUtterance(text); u2.voice = voice; u2.rate = 0.6; u2.pitch = 1.1;
+        // Slow Speed (drilling)
+        const u2 = new SpeechSynthesisUtterance(text); u2.voice = voice; u2.rate = 0.6; 
+        // Normal Speed (reinforcement)
         const u3 = new SpeechSynthesisUtterance(text); u3.voice = voice; u3.rate = 1.0;
+
+        // For Asian languages, pitch adjustment isn't as necessary for clarity and can sound unnatural.
+        if(!['zh', 'ja', 'ko'].includes(currentLang)) {
+             u2.pitch = 1.1;
+        }
 
         u1.onend = () => setTimeout(() => window.speechSynthesis.speak(u2), 800);
         u2.onend = () => setTimeout(() => window.speechSynthesis.speak(u3), 800);
         window.speechSynthesis.speak(u1);
     }
-    window.speechSynthesis.onvoiceschanged = getUKVoice;
+
+    // Ensure voices are loaded before we try to use them
+    window.speechSynthesis.onvoiceschanged = () => {
+        // This empty function triggers the browser to load voice list.
+        // We call getVoice() later when the button is actually pressed.
+    };
+
     document.addEventListener('keydown', (e) => {
         if (document.getElementById('child-mode').style.display === 'flex') {
             if(e.key === 'ArrowRight') move(1); if(e.key === 'ArrowLeft') move(-1); if(e.key === ' ') speakDrill(); if(e.key === 'Escape') exitChild();
         }
     });
 
-    // PRINT
-    function printPoker() {
-        document.getElementById('print-area').className = 'grid-poker';
-        document.getElementById('print-area').innerHTML = deck.map(c => `<div class="cut-guide"><img src="${c.img}"><div class="txt">${c.word}</div><div class="bar" style="background:${colors[c.cat]}"></div></div>`).join('');
+    // --- Multilingual Printing ---
+    function getPrintHTML(layoutClass, cardTemplateFn) {
+        document.getElementById('print-area').className = layoutClass;
+        document.getElementById('print-area').innerHTML = deck.map(card => {
+            const col = colors[card.cat];
+            // Use current language for print output
+            const txt = card.translations[currentLang] || card.translations['en'];
+            return cardTemplateFn(card.img, txt, col);
+        }).join('');
         window.print();
     }
+
+    function printPoker() {
+        getPrintHTML('grid-poker', (img, txt, col) => `
+            <div class="cut-guide"><img src="${img}"><div class="txt">${txt}</div><div class="bar" style="background:${col}"></div></div>
+        `);
+    }
     function printA4() {
-        document.getElementById('print-area').className = 'layout-a4';
-        document.getElementById('print-area').innerHTML = deck.map(c => `<div class="page"><div class="cut-guide"><img src="${c.img}"><div class="bar" style="background:${colors[c.cat]}"></div><div class="txt">${c.word}</div></div></div>`).join('');
-        window.print();
+        getPrintHTML('layout-a4', (img, txt, col) => `
+            <div class="page"><div class="cut-guide"><img src="${img}"><div class="bar" style="background:${col}"></div><div class="txt" style="${['zh','ja','ko'].includes(currentLang)?'font-size:70pt;':''}">${txt}</div></div></div>
+        `);
     }
 </script>
 </body>

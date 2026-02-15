@@ -1,5 +1,47 @@
 [
-  { "word": "dog",    "cat": "animal", "img": "images/dog.png" },
-  { "word": "banana", "cat": "food",   "img": "images/banana.png" },
-  { "word": "nose",   "cat": "body",   "img": "images/nose.png" }
+  {
+    "id": "dog",
+    "cat": "animal",
+    "img": "images/dog.jpg",
+    "translations": {
+      "en": "dog",
+      "zh": "狗",
+      "fr": "chien",
+      "de": "Hund",
+      "it": "cane",
+      "ru": "собака",
+      "ja": "犬",
+      "ko": "개"
+    }
+  },
+  {
+    "id": "banana",
+    "cat": "food",
+    "img": "images/banana.jpg",
+    "translations": {
+      "en": "banana",
+      "zh": "香蕉",
+      "fr": "banane",
+      "de": "Banane",
+      "it": "banana",
+      "ru": "банан",
+      "ja": "バナナ",
+      "ko": "바나나"
+    }
+  },
+  {
+    "id": "nose",
+    "cat": "body",
+    "img": "images/nose.jpg",
+    "translations": {
+      "en": "nose",
+      "zh": "鼻子",
+      "fr": "nez",
+      "de": "Nase",
+      "it": "naso",
+      "ru": "нос",
+      "ja": "鼻",
+      "ko": "코"
+    }
+  }
 ]
