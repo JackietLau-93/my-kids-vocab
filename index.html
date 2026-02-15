@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>TinyVocab Phonetic</title>
+<title>TinyVocab Rainbow</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,15 +11,19 @@
 
 <style>
     :root {
-        /* Semantic Colors (Card Style) */
+        /* Semantic Colors (Bottom Bars - Keep these consistent for categories) */
         --c-animal: #7CB342; --c-food: #FDD835; --c-body: #42A5F5; 
         --c-home: #EF5350; --c-act: #AB47BC;
         
-        /* Grammar Colors (POS Badges) */
-        --pos-noun: #2196F3; /* Blue */
-        --pos-verb: #E91E63; /* Red */
-        --pos-adj:  #9C27B0; /* Purple */
-
+        /* YOUR CUSTOM GRAMMAR RAINBOW */
+        --pos-verb: #F44336;  /* Red */
+        --pos-adv:  #F9A825;  /* Gold (Darkened for white text legibility) */
+        --pos-conj: #FF9800;  /* Orange */
+        --pos-adj:  #4CAF50;  /* Green */
+        --pos-noun: #2196F3;  /* Blue */
+        --pos-pron: #9C27B0;  /* Purple */
+        --pos-prep: #E91E63;  /* Pink */
+        
         /* Gender Colors */
         --g-masc: #2196F3; --g-fem: #E91E63; --g-neut: #4CAF50;
         
@@ -80,18 +84,29 @@
     .card-obi { min-height: 80px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding-bottom: 5px; position: relative; }
     .color-stroke { position: absolute; bottom: 0; left: 0; width: 100%; height: 6px; }
     
-    .word-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 2px; }
+    .word-row { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; margin-bottom: 2px; }
     .word { font-size: 1.8rem; color: #333; text-align: center; line-height: 1.2; }
     .sub-word { font-size: 0.9rem; color: #777; font-family: 'Zen Maru Gothic'; text-align: center; font-weight: 500; }
     .gender-badge { font-size: 0.75rem; color: #999; font-style: italic; margin-top: 2px; font-family: 'Zen Maru Gothic'; }
 
-    /* POS Badge */
+    /* RAINBOW GRAMMAR BADGES */
     .pos-badge { 
-        font-size: 0.6rem; color: white; padding: 2px 6px; border-radius: 10px; font-family: 'Zen Maru Gothic'; font-weight: bold; text-transform: uppercase; margin-top: 4px; display: inline-block;
+        font-size: 0.6rem; color: white; padding: 3px 8px; border-radius: 10px; 
+        font-family: 'Zen Maru Gothic'; font-weight: bold; letter-spacing: 0.5px;
+        text-transform: lowercase; margin-top: 4px; display: none; 
     }
+    
+    /* Apply Custom Colors */
     .pos-noun { background: var(--pos-noun); }
     .pos-verb { background: var(--pos-verb); }
     .pos-adj { background: var(--pos-adj); }
+    .pos-adv { background: var(--pos-adv); }
+    .pos-pron { background: var(--pos-pron); }
+    .pos-prep { background: var(--pos-prep); }
+    .pos-conj { background: var(--pos-conj); }
+    
+    /* Show badge if Grammar toggle is ON */
+    .show-grammar .pos-badge { display: inline-block; }
 
     .flip-btn { position: absolute; top: 10px; right: 10px; width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.9); border: 1px solid #eee; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; cursor: pointer; z-index: 10; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
 
@@ -190,27 +205,25 @@
     let currentLang = 'en';
 
     // CONFIGS
-    // Added 'ipa' to en, fr, de, it, ru
     const langConfig = {
-        'en': { toggles: ['article', 'plural', 'ipa'] },
-        'fr': { toggles: ['article', 'plural', 'gender', 'ipa'] },
-        'de': { toggles: ['article', 'plural', 'gender', 'ipa'] },
-        'it': { toggles: ['article', 'plural', 'gender', 'ipa'] },
-        'ru': { toggles: ['plural', 'gender', 'latin', 'ipa'] },
-        'zh': { toggles: ['traditional', 'pinyin'] },
-        'ja': { toggles: ['hiragana'] },
-        'ko': { toggles: ['hanja'] }
+        'en': { toggles: ['grammar', 'article', 'plural', 'ipa'] },
+        'fr': { toggles: ['grammar', 'article', 'plural', 'gender', 'ipa'] },
+        'de': { toggles: ['grammar', 'article', 'plural', 'gender', 'ipa'] },
+        'it': { toggles: ['grammar', 'article', 'plural', 'gender', 'ipa'] },
+        'ru': { toggles: ['grammar', 'plural', 'gender', 'latin', 'ipa'] },
+        'zh': { toggles: ['grammar', 'traditional', 'pinyin'] },
+        'ja': { toggles: ['grammar', 'hiragana'] },
+        'ko': { toggles: ['grammar', 'hanja'] }
     };
 
     const toggleLabels = { 
+        'grammar': 'Grammar',
         'plural':'Plural', 'article':'Article', 'gender':'Gender', 
         'pinyin':'Pinyin', 'latin':'Latin', 'ipa':'IPA',
         'hiragana':'Hiragana', 'hanja':'Hanja', 'traditional':'Traditional' 
     };
 
-    let toggleState = { plural:false, article:false, gender:false, pinyin:false, latin:false, ipa:false, hiragana:false, hanja:false, traditional:false };
-    
-    // Semantic Colors (Bars)
+    let toggleState = { grammar: false, plural:false, article:false, gender:false, pinyin:false, latin:false, ipa:false, hiragana:false, hanja:false, traditional:false };
     const colors = { animal: '#7CB342', food: '#FDD835', body: '#42A5F5', home: '#EF5350', act: '#AB47BC' };
 
     fetch('data.json').then(res => res.json()).then(data => { 
@@ -284,9 +297,7 @@
         let subText = '';
         if (toggleState.pinyin && raw.py) subText = raw.py;
         if (toggleState.latin && raw.lt) subText = raw.lt;
-        // IPA Logic: Overrides Latin/Pinyin if enabled
         if (toggleState.ipa && raw.ipa) subText = `[${raw.ipa}]`;
-        
         if (currentLang === 'ja' && toggleState.hiragana && raw.r) subText = `(${raw.r})`;
         if (currentLang === 'ko' && toggleState.hanja && raw.hj) { subText = `(${mainText})`; mainText = raw.hj; }
 
@@ -300,9 +311,9 @@
         document.getElementById('grid').innerHTML = deck.map(card => {
             const txt = getTextDisplay(card);
             const col = colors[card.cat] || '#ccc';
-            // POS Badge Logic
             const posClass = `pos-${card.pos || 'noun'}`;
             const posLabel = card.pos || '';
+            const grammarVisibility = toggleState.grammar ? 'show-grammar' : '';
 
             return `
             <div class="vocab-card" onclick="startChildAt('${card.id}')">
@@ -310,11 +321,12 @@
                     <div class="card-front">
                         <div class="flip-btn" onclick="flipCard(event, '${card.id}')">🔄</div>
                         <div class="card-art"><img src="${card.img}" onerror="this.src='https://via.placeholder.com/300'" loading="lazy"></div>
-                        <div class="card-obi">
+                        <div class="card-obi ${grammarVisibility}">
                             <div class="word-row">
                                 <div class="word ${fontClass}">${txt.main}</div>
-                                <div class="pos-badge ${posClass}">${posLabel}</div>
                             </div>
+                            <div class="pos-badge ${posClass}">${posLabel}</div>
+                            
                             ${txt.sub ? `<div class="sub-word">${txt.sub}</div>` : ''}
                             ${txt.gender ? `<div class="gender-badge">${txt.gender}</div>` : ''}
                             <div class="color-stroke" style="background:${col}"></div>
@@ -353,10 +365,10 @@
         document.getElementById('c-gender').innerText = txt.gender;
         document.getElementById('c-stripe').style.background = col;
         
-        // Update POS Badge in Child Mode
         const posEl = document.getElementById('c-pos');
         posEl.className = `pos-badge pos-${card.pos || 'noun'}`;
         posEl.innerText = card.pos || '';
+        posEl.style.display = toggleState.grammar ? 'inline-block' : 'none';
     }
 
     // --- UTILS ---
