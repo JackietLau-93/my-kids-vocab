@@ -3,194 +3,180 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>TinyVocab Zen</title>
+<title>TinyVocab Seamless</title>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Zen+Maru+Gothic:wght@500;700&display=swap" rel="stylesheet">
 <style>
     :root {
-        /* Palette: Muted, Natural Japanese Tones */
-        --c-animal: #7CB342; /* Matcha Green */
-        --c-food:   #FDD835; /* Yuzu Yellow */
-        --c-body:   #42A5F5; /* Indigo Blue */
-        --c-home:   #EF5350; /* Shrine Red */
-        --c-act:    #AB47BC; /* Iris Purple */
+        --c-animal: #7CB342; /* Matcha */
+        --c-food:   #FDD835; /* Yuzu */
+        --c-body:   #42A5F5; /* Sky */
+        --c-home:   #EF5350; /* Shrine */
+        --c-act:    #AB47BC; /* Iris */
         
-        --bg: #FAFAFA; /* Off-white paper background */
-        --card-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        --bg: #F2F2F2; 
+        --card-bg: #FFFFFF; /* Pure White is critical here */
     }
 
     body { 
-        font-family: 'Zen Maru Gothic', sans-serif; /* Soft, rounded Japanese-style font */
+        font-family: 'Zen Maru Gothic', sans-serif; 
         background: var(--bg); 
         margin: 0; 
-        color: #444;
+        color: #333;
         -webkit-font-smoothing: antialiased;
     }
 
     /* --- HEADER --- */
     header { 
-        background: rgba(255,255,255,0.9); backdrop-filter: blur(10px);
+        background: rgba(255,255,255,0.95);
         padding: 15px 20px; 
         display: flex; justify-content: space-between; align-items: center; 
         position: sticky; top: 0; z-index: 100;
-        border-bottom: 1px solid #eee;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     }
-    
-    .btn { 
-        padding: 8px 16px; border: 1px solid #ddd; border-radius: 20px; 
-        cursor: pointer; font-family: 'Fredoka One'; font-size: 0.85rem;
-        background: white; color: #555; transition: all 0.2s;
-    }
-    .btn:hover { background: #f5f5f5; transform: translateY(-1px); }
+    .btn { padding: 8px 16px; border: 1px solid #ddd; border-radius: 20px; cursor: pointer; background: white; font-family: 'Fredoka One'; color: #555; }
     .btn-primary { background: #333; color: white; border-color: #333; }
 
     /* --- GRID --- */
     .container { max-width: 1200px; margin: 0 auto; padding: 30px 20px; }
-    .card-grid { 
-        display: grid; 
-        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); 
-        gap: 30px; 
-    }
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 25px; }
     
-    /* --- THE ZEN CARD --- */
+    /* --- SEAMLESS CARD DESIGN --- */
     .vocab-card {
         aspect-ratio: 3/4;
-        background: white; 
-        border-radius: 16px; /* Soft rounding */
+        background: var(--card-bg); 
+        border-radius: 16px; 
         overflow: hidden;
-        box-shadow: var(--card-shadow); 
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.06); /* Soft lift */
+        transition: transform 0.3s ease;
         display: flex; flex-direction: column;
-        position: relative;
         cursor: pointer;
+        position: relative;
     }
-    .vocab-card:hover { transform: translateY(-8px); box-shadow: 0 15px 40px rgba(0,0,0,0.12); }
+    .vocab-card:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
 
-    /* The Artwork Area - Full Bleed Feel */
+    /* SEAMLESS MAGIC: 
+       We remove drop-shadow filters on the image itself.
+       We use mix-blend-mode: multiply to make white pixels transparent.
+    */
     .card-art {
-        flex: 1; /* Takes up all available space */
+        flex: 1; 
         width: 100%;
         display: flex; align-items: center; justify-content: center;
-        padding: 20px; box-sizing: border-box;
-        background: white;
+        padding: 15px; box-sizing: border-box;
+        background: var(--card-bg);
     }
     .card-art img { 
         max-width: 100%; max-height: 100%; 
         object-fit: contain; 
-        filter: drop-shadow(0 5px 15px rgba(0,0,0,0.05)); /* Subtle depth */
+        /* This is the secret sauce: */
+        mix-blend-mode: multiply; 
     }
 
-    /* The "Obi" (Sash) Text Area */
     .card-obi {
-        height: 60px; /* Fixed height for text */
+        height: 60px; 
         display: flex; align-items: center; justify-content: center;
-        background: white;
+        background: var(--card-bg);
         position: relative;
     }
     
-    /* The Colored Stroke at the bottom */
     .color-stroke {
         position: absolute; bottom: 0; left: 0; width: 100%; height: 6px;
     }
-
+    
     .word { 
         font-family: 'Fredoka One'; 
-        font-size: 1.8rem; 
+        font-size: 1.6rem; 
         color: #333; 
         text-transform: lowercase; 
-        margin-bottom: 6px; /* Lift slightly above the stroke */
+        margin-bottom: 6px; 
     }
 
     /* --- CHILD MODE --- */
     #child-mode { 
         position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
-        background: white; z-index: 200; 
+        background: #fff; z-index: 200; 
         display: flex; flex-direction: column; align-items: center; justify-content: center; 
     }
     .focus-card {
         width: 85vw; max-width: 400px; aspect-ratio: 3/4;
         background: white; border-radius: 30px;
-        box-shadow: 0 30px 80px rgba(0,0,0,0.1);
+        box-shadow: 0 20px 60px rgba(0,0,0,0.1);
         display: flex; flex-direction: column; overflow: hidden;
-        position: relative;
     }
-    .focus-card img { flex: 1; object-fit: contain; padding: 40px; }
+    .focus-card img { 
+        flex: 1; object-fit: contain; padding: 40px; 
+        mix-blend-mode: multiply; /* Applied here too */
+    }
     .focus-card .word-box { height: 100px; display: flex; align-items: center; justify-content: center; }
     .focus-card h1 { font-family: 'Fredoka One'; font-size: 3.5rem; margin: 0; color: #333; }
-    .focus-stripe { height: 12px; width: 100%; }
+    .focus-stripe { height: 10px; width: 100%; }
 
-    .controls { margin-top: 40px; display: flex; gap: 20px; }
+    .controls { margin-top: 30px; display: flex; gap: 20px; }
     .nav-btn { width: 70px; height: 70px; border-radius: 50%; border: none; font-size: 2rem; background: #f5f5f5; cursor: pointer; color: #333; }
-    .play-btn { width: 90px; height: 90px; font-size: 3rem; background: #333; color: white; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+    .play-btn { width: 90px; height: 90px; font-size: 3rem; background: #333; color: white; }
 
     /* --- PRINT STYLES --- */
     #print-area { display: none; }
     
     @media print {
-        @page { margin: 0; size: auto; }
+        @page { margin: 0; }
         body { background: white; -webkit-print-color-adjust: exact; }
         header, .container, #child-mode { display: none !important; }
         #print-area { display: block !important; width: 100%; height: 100%; }
         
-        /* CUTTING GUIDES */
         .cut-guide {
-            border: 1px dashed #e0e0e0; /* Very faint gray line for cutting */
+            border: 1px dashed #e0e0e0; /* Faint cut line */
             box-sizing: border-box;
             background: white;
             position: relative;
             display: flex; flex-direction: column;
-            border-radius: 8px; /* Slight rounded corners for the guide */
+            border-radius: 6px;
         }
 
         /* POKER LAYOUT */
         .grid-poker { 
             display: grid; grid-template-columns: repeat(3, 63.5mm); grid-template-rows: repeat(3, 88.9mm); 
-            padding: 10mm; gap: 2mm; /* Slight gap for scissors */
+            padding: 10mm; gap: 2mm; 
         }
         .grid-poker .cut-guide { width: 63.5mm; height: 88.9mm; }
         .grid-poker img { flex: 1; width: 100%; object-fit: contain; padding: 10px; }
-        .grid-poker .txt { height: 20mm; display: flex; align-items: center; justify-content: center; font-family: 'Fredoka One'; font-size: 18pt; color: #333; margin-bottom: 2mm;}
+        .grid-poker .txt { height: 20mm; display: flex; align-items: center; justify-content: center; font-family: 'Fredoka One'; font-size: 16pt; color: #333; margin-bottom: 2mm;}
         .grid-poker .bar { height: 3mm; width: 100%; position: absolute; bottom: 0; left: 0; }
 
         /* A4 LAYOUT */
         .layout-a4 .page { break-after: page; width: 100vw; height: 100vh; display: flex; align-items: center; justify-content: center; }
         .layout-a4 .cut-guide { 
             width: 260mm; height: 180mm; 
-            border: none; /* No border needed for A4 poster */
-            flex-direction: row; 
+            border: none; flex-direction: row; 
         }
-        .layout-a4 img { flex: 2; object-fit: contain; padding: 20px; }
+        .layout-a4 img { flex: 2; object-fit: contain; padding: 0; }
         .layout-a4 .txt { flex: 1; display: flex; align-items: center; justify-content: center; font-family: 'Fredoka One'; font-size: 90pt; color: #333; }
-        .layout-a4 .bar { width: 15px; height: 100%; position: static; } /* Vertical bar for A4 */
+        .layout-a4 .bar { width: 15px; height: 100%; position: static; }
     }
 </style>
 </head>
 <body>
 
 <header>
-    <div style="font-weight:bold; font-size:1.2rem; color:#333; display:flex; align-items:center; gap:10px;">
-        🦁 <span style="font-family:'Fredoka One'">TinyVocab</span>
-    </div>
+    <div style="font-weight:bold; font-size:1.2rem; color:#333; font-family:'Fredoka One'">🦁 TinyVocab</div>
     <div style="display:flex; gap:8px">
-        <button class="btn" onclick="printA4()">🖨️ Poster</button>
-        <button class="btn" onclick="printPoker()">🖨️ Cards</button>
+        <button class="btn" onclick="printA4()">Poster</button>
+        <button class="btn" onclick="printPoker()">Cards</button>
         <button class="btn btn-primary" onclick="startChild()">▶ Child Mode</button>
     </div>
 </header>
 
 <div class="container">
-    <div id="loading" style="text-align:center; color:#999; margin-top:50px;">Loading gallery...</div>
     <div class="card-grid" id="grid"></div>
 </div>
 
 <div id="child-mode" style="display:none;">
     <button onclick="exitChild()" style="position:absolute; top:30px; right:30px; border:none; background:none; font-size:2rem; opacity:0.3; cursor:pointer;">✕</button>
-    
     <div class="focus-card" id="focus-display">
         <img id="c-img" src="">
         <div class="word-box"><h1 id="c-word">Word</h1></div>
         <div class="focus-stripe" id="c-stripe"></div>
     </div>
-
     <div class="controls">
         <button class="nav-btn" onclick="move(-1)">👈</button>
         <button class="nav-btn play-btn" onclick="speakDrill()">🔊</button>
@@ -203,18 +189,9 @@
 <script>
     let deck = [];
     let currentIndex = 0;
-    const colors = { 
-        animal: '#7CB342', food: '#FDD835', body: '#42A5F5', 
-        home: '#EF5350', act: '#AB47BC' 
-    };
+    const colors = { animal: '#7CB342', food: '#FDD835', body: '#42A5F5', home: '#EF5350', act: '#AB47BC' };
 
-    fetch('data.json')
-        .then(res => res.json())
-        .then(data => {
-            deck = data;
-            document.getElementById('loading').style.display = 'none';
-            renderGrid();
-        });
+    fetch('data.json').then(res => res.json()).then(data => { deck = data; renderGrid(); });
 
     function renderGrid() {
         const grid = document.getElementById('grid');
@@ -222,33 +199,18 @@
             const col = colors[card.cat] || '#ccc';
             return `
             <div class="vocab-card" onclick="startChildAt('${card.word}')">
-                <div class="card-art">
-                    <img src="${card.img}" loading="lazy">
-                </div>
+                <div class="card-art"><img src="${card.img}" loading="lazy"></div>
                 <div class="card-obi">
                     <div class="word">${card.word}</div>
                     <div class="color-stroke" style="background:${col}"></div>
                 </div>
-            </div>
-            `;
+            </div>`;
         }).join('');
     }
 
-    // --- LOGIC (Identical to previous version) ---
-    function startChildAt(word) {
-        currentIndex = deck.findIndex(c => c.word === word);
-        if(currentIndex === -1) currentIndex = 0;
-        startChild();
-    }
-    function startChild() {
-        if(deck.length === 0) return;
-        document.getElementById('child-mode').style.display = 'flex';
-        updateDisplay();
-    }
-    function exitChild() {
-        document.getElementById('child-mode').style.display = 'none';
-        window.speechSynthesis.cancel();
-    }
+    function startChildAt(word) { currentIndex = deck.findIndex(c => c.word === word); startChild(); }
+    function startChild() { if(deck.length>0){ document.getElementById('child-mode').style.display = 'flex'; updateDisplay(); } }
+    function exitChild() { document.getElementById('child-mode').style.display = 'none'; window.speechSynthesis.cancel(); }
     function updateDisplay() {
         const card = deck[currentIndex];
         const col = colors[card.cat] || '#333';
@@ -256,17 +218,10 @@
         document.getElementById('c-word').innerText = card.word;
         document.getElementById('c-stripe').style.background = col;
     }
-    function move(dir) {
-        window.speechSynthesis.cancel();
-        currentIndex = (currentIndex + dir + deck.length) % deck.length;
-        updateDisplay();
-    }
+    function move(dir) { window.speechSynthesis.cancel(); currentIndex = (currentIndex + dir + deck.length) % deck.length; updateDisplay(); }
     
-    // --- SPEECH (UK + DRILL) ---
-    function getUKVoice() {
-        const voices = window.speechSynthesis.getVoices();
-        return voices.find(v => v.lang === 'en-GB' || v.lang === 'en_GB') || voices[0];
-    }
+    // SPEECH DRILL
+    function getUKVoice() { return window.speechSynthesis.getVoices().find(v => v.lang === 'en-GB' || v.lang === 'en_GB') || window.speechSynthesis.getVoices()[0]; }
     function speakDrill() {
         const text = deck[currentIndex].word;
         const voice = getUKVoice();
@@ -276,49 +231,26 @@
         const u2 = new SpeechSynthesisUtterance(text); u2.voice = voice; u2.rate = 0.6; u2.pitch = 1.1;
         const u3 = new SpeechSynthesisUtterance(text); u3.voice = voice; u3.rate = 1.0;
 
-        u1.onend = () => { setTimeout(() => window.speechSynthesis.speak(u2), 800); };
-        u2.onend = () => { setTimeout(() => window.speechSynthesis.speak(u3), 800); };
+        u1.onend = () => setTimeout(() => window.speechSynthesis.speak(u2), 800);
+        u2.onend = () => setTimeout(() => window.speechSynthesis.speak(u3), 800);
         window.speechSynthesis.speak(u1);
     }
     window.speechSynthesis.onvoiceschanged = getUKVoice;
     document.addEventListener('keydown', (e) => {
         if (document.getElementById('child-mode').style.display === 'flex') {
-            if(e.key === 'ArrowRight') move(1);
-            if(e.key === 'ArrowLeft') move(-1);
-            if(e.key === ' ' || e.key === 'Enter') speakDrill();
-            if(e.key === 'Escape') exitChild();
+            if(e.key === 'ArrowRight') move(1); if(e.key === 'ArrowLeft') move(-1); if(e.key === ' ') speakDrill(); if(e.key === 'Escape') exitChild();
         }
     });
 
-    // --- PRINT ENGINE (Zen Layout) ---
+    // PRINT
     function printPoker() {
-        const area = document.getElementById('print-area');
-        area.className = 'grid-poker';
-        area.innerHTML = deck.map(c => {
-            const col = colors[c.cat] || '#999';
-            return `
-            <div class="cut-guide">
-                <img src="${c.img}">
-                <div class="txt">${c.word}</div>
-                <div class="bar" style="background:${col}"></div>
-            </div>`;
-        }).join('');
+        document.getElementById('print-area').className = 'grid-poker';
+        document.getElementById('print-area').innerHTML = deck.map(c => `<div class="cut-guide"><img src="${c.img}"><div class="txt">${c.word}</div><div class="bar" style="background:${colors[c.cat]}"></div></div>`).join('');
         window.print();
     }
     function printA4() {
-        const area = document.getElementById('print-area');
-        area.className = 'layout-a4';
-        area.innerHTML = deck.map(c => {
-            const col = colors[c.cat] || '#999';
-            return `
-            <div class="page">
-                <div class="cut-guide">
-                    <img src="${c.img}">
-                    <div class="bar" style="background:${col}"></div>
-                    <div class="txt">${c.word}</div>
-                </div>
-            </div>`;
-        }).join('');
+        document.getElementById('print-area').className = 'layout-a4';
+        document.getElementById('print-area').innerHTML = deck.map(c => `<div class="page"><div class="cut-guide"><img src="${c.img}"><div class="bar" style="background:${colors[c.cat]}"></div><div class="txt">${c.word}</div></div></div>`).join('');
         window.print();
     }
 </script>
