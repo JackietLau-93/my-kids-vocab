@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>TinyVocab Polyglot</title>
+<title>TinyVocab Grammar</title>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Zen+Maru+Gothic:wght@500;700&display=swap" rel="stylesheet">
 <style>
     :root {
@@ -17,27 +17,36 @@
         margin: 0; color: #333; -webkit-font-smoothing: antialiased;
     }
 
-    /* --- HEADER & CONTROLS --- */
+    /* --- HEADER --- */
     header { 
-        background: rgba(255,255,255,0.95); padding: 15px 20px; 
-        display: flex; justify-content: space-between; align-items: center; 
+        background: rgba(255,255,255,0.98); padding: 15px 20px; 
         position: sticky; top: 0; z-index: 100;
         box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        flex-wrap: wrap; gap: 10px;
+        display: flex; flex-direction: column; gap: 10px;
     }
-    .header-group { display: flex; gap: 8px; align-items: center; }
     
+    .top-row { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+    .controls-row { display: flex; gap: 15px; align-items: center; padding-top: 5px; border-top: 1px solid #f0f0f0; }
+
     .btn { padding: 8px 16px; border: 1px solid #ddd; border-radius: 20px; cursor: pointer; background: white; font-family: 'Fredoka One'; color: #555; font-size: 0.85rem;}
     .btn-primary { background: #333; color: white; border-color: #333; }
     
-    /* Language Select Dropdown */
     #lang-select {
         padding: 8px 12px; border: 1px solid #ddd; border-radius: 20px;
-        font-family: 'Zen Maru Gothic'; font-weight: bold; color: #333;
-        background: white; cursor: pointer; outline: none;
+        font-family: 'Zen Maru Gothic'; font-weight: bold; color: #333; background: white; outline: none;
     }
 
-    /* --- GRID & CARD --- */
+    /* TOGGLE SWITCH STYLES */
+    .toggle-group { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; font-weight: bold; color: #555; cursor: pointer; }
+    .switch { position: relative; display: inline-block; width: 40px; height: 24px; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+    .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+    input:checked + .slider { background-color: #333; }
+    input:checked + .slider:before { transform: translateX(16px); }
+    .hidden { display: none !important; }
+
+    /* --- GRID --- */
     .container { max-width: 1200px; margin: 0 auto; padding: 30px 20px; }
     .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 25px; }
     
@@ -49,20 +58,23 @@
     }
     .vocab-card:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
 
-    .card-art { flex: 1; width: 100%; display: flex; align-items: center; justify-content: center; padding: 15px; box-sizing: border-box; background: var(--card-bg); }
+    .card-art { flex: 1; width: 100%; display: flex; align-items: center; justify-content: center; padding: 15px; box-sizing: border-box; }
     .card-art img { max-width: 100%; max-height: 100%; object-fit: contain; filter: brightness(1.03) contrast(1.03); mix-blend-mode: multiply; }
 
-    .card-obi { height: 60px; display: flex; align-items: center; justify-content: center; background: var(--card-bg); position: relative; }
+    .card-obi { min-height: 70px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding-bottom: 5px; position: relative; }
     .color-stroke { position: absolute; bottom: 0; left: 0; width: 100%; height: 6px; }
-    .word { font-family: 'Fredoka One'; font-size: 1.6rem; color: #333; margin-bottom: 6px; }
+    .word { font-family: 'Fredoka One'; font-size: 1.6rem; color: #333; text-align: center; line-height: 1.1; }
+    .sub-word { font-size: 0.9rem; color: #888; font-family: 'Zen Maru Gothic'; margin-top: 2px; }
 
     /* --- CHILD MODE --- */
     #child-mode { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #fff; z-index: 200; display: flex; flex-direction: column; align-items: center; justify-content: center; }
     .focus-card { width: 85vw; max-width: 400px; aspect-ratio: 3/4; background: white; border-radius: 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.1); display: flex; flex-direction: column; overflow: hidden; }
     .focus-card img { flex: 1; object-fit: contain; padding: 40px; filter: brightness(1.03) contrast(1.03); mix-blend-mode: multiply; }
-    .focus-card .word-box { height: 100px; display: flex; align-items: center; justify-content: center; }
-    .focus-card h1 { font-family: 'Fredoka One'; font-size: 3.5rem; margin: 0; color: #333; }
+    .focus-card .word-box { height: 120px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+    .focus-card h1 { font-family: 'Fredoka One'; font-size: 3rem; margin: 0; color: #333; line-height: 1; }
+    .focus-card h2 { font-family: 'Zen Maru Gothic'; font-size: 1.5rem; margin: 5px 0 0 0; color: #888; font-weight: normal; }
     .focus-stripe { height: 10px; width: 100%; }
+    
     .controls { margin-top: 30px; display: flex; gap: 20px; }
     .nav-btn { width: 70px; height: 70px; border-radius: 50%; border: none; font-size: 2rem; background: #f5f5f5; cursor: pointer; color: #333; }
     .play-btn { width: 90px; height: 90px; font-size: 3rem; background: #333; color: white; }
@@ -70,20 +82,20 @@
     /* --- PRINT STYLES --- */
     #print-area { display: none; }
     @media print {
-        @page { margin: 0; }
-        body { background: white; -webkit-print-color-adjust: exact; }
         header, .container, #child-mode { display: none !important; }
         #print-area { display: block !important; width: 100%; height: 100%; }
+        /* Clean white print layout */
         .cut-guide { border: 1px dashed #e0e0e0; box-sizing: border-box; background: white; position: relative; display: flex; flex-direction: column; border-radius: 6px; }
         .grid-poker { display: grid; grid-template-columns: repeat(3, 63.5mm); grid-template-rows: repeat(3, 88.9mm); padding: 10mm; gap: 2mm; }
         .grid-poker .cut-guide { width: 63.5mm; height: 88.9mm; }
         .grid-poker img { flex: 1; width: 100%; object-fit: contain; padding: 10px; }
-        .grid-poker .txt { height: 20mm; display: flex; align-items: center; justify-content: center; font-family: 'Fredoka One'; font-size: 16pt; color: #333; margin-bottom: 2mm;}
+        .grid-poker .txt { height: 20mm; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: 'Fredoka One'; font-size: 16pt; color: #333; margin-bottom: 2mm; text-align: center;}
         .grid-poker .bar { height: 3mm; width: 100%; position: absolute; bottom: 0; left: 0; }
+        
         .layout-a4 .page { break-after: page; width: 100vw; height: 100vh; display: flex; align-items: center; justify-content: center; }
         .layout-a4 .cut-guide { width: 260mm; height: 180mm; border: none; flex-direction: row; }
         .layout-a4 img { flex: 2; object-fit: contain; padding: 0; }
-        .layout-a4 .txt { flex: 1; display: flex; align-items: center; justify-content: center; font-family: 'Fredoka One'; font-size: 90pt; color: #333; }
+        .layout-a4 .txt { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: 'Fredoka One'; font-size: 70pt; color: #333; text-align: center; }
         .layout-a4 .bar { width: 15px; height: 100%; position: static; }
     }
 </style>
@@ -91,25 +103,35 @@
 <body>
 
 <header>
-    <div class="header-group" style="font-weight:bold; font-size:1.2rem; color:#333; font-family:'Fredoka One'">
-        🦁 TinyVocab
-    </div>
-    
-    <div class="header-group">
+    <div class="top-row">
+        <div style="font-weight:bold; font-size:1.2rem; color:#333; font-family:'Fredoka One'">🦁 TinyVocab</div>
         <select id="lang-select">
             <option value="en">🇬🇧 English</option>
-            <option value="zh">🇨🇳 Chinese</option>
             <option value="fr">🇫🇷 French</option>
             <option value="de">🇩🇪 German</option>
             <option value="it">🇮🇹 Italian</option>
             <option value="ru">🇷🇺 Russian</option>
+            <option value="zh">🇨🇳 Chinese</option>
             <option value="ja">🇯🇵 Japanese</option>
             <option value="ko">🇰🇷 Korean</option>
         </select>
+        <div style="display:flex; gap:8px;">
+            <button class="btn" onclick="printA4()">Poster</button>
+            <button class="btn" onclick="printPoker()">Cards</button>
+            <button class="btn btn-primary" onclick="startChild()">▶ Child Mode</button>
+        </div>
+    </div>
+    
+    <div class="controls-row">
+        <label class="toggle-group" id="ctrl-plural">
+            <span class="switch"><input type="checkbox" id="tog-plural"><span class="slider"></span></span>
+            Many (Plural)
+        </label>
         
-        <button class="btn" onclick="printA4()">Poster</button>
-        <button class="btn" onclick="printPoker()">Cards</button>
-        <button class="btn btn-primary" onclick="startChild()">▶ Child Mode</button>
+        <label class="toggle-group" id="ctrl-detail">
+            <span class="switch"><input type="checkbox" id="tog-detail"><span class="slider"></span></span>
+            <span id="lbl-detail">Show Article</span>
+        </label>
     </div>
 </header>
 
@@ -121,7 +143,10 @@
     <button onclick="exitChild()" style="position:absolute; top:30px; right:30px; border:none; background:none; font-size:2rem; opacity:0.3; cursor:pointer;">✕</button>
     <div class="focus-card" id="focus-display">
         <img id="c-img" src="">
-        <div class="word-box"><h1 id="c-word">Word</h1></div>
+        <div class="word-box">
+            <h1 id="c-word">Word</h1>
+            <h2 id="c-sub"></h2>
+        </div>
         <div class="focus-stripe" id="c-stripe"></div>
     </div>
     <div class="controls">
@@ -136,154 +161,163 @@
 <script>
     let deck = [];
     let currentIndex = 0;
-    let currentLang = 'en'; // Default language
+    let currentLang = 'en';
 
-    // Language & Voice Configuration
-    const langConfig = {
-        'en': { locale: 'en-GB' }, // UK English
-        'zh': { locale: 'zh-CN' }, // Mainland China
-        'fr': { locale: 'fr-FR' }, // France
-        'de': { locale: 'de-DE' }, // Germany
-        'it': { locale: 'it-IT' }, // Italy
-        'ru': { locale: 'ru-RU' }, // Russia
-        'ja': { locale: 'ja-JP' }, // Standard Japanese
-        'ko': { locale: 'ko-KR' }  // South Korea
+    // Config: Which languages support which features
+    const features = {
+        'en': { plural: true, detail: 'Show Article' },
+        'fr': { plural: true, detail: 'Show Gender' },
+        'de': { plural: true, detail: 'Show Gender' },
+        'it': { plural: true, detail: 'Show Gender' },
+        'ru': { plural: true, detail: 'Show Gender' }, // Russian cases are complex, we treat detail as gender article hint if added, or keep simple
+        'zh': { plural: false, detail: null },
+        'ja': { plural: false, detail: 'Hiragana' },
+        'ko': { plural: false, detail: null }
     };
 
     const colors = { animal: '#7CB342', food: '#FDD835', body: '#42A5F5', home: '#EF5350', act: '#AB47BC' };
 
     // Load Data
-    fetch('data.json').then(res => res.json()).then(data => { 
-        deck = data; 
-        renderGrid(); 
-    });
+    fetch('data.json').then(res => res.json()).then(data => { deck = data; updateUIControls(); renderGrid(); });
 
-    // Handle Language Change
-    document.getElementById('lang-select').addEventListener('change', (e) => {
+    // UI Logic
+    const langSelect = document.getElementById('lang-select');
+    const togPlural = document.getElementById('tog-plural');
+    const togDetail = document.getElementById('tog-detail');
+
+    langSelect.addEventListener('change', (e) => {
         currentLang = e.target.value;
-        renderGrid(); // Re-render the main grid
-        if(document.getElementById('child-mode').style.display === 'flex') {
-            updateDisplay(); // Update child mode if open
-        }
+        togPlural.checked = false; // Reset toggles on lang change
+        togDetail.checked = false;
+        updateUIControls();
+        renderGrid();
     });
 
-    // Render Main Grid based on selected language
+    [togPlural, togDetail].forEach(t => t.addEventListener('change', () => {
+        renderGrid();
+        if(document.getElementById('child-mode').style.display === 'flex') updateDisplay();
+    }));
+
+    function updateUIControls() {
+        const feat = features[currentLang];
+        // Show/Hide Plural Toggle
+        document.getElementById('ctrl-plural').classList.toggle('hidden', !feat.plural);
+        
+        // Show/Hide Detail Toggle & update label
+        const detailCtrl = document.getElementById('ctrl-detail');
+        if (feat.detail) {
+            detailCtrl.classList.remove('hidden');
+            document.getElementById('lbl-detail').innerText = feat.detail;
+        } else {
+            detailCtrl.classList.add('hidden');
+        }
+    }
+
+    // --- TEXT GENERATION LOGIC ---
+    function getTextDisplay(card) {
+        const data = card.translations[currentLang];
+        if (!data) return { main: card.translations['en'].n, sub: '' }; // Fallback
+
+        let mainText = data.n; // Default: Noun
+        let subText = '';
+
+        // 1. Handle Plural
+        if (togPlural.checked && features[currentLang].plural && data.p) {
+            mainText = data.p;
+        } 
+        // 2. Handle Details (Articles / Readings)
+        else if (togDetail.checked && features[currentLang].detail) {
+            if (currentLang === 'ja' && data.r) {
+                // Japanese: Kanji + Hiragana
+                mainText = `${data.n}`;
+                subText = `(${data.r})`; 
+            } else if (data.art) {
+                // European: Article + Noun
+                mainText = `${data.art} ${data.n}`;
+            }
+        }
+
+        return { main: mainText, sub: subText };
+    }
+
     function renderGrid() {
-        const grid = document.getElementById('grid');
-        grid.innerHTML = deck.map(card => {
-            const col = colors[card.cat] || '#ccc';
-            // Get the word in the current language, fallback to English if missing
-            const displayWord = card.translations[currentLang] || card.translations['en'];
+        document.getElementById('grid').innerHTML = deck.map(card => {
+            const txt = getTextDisplay(card);
+            const col = colors[card.cat];
             return `
             <div class="vocab-card" onclick="startChildAt('${card.id}')">
                 <div class="card-art"><img src="${card.img}" loading="lazy"></div>
                 <div class="card-obi">
-                    <div class="word">${displayWord}</div>
+                    <div class="word">${txt.main}</div>
+                    ${txt.sub ? `<div class="sub-word">${txt.sub}</div>` : ''}
                     <div class="color-stroke" style="background:${col}"></div>
                 </div>
             </div>`;
         }).join('');
     }
 
-    // --- Child Mode Logic ---
+    // --- CHILD MODE ---
     function startChildAt(id) { currentIndex = deck.findIndex(c => c.id === id); startChild(); }
     function startChild() { if(deck.length>0){ document.getElementById('child-mode').style.display = 'flex'; updateDisplay(); } }
     function exitChild() { document.getElementById('child-mode').style.display = 'none'; window.speechSynthesis.cancel(); }
     
     function updateDisplay() {
         const card = deck[currentIndex];
+        const txt = getTextDisplay(card);
         const col = colors[card.cat] || '#333';
-        const displayWord = card.translations[currentLang] || card.translations['en'];
         
         document.getElementById('c-img').src = card.img;
-        document.getElementById('c-word').innerText = displayWord;
+        document.getElementById('c-word').innerText = txt.main;
+        document.getElementById('c-sub').innerText = txt.sub;
         document.getElementById('c-stripe').style.background = col;
-        
-        // Adjust font size for some languages if needed
-        const wordBox = document.getElementById('c-word');
-        wordBox.style.fontSize = (currentLang === 'zh' || currentLang === 'ja' || currentLang === 'ko') ? '4rem' : '3.5rem';
     }
     function move(dir) { window.speechSynthesis.cancel(); currentIndex = (currentIndex + dir + deck.length) % deck.length; updateDisplay(); }
-    
-    // --- Smart Voice Selection ---
-    function getVoice(langCode) {
-        const targetLocale = langConfig[langCode].locale;
-        const voices = window.speechSynthesis.getVoices();
-        
-        // 1. Try to find an exact locale match (e.g., 'fr-FR')
-        // Some browsers use underscores instead of dashes, so we check both.
-        let voice = voices.find(v => v.lang === targetLocale || v.lang.replace('_', '-') === targetLocale);
-        
-        // 2. If no exact match, fallback to any voice in that language (e.g., any 'fr')
-        if (!voice) {
-            const shortLang = targetLocale.split('-')[0];
-            voice = voices.find(v => v.lang.startsWith(shortLang));
-        }
-        
-        // 3. Final fallback to the first available voice (rarely needed on modern devices)
-        return voice || voices[0];
-    }
 
-    // Multilingual Speech Drill
+    // --- SPEECH ---
     function speakDrill() {
         const card = deck[currentIndex];
-        // Get text in current language
-        const text = card.translations[currentLang] || card.translations['en'];
-        // Find the best voice for the current language
-        const voice = getVoice(currentLang);
+        const txt = getTextDisplay(card);
+        const textToSpeak = txt.main; // Speak what is shown (e.g., "Dogs" or "Le Chien")
+        
+        // Basic locale mapping
+        const locales = { 'en':'en-GB', 'fr':'fr-FR', 'de':'de-DE', 'it':'it-IT', 'ru':'ru-RU', 'zh':'zh-CN', 'ja':'ja-JP', 'ko':'ko-KR' };
+        const voice = window.speechSynthesis.getVoices().find(v => v.lang.includes(locales[currentLang])) || window.speechSynthesis.getVoices()[0];
         
         window.speechSynthesis.cancel();
-        
-        // Normal Speed
-        const u1 = new SpeechSynthesisUtterance(text); u1.voice = voice; u1.rate = 1.0;
-        // Slow Speed (drilling)
-        const u2 = new SpeechSynthesisUtterance(text); u2.voice = voice; u2.rate = 0.6; 
-        // Normal Speed (reinforcement)
-        const u3 = new SpeechSynthesisUtterance(text); u3.voice = voice; u3.rate = 1.0;
-
-        // For Asian languages, pitch adjustment isn't as necessary for clarity and can sound unnatural.
-        if(!['zh', 'ja', 'ko'].includes(currentLang)) {
-             u2.pitch = 1.1;
-        }
-
-        u1.onend = () => setTimeout(() => window.speechSynthesis.speak(u2), 800);
-        u2.onend = () => setTimeout(() => window.speechSynthesis.speak(u3), 800);
-        window.speechSynthesis.speak(u1);
+        const u = new SpeechSynthesisUtterance(textToSpeak);
+        u.voice = voice;
+        u.rate = 0.9;
+        window.speechSynthesis.speak(u);
     }
 
-    // Ensure voices are loaded before we try to use them
-    window.speechSynthesis.onvoiceschanged = () => {
-        // This empty function triggers the browser to load voice list.
-        // We call getVoice() later when the button is actually pressed.
-    };
-
-    document.addEventListener('keydown', (e) => {
-        if (document.getElementById('child-mode').style.display === 'flex') {
-            if(e.key === 'ArrowRight') move(1); if(e.key === 'ArrowLeft') move(-1); if(e.key === ' ') speakDrill(); if(e.key === 'Escape') exitChild();
-        }
-    });
-
-    // --- Multilingual Printing ---
-    function getPrintHTML(layoutClass, cardTemplateFn) {
-        document.getElementById('print-area').className = layoutClass;
-        document.getElementById('print-area').innerHTML = deck.map(card => {
-            const col = colors[card.cat];
-            // Use current language for print output
-            const txt = card.translations[currentLang] || card.translations['en'];
-            return cardTemplateFn(card.img, txt, col);
+    // --- PRINTING ---
+    function printPoker() {
+        document.getElementById('print-area').className = 'grid-poker';
+        document.getElementById('print-area').innerHTML = deck.map(c => {
+            const txt = getTextDisplay(c);
+            return `<div class="cut-guide"><img src="${c.img}">
+                <div class="txt">
+                    <div>${txt.main}</div>
+                    ${txt.sub ? `<div style="font-size:0.5em; color:#666;">${txt.sub}</div>` : ''}
+                </div>
+                <div class="bar" style="background:${colors[c.cat]}"></div>
+            </div>`;
         }).join('');
         window.print();
     }
 
-    function printPoker() {
-        getPrintHTML('grid-poker', (img, txt, col) => `
-            <div class="cut-guide"><img src="${img}"><div class="txt">${txt}</div><div class="bar" style="background:${col}"></div></div>
-        `);
-    }
     function printA4() {
-        getPrintHTML('layout-a4', (img, txt, col) => `
-            <div class="page"><div class="cut-guide"><img src="${img}"><div class="bar" style="background:${col}"></div><div class="txt" style="${['zh','ja','ko'].includes(currentLang)?'font-size:70pt;':''}">${txt}</div></div></div>
-        `);
+        document.getElementById('print-area').className = 'layout-a4';
+        document.getElementById('print-area').innerHTML = deck.map(c => {
+            const txt = getTextDisplay(c);
+            return `<div class="page"><div class="cut-guide"><img src="${c.img}"><div class="bar" style="background:${colors[c.cat]}"></div>
+                <div class="txt">
+                    <div>${txt.main}</div>
+                    ${txt.sub ? `<div style="font-size:0.4em; color:#666;">${txt.sub}</div>` : ''}
+                </div>
+            </div></div>`;
+        }).join('');
+        window.print();
     }
 </script>
 </body>
