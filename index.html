@@ -3,8 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>TinyVocab Flip</title>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Zen+Maru+Gothic:wght@500;700&display=swap" rel="stylesheet">
+<title>TinyVocab Ultimate</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Jua&family=Noto+Sans+TC:wght@700&family=ZCOOL+KuaiLe&family=Zen+Maru+Gothic:wght@500;700&display=swap" rel="stylesheet">
+
 <style>
     :root {
         --c-animal: #7CB342; --c-food: #FDD835; --c-body: #42A5F5; 
@@ -21,6 +25,13 @@
         font-family: 'Zen Maru Gothic', sans-serif; background: var(--bg); 
         margin: 0; color: #333; -webkit-font-smoothing: antialiased;
     }
+
+    /* --- LANGUAGE SPECIFIC FONTS --- */
+    .font-en, .font-fr, .font-de, .font-it, .font-ru { font-family: 'Fredoka One', cursive; }
+    .font-ja { font-family: 'Zen Maru Gothic', sans-serif; font-weight: 700; }
+    .font-ko { font-family: 'Jua', sans-serif; }
+    .font-zh-cn { font-family: 'ZCOOL KuaiLe', cursive; letter-spacing: 1px; }
+    .font-zh-tw { font-family: 'Noto Sans TC', sans-serif; font-weight: 700; }
 
     /* --- HEADER --- */
     header { 
@@ -87,10 +98,6 @@
         display: flex; flex-direction: column;
     }
 
-    .card-front {
-        /* Default front style */
-    }
-
     .card-back {
         transform: rotateY(180deg);
         background: #fdfdfd;
@@ -105,9 +112,9 @@
     .card-obi { min-height: 80px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding-bottom: 5px; position: relative; }
     .color-stroke { position: absolute; bottom: 0; left: 0; width: 100%; height: 6px; }
     
-    .word { font-family: 'Fredoka One'; font-size: 1.6rem; color: #333; text-align: center; line-height: 1.1; margin-bottom: 2px;}
+    .word { font-size: 1.8rem; color: #333; text-align: center; line-height: 1.2; margin-bottom: 2px;}
     .sub-word { font-size: 0.9rem; color: #777; font-family: 'Zen Maru Gothic'; text-align: center; font-weight: 500;}
-    .gender-badge { font-size: 0.75rem; color: #999; font-style: italic; margin-top: 2px; }
+    .gender-badge { font-size: 0.75rem; color: #999; font-style: italic; margin-top: 2px; font-family: 'Zen Maru Gothic';}
 
     /* FLIP BUTTON */
     .flip-btn {
@@ -146,7 +153,7 @@
     .focus-card { width: 85vw; max-width: 400px; aspect-ratio: 3/4; background: white; border-radius: 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.1); display: flex; flex-direction: column; overflow: hidden; }
     .focus-card img { flex: 1; object-fit: contain; padding: 40px; filter: brightness(1.03) contrast(1.03); mix-blend-mode: multiply; }
     .focus-card .word-box { height: 140px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 10px; box-sizing: border-box;}
-    .focus-card h1 { font-family: 'Fredoka One'; font-size: 3rem; margin: 0; color: #333; line-height: 1; }
+    .focus-card h1 { font-size: 3.5rem; margin: 0; color: #333; line-height: 1; }
     .focus-card h2 { font-family: 'Zen Maru Gothic'; font-size: 1.5rem; margin: 8px 0 0 0; color: #888; font-weight: normal; }
     .focus-stripe { height: 10px; width: 100%; }
     
@@ -163,13 +170,13 @@
         .grid-poker { display: grid; grid-template-columns: repeat(3, 63.5mm); grid-template-rows: repeat(3, 88.9mm); padding: 10mm; gap: 2mm; }
         .grid-poker .cut-guide { width: 63.5mm; height: 88.9mm; }
         .grid-poker img { flex: 1; width: 100%; object-fit: contain; padding: 10px; }
-        .grid-poker .txt { height: 25mm; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: 'Fredoka One'; font-size: 16pt; color: #333; margin-bottom: 2mm; text-align: center;}
+        .grid-poker .txt { height: 25mm; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 18pt; color: #333; margin-bottom: 2mm; text-align: center;}
         .grid-poker .bar { height: 3mm; width: 100%; position: absolute; bottom: 0; left: 0; }
         
         .layout-a4 .page { break-after: page; width: 100vw; height: 100vh; display: flex; align-items: center; justify-content: center; }
         .layout-a4 .cut-guide { width: 260mm; height: 180mm; border: none; flex-direction: row; }
         .layout-a4 img { flex: 2; object-fit: contain; padding: 0; }
-        .layout-a4 .txt { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: 'Fredoka One'; font-size: 70pt; color: #333; text-align: center; }
+        .layout-a4 .txt { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 80pt; color: #333; text-align: center; }
         .layout-a4 .bar { width: 15px; height: 100%; position: static; }
     }
 </style>
@@ -228,7 +235,7 @@
     let currentIndex = 0;
     let currentLang = 'en';
 
-    // Configs
+    // --- CONFIGS ---
     const langConfig = {
         'en': { toggles: ['article', 'plural'] },
         'fr': { toggles: ['article', 'plural', 'gender'] },
@@ -244,7 +251,7 @@
     let toggleState = { plural:false, article:false, gender:false, pinyin:false, latin:false, hiragana:false, hanja:false, traditional:false };
     const colors = { animal: '#7CB342', food: '#FDD835', body: '#42A5F5', home: '#EF5350', act: '#AB47BC' };
 
-    // Initialization
+    // --- INIT ---
     fetch('data.json').then(res => res.json()).then(data => { 
         deck = data; updateControls(); renderGrid(); 
     }).catch(err => console.error(err));
@@ -254,6 +261,14 @@
         Object.keys(toggleState).forEach(k => toggleState[k] = false);
         updateControls(); renderGrid();
     });
+
+    // --- FONT HELPER ---
+    function getFontClass() {
+        if (currentLang === 'ja') return 'font-ja';
+        if (currentLang === 'ko') return 'font-ko';
+        if (currentLang === 'zh') return toggleState.traditional ? 'font-zh-tw' : 'font-zh-cn';
+        return 'font-en'; // Default for En, Fr, De, It, Ru
+    }
 
     // --- CONTROLS UI ---
     function updateControls() {
@@ -301,6 +316,7 @@
         if (!raw || typeof raw === 'string') return { main: raw || '?', sub: '', gender: '' };
 
         let mainText = (currentLang === 'zh' && toggleState.traditional && raw.t) ? raw.t : (raw.n || '?');
+        
         if (toggleState.plural && raw.p) mainText = raw.p;
         if (toggleState.article && !toggleState.plural && raw.art) mainText = `${raw.art} ${mainText}`;
 
@@ -341,13 +357,14 @@
         `;
     }
 
-    // --- RENDER GRID (FLIP CARD) ---
+    // --- RENDER GRID ---
     function renderGrid() {
+        const fontClass = getFontClass();
+        
         document.getElementById('grid').innerHTML = deck.map(card => {
             const txt = getTextDisplay(card);
             const col = colors[card.cat] || '#ccc';
             
-            // Build Back Content (Comparison)
             const comparisonHTML = `
                 <table class="comp-table">
                     ${buildCompRow(card, 'fr', '🇫🇷')}
@@ -364,7 +381,7 @@
                         <div class="flip-btn" onclick="flipCard(event, '${card.id}')">🔄</div>
                         <div class="card-art"><img src="${card.img}" onerror="this.src='https://via.placeholder.com/300'" loading="lazy"></div>
                         <div class="card-obi">
-                            <div class="word">${txt.main}</div>
+                            <div class="word ${fontClass}">${txt.main}</div>
                             ${txt.sub ? `<div class="sub-word">${txt.sub}</div>` : ''}
                             ${txt.gender ? `<div class="gender-badge">${txt.gender}</div>` : ''}
                             <div class="color-stroke" style="background:${col}"></div>
@@ -382,21 +399,18 @@
 
     // Flip Logic
     window.flipCard = function(e, id) {
-        e.stopPropagation(); // Stop it from opening Child Mode
+        e.stopPropagation(); 
         const cardInner = document.getElementById(`card-${id}`);
         const parent = cardInner.parentElement;
-        
-        // Toggle class
         if (parent.classList.contains('flipped')) {
             parent.classList.remove('flipped');
         } else {
-            // Close others (optional, keeps it clean)
             document.querySelectorAll('.vocab-card').forEach(c => c.classList.remove('flipped'));
             parent.classList.add('flipped');
         }
     };
 
-    // --- CHILD MODE & PRINTING (Same as before) ---
+    // --- CHILD MODE ---
     function startChildAt(id) { currentIndex = deck.findIndex(c => c.id === id); startChild(); }
     function startChild() { if(deck.length>0){ document.getElementById('child-mode').style.display = 'flex'; updateDisplay(); } }
     function exitChild() { document.getElementById('child-mode').style.display = 'none'; window.speechSynthesis.cancel(); }
@@ -405,8 +419,14 @@
         const card = deck[currentIndex];
         const txt = getTextDisplay(card);
         const col = colors[card.cat] || '#333';
+        
+        // Font Logic
+        const fontClass = getFontClass();
+        const wordEl = document.getElementById('c-word');
+        wordEl.className = ''; wordEl.classList.add(fontClass);
+
         document.getElementById('c-img').src = card.img;
-        document.getElementById('c-word').innerText = txt.main;
+        wordEl.innerText = txt.main;
         document.getElementById('c-sub').innerText = txt.sub;
         document.getElementById('c-gender').innerText = txt.gender;
         document.getElementById('c-stripe').style.background = col;
@@ -425,25 +445,44 @@
         const voice = window.speechSynthesis.getVoices().find(v => v.lang.includes(target)) || window.speechSynthesis.getVoices()[0];
         
         window.speechSynthesis.cancel();
-        const u = new SpeechSynthesisUtterance(textToSpeak);
-        u.voice = voice;
-        u.rate = 0.9;
-        window.speechSynthesis.speak(u);
+        
+        // Drill: Normal -> Slow -> Normal
+        const u1 = new SpeechSynthesisUtterance(textToSpeak); u1.voice = voice; u1.rate = 1.0;
+        const u2 = new SpeechSynthesisUtterance(textToSpeak); u2.voice = voice; u2.rate = 0.6;
+        const u3 = new SpeechSynthesisUtterance(textToSpeak); u3.voice = voice; u3.rate = 1.0;
+        
+        u1.onend = () => setTimeout(() => window.speechSynthesis.speak(u2), 600);
+        u2.onend = () => setTimeout(() => window.speechSynthesis.speak(u3), 600);
+        window.speechSynthesis.speak(u1);
     }
 
+    // --- PRINTING ---
     function printPoker() {
+        const fontClass = getFontClass();
         document.getElementById('print-area').className = 'grid-poker';
         document.getElementById('print-area').innerHTML = deck.map(c => {
             const txt = getTextDisplay(c);
-            return `<div class="cut-guide"><img src="${c.img}"><div class="txt"><div>${txt.main}</div>${txt.sub ? `<div style="font-size:0.6em; color:#666;">${txt.sub}</div>` : ''}</div><div class="bar" style="background:${colors[c.cat]||'#ccc'}"></div></div>`;
+            return `<div class="cut-guide"><img src="${c.img}">
+                <div class="txt">
+                    <div class="${fontClass}">${txt.main}</div>
+                    ${txt.sub ? `<div style="font-size:0.6em; color:#666;">${txt.sub}</div>` : ''}
+                </div>
+                <div class="bar" style="background:${colors[c.cat]||'#ccc'}"></div>
+            </div>`;
         }).join('');
         window.print();
     }
     function printA4() {
+        const fontClass = getFontClass();
         document.getElementById('print-area').className = 'layout-a4';
         document.getElementById('print-area').innerHTML = deck.map(c => {
             const txt = getTextDisplay(c);
-            return `<div class="page"><div class="cut-guide"><img src="${c.img}"><div class="bar" style="background:${colors[c.cat]||'#ccc'}"></div><div class="txt"><div>${txt.main}</div>${txt.sub ? `<div style="font-size:0.4em; color:#666;">${txt.sub}</div>` : ''}</div></div></div>`;
+            return `<div class="page"><div class="cut-guide"><img src="${c.img}"><div class="bar" style="background:${colors[c.cat]||'#ccc'}"></div>
+                <div class="txt">
+                    <div class="${fontClass}">${txt.main}</div>
+                    ${txt.sub ? `<div style="font-size:0.4em; color:#666;">${txt.sub}</div>` : ''}
+                </div>
+            </div></div>`;
         }).join('');
         window.print();
     }
