@@ -16,35 +16,35 @@
     }
   },
   {
-    "id": "banana",
-    "cat": "food",
-    "pos": "noun",
-    "img": "images/banana.png",
+    "id": "eat",
+    "cat": "act",
+    "pos": "verb",
+    "img": "images/eat.png",
     "translations": {
-      "en": { "n": "banana", "art": "a", "p": "bananas", "ipa": "/bəˈnɑːnə/" },
-      "zh": { "n": "香蕉", "t": "香蕉", "py": "xiāngjiāo" },
-      "fr": { "n": "banane", "art": "la", "p": "les bananes", "g": "fem.", "ipa": "/ba.nan/" },
-      "de": { "n": "Banane", "art": "die", "p": "die Bananen", "g": "fem.", "ipa": "/baˈnaːnə/" },
-      "it": { "n": "banana", "art": "la", "p": "le banane", "g": "fem.", "ipa": "/baˈna.na/" },
-      "ru": { "n": "банан", "p": "бананы", "g": "masc.", "lt": "banan", "ipa": "/bɐˈnan/" },
-      "ja": { "n": "バナナ", "r": "ばなな" },
-      "ko": { "n": "바나나", "hj": "" }
+      "en": { "n": "eat", "pres": "eats", "ipa": "/iːt/" },
+      "zh": { "n": "吃", "py": "chī" },
+      "fr": { "n": "manger", "pres": "il mange", "ipa": "/mɑ̃.ʒe/" },
+      "de": { "n": "essen", "pres": "er isst", "ipa": "/ˈɛsn̩/" },
+      "it": { "n": "mangiare", "pres": "lui mangia", "ipa": "/manˈdʒa.re/" },
+      "ru": { "n": "есть", "pres": "он ест", "lt": "yest'", "ipa": "/jesʲtʲ/" },
+      "ja": { "n": "食べる", "r": "たべる" },
+      "ko": { "n": "먹다", "hj": "" }
     }
   },
   {
-    "id": "nose",
-    "cat": "body",
-    "pos": "noun",
-    "img": "images/nose.png",
+    "id": "big",
+    "cat": "act",
+    "pos": "adj",
+    "img": "images/big.png",
     "translations": {
-      "en": { "n": "nose", "art": "a", "p": "noses", "ipa": "/nəʊz/" },
-      "zh": { "n": "鼻子", "t": "鼻子", "py": "bízi" },
-      "fr": { "n": "nez", "art": "le", "p": "les nez", "g": "masc.", "ipa": "/ne/" },
-      "de": { "n": "Nase", "art": "die", "p": "die Nasen", "g": "fem.", "ipa": "/ˈnaːzə/" },
-      "it": { "n": "naso", "art": "il", "p": "i nasi", "g": "masc.", "ipa": "/ˈna.zo/" },
-      "ru": { "n": "нос", "p": "носы", "g": "masc.", "lt": "nos", "ipa": "/nos/" },
-      "ja": { "n": "鼻", "r": "はな" },
-      "ko": { "n": "코", "hj": "" }
+      "en": { "n": "big", "ipa": "/bɪɡ/" },
+      "zh": { "n": "大", "py": "dà" },
+      "fr": { "n": "grand", "f": "grande", "mp": "grands", "fp": "grandes", "ipa": "/ɡʁɑ̃/" },
+      "de": { "n": "großer", "f": "große", "nt": "großes", "p": "große", "ipa": "/ˈɡʁoːsɐ/" },
+      "it": { "n": "grande", "f": "grande", "p": "grandi", "ipa": "/ˈɡran.de/" },
+      "ru": { "n": "большой", "f": "большая", "nt": "большое", "p": "большие", "lt": "bolshoy", "ipa": "/bɐlʲˈʂoj/" },
+      "ja": { "n": "大きい", "r": "おおきい" },
+      "ko": { "n": "크다", "hj": "" }
     }
   }
 ]

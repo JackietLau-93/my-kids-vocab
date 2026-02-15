@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>TinyVocab Rainbow</title>
+<title>TinyVocab Levels</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,29 +11,22 @@
 
 <style>
     :root {
-        /* Semantic Colors (Bottom Bars - Keep these consistent for categories) */
+        /* Semantic Colors */
         --c-animal: #7CB342; --c-food: #FDD835; --c-body: #42A5F5; 
         --c-home: #EF5350; --c-act: #AB47BC;
         
-        /* YOUR CUSTOM GRAMMAR RAINBOW */
-        --pos-verb: #F44336;  /* Red */
-        --pos-adv:  #F9A825;  /* Gold (Darkened for white text legibility) */
-        --pos-conj: #FF9800;  /* Orange */
-        --pos-adj:  #4CAF50;  /* Green */
-        --pos-noun: #2196F3;  /* Blue */
-        --pos-pron: #9C27B0;  /* Purple */
-        --pos-prep: #E91E63;  /* Pink */
+        /* Rainbow Grammar */
+        --pos-noun: #2196F3; --pos-verb: #F44336; --pos-adj: #4CAF50;
+        --pos-adv: #F9A825; --pos-pron: #9C27B0; --pos-prep: #E91E63; --pos-conj: #FF9800;
         
-        /* Gender Colors */
         --g-masc: #2196F3; --g-fem: #E91E63; --g-neut: #4CAF50;
-        
         --bg: #F2F2F2; --card-bg: #FFFFFF;
+        
+        /* Level Slider Colors */
+        --lvl-1: #4CAF50; --lvl-2: #FF9800; --lvl-3: #F44336;
     }
 
-    body { 
-        font-family: 'Zen Maru Gothic', sans-serif; background: var(--bg); 
-        margin: 0; color: #333; -webkit-font-smoothing: antialiased;
-    }
+    body { font-family: 'Zen Maru Gothic', sans-serif; background: var(--bg); margin: 0; color: #333; -webkit-font-smoothing: antialiased; }
 
     /* FONTS */
     .font-en, .font-fr, .font-de, .font-it, .font-ru { font-family: 'Fredoka One', cursive; }
@@ -42,7 +35,7 @@
     .font-zh-cn { font-family: 'Noto Sans SC', sans-serif; font-weight: 700; letter-spacing: 1px; }
     .font-zh-tw { font-family: 'Noto Sans TC', sans-serif; font-weight: 700; letter-spacing: 1px; }
 
-    /* HEADER */
+    /* HEADER & LEVEL SLIDER */
     header { 
         background: rgba(255,255,255,0.98); padding: 15px 20px; 
         position: sticky; top: 0; z-index: 100;
@@ -50,22 +43,39 @@
         display: flex; flex-direction: column; gap: 10px;
     }
     .top-row { display: flex; justify-content: space-between; align-items: center; width: 100%; flex-wrap: wrap; gap: 10px;}
-    .controls-row { display: flex; gap: 12px; align-items: center; padding-top: 5px; border-top: 1px solid #f0f0f0; flex-wrap: wrap;}
-
-    .btn { padding: 8px 16px; border: 1px solid #ddd; border-radius: 20px; cursor: pointer; background: white; font-family: 'Fredoka One'; color: #555; font-size: 0.85rem;}
-    .btn-primary { background: #333; color: white; border-color: #333; }
     
     #lang-select { padding: 8px 12px; border: 1px solid #ddd; border-radius: 20px; font-family: 'Zen Maru Gothic'; font-weight: bold; outline: none; }
+    .btn { padding: 8px 16px; border: 1px solid #ddd; border-radius: 20px; cursor: pointer; background: white; font-family: 'Fredoka One'; color: #555; font-size: 0.85rem;}
+    .btn-primary { background: #333; color: white; border-color: #333; }
+
+    /* LEVEL SLIDER CONTAINER */
+    .level-container { display: flex; align-items: center; gap: 15px; width: 100%; padding: 5px 0; border-top: 1px solid #eee; }
+    .level-label { font-family: 'Fredoka One'; font-size: 0.9rem; color: #555; width: 60px; }
+    input[type=range] {
+        flex: 1; -webkit-appearance: none; width: 100%; height: 6px; background: #ddd; border-radius: 5px; outline: none;
+    }
+    input[type=range]::-webkit-slider-thumb {
+        -webkit-appearance: none; appearance: none; width: 24px; height: 24px; border-radius: 50%; 
+        background: var(--lvl-1); cursor: pointer; transition: background 0.3s;
+    }
+    /* Dynamic Slider Color Classes (applied via JS) */
+    .lvl-1::-webkit-slider-thumb { background: var(--lvl-1) !important; }
+    .lvl-2::-webkit-slider-thumb { background: var(--lvl-2) !important; }
+    .lvl-3::-webkit-slider-thumb { background: var(--lvl-3) !important; }
+
+    .controls-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; min-height: 35px; }
 
     /* TOGGLES */
-    .toggle-group { display: flex; align-items: center; gap: 6px; font-size: 0.85rem; font-weight: bold; color: #555; cursor: pointer; background: #fff; padding: 4px 8px; border-radius: 15px; border: 1px solid #eee; transition: opacity 0.3s; }
-    .switch { position: relative; display: inline-block; width: 36px; height: 20px; }
+    .toggle-group { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; font-weight: bold; color: #555; cursor: pointer; background: #fff; padding: 4px 8px; border-radius: 15px; border: 1px solid #eee; transition: all 0.3s; }
+    .switch { position: relative; display: inline-block; width: 32px; height: 18px; }
     .switch input { opacity: 0; width: 0; height: 0; }
     .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
-    .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; }
+    .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; }
     input:checked + .slider { background-color: #333; }
-    input:checked + .slider:before { transform: translateX(16px); }
+    input:checked + .slider:before { transform: translateX(14px); }
     .toggle-group.disabled { opacity: 0.4; pointer-events: none; filter: grayscale(1); }
+    /* Hidden logic for Level system */
+    .toggle-group.lvl-hidden { display: none; }
 
     /* CARD GRID */
     .container { max-width: 1200px; margin: 0 auto; padding: 30px 20px; }
@@ -77,10 +87,8 @@
     .card-front, .card-back { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; border-radius: 16px; overflow: hidden; background: var(--card-bg); display: flex; flex-direction: column; }
     .card-back { transform: rotateY(180deg); background: #fdfdfd; padding: 15px; box-sizing: border-box; align-items: center; justify-content: flex-start; }
 
-    /* CARD CONTENT */
     .card-art { flex: 1; width: 100%; display: flex; align-items: center; justify-content: center; padding: 15px; box-sizing: border-box; }
     .card-art img { max-width: 100%; max-height: 100%; object-fit: contain; filter: brightness(1.03) contrast(1.03); mix-blend-mode: multiply; }
-    
     .card-obi { min-height: 80px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding-bottom: 5px; position: relative; }
     .color-stroke { position: absolute; bottom: 0; left: 0; width: 100%; height: 6px; }
     
@@ -89,23 +97,8 @@
     .sub-word { font-size: 0.9rem; color: #777; font-family: 'Zen Maru Gothic'; text-align: center; font-weight: 500; }
     .gender-badge { font-size: 0.75rem; color: #999; font-style: italic; margin-top: 2px; font-family: 'Zen Maru Gothic'; }
 
-    /* RAINBOW GRAMMAR BADGES */
-    .pos-badge { 
-        font-size: 0.6rem; color: white; padding: 3px 8px; border-radius: 10px; 
-        font-family: 'Zen Maru Gothic'; font-weight: bold; letter-spacing: 0.5px;
-        text-transform: lowercase; margin-top: 4px; display: none; 
-    }
-    
-    /* Apply Custom Colors */
-    .pos-noun { background: var(--pos-noun); }
-    .pos-verb { background: var(--pos-verb); }
-    .pos-adj { background: var(--pos-adj); }
-    .pos-adv { background: var(--pos-adv); }
-    .pos-pron { background: var(--pos-pron); }
-    .pos-prep { background: var(--pos-prep); }
-    .pos-conj { background: var(--pos-conj); }
-    
-    /* Show badge if Grammar toggle is ON */
+    .pos-badge { font-size: 0.6rem; color: white; padding: 3px 8px; border-radius: 10px; font-family: 'Zen Maru Gothic'; font-weight: bold; letter-spacing: 0.5px; text-transform: lowercase; margin-top: 4px; display: none; }
+    .pos-noun { background: var(--pos-noun); } .pos-verb { background: var(--pos-verb); } .pos-adj { background: var(--pos-adj); }
     .show-grammar .pos-badge { display: inline-block; }
 
     .flip-btn { position: absolute; top: 10px; right: 10px; width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.9); border: 1px solid #eee; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; cursor: pointer; z-index: 10; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
@@ -136,13 +129,10 @@
         #print-area { display: block !important; width: 100%; height: 100%; }
         .cut-guide { border: 1px dashed #e0e0e0; box-sizing: border-box; background: white; position: relative; display: flex; flex-direction: column; border-radius: 6px; }
         .grid-poker { display: grid; grid-template-columns: repeat(3, 63.5mm); grid-template-rows: repeat(3, 88.9mm); padding: 10mm; gap: 2mm; }
-        .grid-poker .cut-guide { width: 63.5mm; height: 88.9mm; }
         .grid-poker img { flex: 1; width: 100%; object-fit: contain; padding: 10px; }
         .grid-poker .txt { height: 25mm; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 18pt; color: #333; margin-bottom: 2mm; text-align: center;}
         .grid-poker .bar { height: 3mm; width: 100%; position: absolute; bottom: 0; left: 0; }
         .layout-a4 .page { break-after: page; width: 100vw; height: 100vh; display: flex; align-items: center; justify-content: center; }
-        .layout-a4 .cut-guide { width: 260mm; height: 180mm; border: none; flex-direction: row; }
-        .layout-a4 img { flex: 2; object-fit: contain; padding: 0; }
         .layout-a4 .txt { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 80pt; color: #333; text-align: center; }
         .layout-a4 .bar { width: 15px; height: 100%; position: static; }
     }
@@ -170,6 +160,11 @@
         </div>
     </div>
     
+    <div class="level-container">
+        <div class="level-label" id="lvl-txt">Level 1</div>
+        <input type="range" min="1" max="3" value="1" class="lvl-1" id="level-slider" oninput="updateLevel(this.value)">
+    </div>
+
     <div class="controls-row" id="header-toggles"></div>
 </header>
 
@@ -203,38 +198,75 @@
     let deck = [];
     let currentIndex = 0;
     let currentLang = 'en';
+    let currentLevel = 1;
 
-    // CONFIGS
+    // --- CONFIGS ---
+    // Defined by LANGUAGE
     const langConfig = {
-        'en': { toggles: ['grammar', 'article', 'plural', 'ipa'] },
-        'fr': { toggles: ['grammar', 'article', 'plural', 'gender', 'ipa'] },
-        'de': { toggles: ['grammar', 'article', 'plural', 'gender', 'ipa'] },
-        'it': { toggles: ['grammar', 'article', 'plural', 'gender', 'ipa'] },
-        'ru': { toggles: ['grammar', 'plural', 'gender', 'latin', 'ipa'] },
+        'en': { toggles: ['grammar', 'article', 'plural', 'ipa', 'conjugate'] },
+        'fr': { toggles: ['grammar', 'article', 'plural', 'gender', 'ipa', 'fem', 'conjugate'] },
+        'de': { toggles: ['grammar', 'article', 'plural', 'gender', 'ipa', 'fem', 'neut', 'conjugate'] },
+        'it': { toggles: ['grammar', 'article', 'plural', 'gender', 'ipa', 'fem', 'conjugate'] },
+        'ru': { toggles: ['grammar', 'plural', 'gender', 'latin', 'ipa', 'fem', 'neut', 'conjugate'] },
         'zh': { toggles: ['grammar', 'traditional', 'pinyin'] },
         'ja': { toggles: ['grammar', 'hiragana'] },
         'ko': { toggles: ['grammar', 'hanja'] }
     };
 
-    const toggleLabels = { 
-        'grammar': 'Grammar',
-        'plural':'Plural', 'article':'Article', 'gender':'Gender', 
-        'pinyin':'Pinyin', 'latin':'Latin', 'ipa':'IPA',
-        'hiragana':'Hiragana', 'hanja':'Hanja', 'traditional':'Traditional' 
+    // Defined by LEVEL (Minimum Level required to show)
+    const levelConfig = {
+        'ipa': 1, 'pinyin': 1, 'latin': 1, 'hiragana': 1, 'hanja': 1, 'traditional': 1, 'gender': 1, 'article': 1,
+        'grammar': 2, 'plural': 2,
+        'fem': 3, 'neut': 3, 'conjugate': 3
     };
 
-    let toggleState = { grammar: false, plural:false, article:false, gender:false, pinyin:false, latin:false, ipa:false, hiragana:false, hanja:false, traditional:false };
+    const toggleLabels = { 
+        'grammar': 'Grammar', 'plural':'Plural', 'article':'Article', 'gender':'Gender', 
+        'pinyin':'Pinyin', 'latin':'Latin', 'ipa':'IPA',
+        'hiragana':'Hiragana', 'hanja':'Hanja', 'traditional':'Traditional',
+        'fem': 'Feminine', 'neut': 'Neuter', 'conjugate': 'Action'
+    };
+
+    let toggleState = { 
+        grammar: false, plural:false, article:false, gender:false, 
+        pinyin:false, latin:false, ipa:false, hiragana:false, hanja:false, traditional:false,
+        fem: false, neut: false, conjugate: false
+    };
+
     const colors = { animal: '#7CB342', food: '#FDD835', body: '#42A5F5', home: '#EF5350', act: '#AB47BC' };
 
     fetch('data.json').then(res => res.json()).then(data => { 
-        deck = data; updateControls('header-toggles'); renderGrid(); 
+        deck = data; updateUI(); 
     }).catch(err => console.error(err));
 
     document.getElementById('lang-select').addEventListener('change', (e) => {
         currentLang = e.target.value;
-        Object.keys(toggleState).forEach(k => toggleState[k] = false);
-        updateControls('header-toggles'); renderGrid();
+        resetToggles();
+        updateUI();
     });
+
+    // --- LEVEL LOGIC ---
+    function updateLevel(val) {
+        currentLevel = parseInt(val);
+        document.getElementById('lvl-txt').innerText = `Level ${currentLevel}`;
+        
+        // Update Slider Color
+        const slider = document.getElementById('level-slider');
+        slider.className = `lvl-${currentLevel}`;
+
+        // Re-render toggles based on visibility
+        updateControls('header-toggles');
+        if(document.getElementById('child-mode').style.display === 'flex') updateControls('child-toggles');
+    }
+
+    function resetToggles() {
+        Object.keys(toggleState).forEach(k => toggleState[k] = false);
+    }
+
+    function updateUI() {
+        updateControls('header-toggles');
+        renderGrid();
+    }
 
     function getFontClass() {
         if (currentLang === 'ja') return 'font-ja';
@@ -248,24 +280,38 @@
         const container = document.getElementById(containerId);
         container.innerHTML = '';
         const config = langConfig[currentLang];
+        
         config.toggles.forEach(key => {
-            const inputID = `chk-${containerId}-${key}`;
-            const html = `
-                <label class="toggle-group" id="lbl-${containerId}-${key}">
-                    <span class="switch">
-                        <input type="checkbox" id="${inputID}" data-key="${key}" onchange="toggleFeature('${key}', this.checked)" ${toggleState[key]?'checked':''}>
-                        <span class="slider"></span>
-                    </span>
-                    ${toggleLabels[key]}
-                </label>`;
-            container.insertAdjacentHTML('beforeend', html);
+            const minLevel = levelConfig[key] || 1;
+            // Only show if current Level >= minLevel
+            if (currentLevel >= minLevel) {
+                const inputID = `chk-${containerId}-${key}`;
+                const html = `
+                    <label class="toggle-group" id="lbl-${containerId}-${key}">
+                        <span class="switch">
+                            <input type="checkbox" id="${inputID}" data-key="${key}" onchange="toggleFeature('${key}', this.checked)" ${toggleState[key]?'checked':''}>
+                            <span class="slider"></span>
+                        </span>
+                        ${toggleLabels[key]}
+                    </label>`;
+                container.insertAdjacentHTML('beforeend', html);
+            }
         });
         checkDependency();
     }
 
     window.toggleFeature = function(key, isChecked) {
         toggleState[key] = isChecked;
-        document.querySelectorAll(`input[data-key="${key}"]`).forEach(el => el.checked = isChecked);
+        // Logic: Fem/Neut are mutually exclusive
+        if(key === 'fem' && isChecked) toggleState.neut = false;
+        if(key === 'neut' && isChecked) toggleState.fem = false;
+
+        // Sync UI inputs
+        document.querySelectorAll(`input[data-key]`).forEach(el => {
+            const k = el.getAttribute('data-key');
+            el.checked = toggleState[k];
+        });
+
         if(key==='plural') checkDependency();
         renderGrid();
         if(document.getElementById('child-mode').style.display === 'flex') updateDisplay();
@@ -285,23 +331,46 @@
         }
     }
 
-    // --- TEXT LOGIC ---
+    // --- COMPLEX TEXT LOGIC (L3) ---
     function getTextDisplay(card) {
         let raw = card.translations[currentLang] || card.translations['en']; 
         if (!raw || typeof raw === 'string') return { main: raw || '?', sub: '', gender: '' };
 
         let mainText = (currentLang === 'zh' && toggleState.traditional && raw.t) ? raw.t : (raw.n || '?');
+        let genderText = (toggleState.gender && raw.g) ? raw.g : '';
+        let subText = '';
+
+        // LEVEL 2 LOGIC
         if (toggleState.plural && raw.p) mainText = raw.p;
+        
+        // LEVEL 3 LOGIC (Verbs)
+        if (toggleState.conjugate && raw.pres) mainText = raw.pres;
+
+        // LEVEL 3 LOGIC (Adjectives)
+        // Order of precedence: Plural > Fem/Neut > Base
+        if (card.pos === 'adj') {
+            if (toggleState.plural) {
+                // Check gendered plurals (mp/fp) or generic (p)
+                if (toggleState.fem && raw.fp) mainText = raw.fp;
+                else if (raw.mp) mainText = raw.mp; // Default plural masc for romance
+                else if (raw.p) mainText = raw.p;
+            } else if (toggleState.fem && raw.f) {
+                mainText = raw.f;
+            } else if (toggleState.neut && raw.nt) {
+                mainText = raw.nt;
+            }
+        }
+
+        // L1 Logic (Article) - Apply last so it wraps the modified word
         if (toggleState.article && !toggleState.plural && raw.art) mainText = `${raw.art} ${mainText}`;
 
-        let subText = '';
+        // SUBTEXT LOGIC
         if (toggleState.pinyin && raw.py) subText = raw.py;
         if (toggleState.latin && raw.lt) subText = raw.lt;
         if (toggleState.ipa && raw.ipa) subText = `[${raw.ipa}]`;
         if (currentLang === 'ja' && toggleState.hiragana && raw.r) subText = `(${raw.r})`;
         if (currentLang === 'ko' && toggleState.hanja && raw.hj) { subText = `(${mainText})`; mainText = raw.hj; }
 
-        let genderText = (toggleState.gender && raw.g) ? raw.g : '';
         return { main: mainText, sub: subText, gender: genderText };
     }
 
@@ -326,7 +395,6 @@
                                 <div class="word ${fontClass}">${txt.main}</div>
                             </div>
                             <div class="pos-badge ${posClass}">${posLabel}</div>
-                            
                             ${txt.sub ? `<div class="sub-word">${txt.sub}</div>` : ''}
                             ${txt.gender ? `<div class="gender-badge">${txt.gender}</div>` : ''}
                             <div class="color-stroke" style="background:${col}"></div>
@@ -379,10 +447,10 @@
 
     function speakDrill() {
         const card = deck[currentIndex];
-        const raw = card.translations[currentLang] || card.translations['en'];
-        let textToSpeak = raw.n; 
-        if(toggleState.plural && raw.p) textToSpeak = raw.p;
-        if(toggleState.article && !toggleState.plural && raw.art) textToSpeak = `${raw.art} ${textToSpeak}`;
+        // Note: Speech synthesis might not be perfect for Level 3 grammar forms depending on the browser voice
+        const txt = getTextDisplay(card); // Use the processed text for speech
+        let textToSpeak = txt.main; 
+
         const locales = { 'en':'en-GB', 'fr':'fr-FR', 'de':'de-DE', 'it':'it-IT', 'ru':'ru-RU', 'zh':'zh-CN', 'ja':'ja-JP', 'ko':'ko-KR' };
         const voice = window.speechSynthesis.getVoices().find(v => v.lang.includes(locales[currentLang]||'en-US')) || window.speechSynthesis.getVoices()[0];
         window.speechSynthesis.cancel();
@@ -392,6 +460,7 @@
         u1.onend=()=>setTimeout(()=>window.speechSynthesis.speak(u2),600); u2.onend=()=>setTimeout(()=>window.speechSynthesis.speak(u3),600); window.speechSynthesis.speak(u1);
     }
     
+    // Print functions same as before (omitted for brevity, assume included)
     function printPoker() {
         const f = getFontClass(); document.getElementById('print-area').className='grid-poker';
         document.getElementById('print-area').innerHTML=deck.map(c=>{const t=getTextDisplay(c); return `<div class="cut-guide"><img src="${c.img}"><div class="txt"><div class="${f}">${t.main}</div>${t.sub?`<div style="font-size:0.6em;color:#666;">${t.sub}</div>`:''}</div><div class="bar" style="background:${colors[c.cat]||'#ccc'}"></div></div>`;}).join(''); window.print();
