@@ -16,6 +16,38 @@
     }
   },
   {
+    "id": "banana",
+    "cat": "food",
+    "pos": "noun",
+    "img": "images/banana.png",
+    "translations": {
+      "en": { "n": "banana", "art": "a", "p": "bananas", "ipa": "/bəˈnɑːnə/" },
+      "zh": { "n": "香蕉", "t": "香蕉", "py": "xiāngjiāo" },
+      "fr": { "n": "banane", "art": "la", "p": "les bananes", "g": "fem.", "ipa": "/ba.nan/" },
+      "de": { "n": "Banane", "art": "die", "p": "die Bananen", "g": "fem.", "ipa": "/baˈnaːnə/" },
+      "it": { "n": "banana", "art": "la", "p": "le banane", "g": "fem.", "ipa": "/baˈna.na/" },
+      "ru": { "n": "банан", "p": "бананы", "g": "masc.", "lt": "banan", "ipa": "/bɐˈnan/" },
+      "ja": { "n": "バナナ", "r": "ばなな" },
+      "ko": { "n": "바나나", "hj": "" }
+    }
+  },
+  {
+    "id": "nose",
+    "cat": "body",
+    "pos": "noun",
+    "img": "images/nose.png",
+    "translations": {
+      "en": { "n": "nose", "art": "a", "p": "noses", "ipa": "/nəʊz/" },
+      "zh": { "n": "鼻子", "t": "鼻子", "py": "bízi" },
+      "fr": { "n": "nez", "art": "le", "p": "les nez", "g": "masc.", "ipa": "/ne/" },
+      "de": { "n": "Nase", "art": "die", "p": "die Nasen", "g": "fem.", "ipa": "/ˈnaːzə/" },
+      "it": { "n": "naso", "art": "il", "p": "i nasi", "g": "masc.", "ipa": "/ˈna.zo/" },
+      "ru": { "n": "нос", "p": "носы", "g": "masc.", "lt": "nos", "ipa": "/nos/" },
+      "ja": { "n": "鼻", "r": "はな" },
+      "ko": { "n": "코", "hj": "" }
+    }
+  },
+  {
     "id": "eat",
     "cat": "act",
     "pos": "verb",
@@ -46,5 +78,19 @@
       "ja": { "n": "大きい", "r": "おおきい" },
       "ko": { "n": "크다", "hj": "" }
     }
+  },
+  {
+    "id": "run",
+    "cat": "act",
+    "pos": "verb",
+    "img": "images/run.png",
+    "translations": { "en": { "n": "run", "pres": "runs", "ipa": "/rʌn/" } }
+  },
+  {
+    "id": "he",
+    "cat": "body",
+    "pos": "pron",
+    "img": "images/he.png",
+    "translations": { "en": { "n": "he", "ipa": "/hiː/" } }
   }
 ]
