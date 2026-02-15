@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>TinyVocab Ultimate</title>
+<title>TinyVocab Educational</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Jua&family=Noto+Sans+TC:wght@700&family=ZCOOL+KuaiLe&family=Zen+Maru+Gothic:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Jua&family=Noto+Sans+SC:wght@500;700&family=Noto+Sans+TC:wght@500;700&family=Zen+Maru+Gothic:wght@500;700&display=swap" rel="stylesheet">
 
 <style>
     :root {
@@ -16,9 +16,7 @@
         --bg: #F2F2F2; --card-bg: #FFFFFF;
         
         /* Gender Colors */
-        --g-masc: #2196F3; /* Blue */
-        --g-fem: #E91E63;  /* Pink */
-        --g-neut: #4CAF50; /* Green */
+        --g-masc: #2196F3; --g-fem: #E91E63; --g-neut: #4CAF50;
     }
 
     body { 
@@ -26,12 +24,16 @@
         margin: 0; color: #333; -webkit-font-smoothing: antialiased;
     }
 
-    /* --- LANGUAGE SPECIFIC FONTS --- */
+    /* --- FONTS --- */
     .font-en, .font-fr, .font-de, .font-it, .font-ru { font-family: 'Fredoka One', cursive; }
+    
     .font-ja { font-family: 'Zen Maru Gothic', sans-serif; font-weight: 700; }
+    
     .font-ko { font-family: 'Jua', sans-serif; }
-    .font-zh-cn { font-family: 'ZCOOL KuaiLe', cursive; letter-spacing: 1px; }
-    .font-zh-tw { font-family: 'Noto Sans TC', sans-serif; font-weight: 700; }
+    
+    /* NEW: Standard Textbook Fonts for Chinese */
+    .font-zh-cn { font-family: 'Noto Sans SC', sans-serif; font-weight: 700; letter-spacing: 1px; }
+    .font-zh-tw { font-family: 'Noto Sans TC', sans-serif; font-weight: 700; letter-spacing: 1px; }
 
     /* --- HEADER --- */
     header { 
@@ -62,73 +64,49 @@
     input:checked + .slider:before { transform: translateX(16px); }
     .toggle-group.disabled { opacity: 0.4; pointer-events: none; filter: grayscale(1); }
 
-    /* --- 3D FLIP CARD CONTAINER --- */
+    /* --- CARD GRID --- */
     .container { max-width: 1200px; margin: 0 auto; padding: 30px 20px; }
     .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 25px; }
     
     .vocab-card {
-        aspect-ratio: 3/4; 
-        background-color: transparent;
-        perspective: 1000px; /* Essential for 3D effect */
-        cursor: pointer;
+        aspect-ratio: 3/4; background-color: transparent; perspective: 1000px; cursor: pointer;
     }
-
     .card-inner {
-        position: relative;
-        width: 100%; height: 100%;
-        text-align: center;
-        transition: transform 0.6s;
-        transform-style: preserve-3d;
-        border-radius: 16px; 
-        box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+        position: relative; width: 100%; height: 100%; text-align: center;
+        transition: transform 0.6s; transform-style: preserve-3d;
+        border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.06);
     }
-
-    .vocab-card.flipped .card-inner {
-        transform: rotateY(180deg);
-    }
-
+    .vocab-card.flipped .card-inner { transform: rotateY(180deg); }
     .card-front, .card-back {
-        position: absolute;
-        width: 100%; height: 100%;
-        -webkit-backface-visibility: hidden; /* Safari */
-        backface-visibility: hidden;
-        border-radius: 16px; 
-        overflow: hidden;
-        background: var(--card-bg);
+        position: absolute; width: 100%; height: 100%;
+        -webkit-backface-visibility: hidden; backface-visibility: hidden;
+        border-radius: 16px; overflow: hidden; background: var(--card-bg);
         display: flex; flex-direction: column;
     }
-
     .card-back {
-        transform: rotateY(180deg);
-        background: #fdfdfd;
-        padding: 15px; box-sizing: border-box;
-        display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+        transform: rotateY(180deg); background: #fdfdfd;
+        padding: 15px; box-sizing: border-box; align-items: center; justify-content: flex-start;
     }
 
-    /* --- FRONT CONTENT --- */
+    /* FRONT CONTENT */
     .card-art { flex: 1; width: 100%; display: flex; align-items: center; justify-content: center; padding: 15px; box-sizing: border-box; }
     .card-art img { max-width: 100%; max-height: 100%; object-fit: contain; filter: brightness(1.03) contrast(1.03); mix-blend-mode: multiply; }
-
+    
     .card-obi { min-height: 80px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding-bottom: 5px; position: relative; }
     .color-stroke { position: absolute; bottom: 0; left: 0; width: 100%; height: 6px; }
     
+    /* Base Word Style - Fonts applied via class */
     .word { font-size: 1.8rem; color: #333; text-align: center; line-height: 1.2; margin-bottom: 2px;}
     .sub-word { font-size: 0.9rem; color: #777; font-family: 'Zen Maru Gothic'; text-align: center; font-weight: 500;}
     .gender-badge { font-size: 0.75rem; color: #999; font-style: italic; margin-top: 2px; font-family: 'Zen Maru Gothic';}
 
-    /* FLIP BUTTON */
     .flip-btn {
-        position: absolute; top: 10px; right: 10px;
-        width: 32px; height: 32px; border-radius: 50%;
-        background: rgba(255,255,255,0.9); border: 1px solid #eee;
-        display: flex; align-items: center; justify-content: center;
-        font-size: 1.2rem; cursor: pointer; z-index: 10;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        transition: transform 0.2s;
+        position: absolute; top: 10px; right: 10px; width: 32px; height: 32px; border-radius: 50%;
+        background: rgba(255,255,255,0.9); border: 1px solid #eee; display: flex; align-items: center; justify-content: center;
+        font-size: 1.2rem; cursor: pointer; z-index: 10; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
-    .flip-btn:hover { transform: scale(1.1); background: white; }
 
-    /* --- BACK CONTENT (COMPARISON TABLE) --- */
+    /* BACK CONTENT */
     .back-title { font-family: 'Fredoka One'; font-size: 1.1rem; color: #333; margin-bottom: 15px; margin-top: 10px; }
     .comp-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; text-align: left; }
     .comp-table tr { border-bottom: 1px solid #eee; }
@@ -136,20 +114,17 @@
     .comp-flag { font-size: 1.2rem; width: 30px; }
     .comp-art { font-weight: bold; width: 30px; }
     .comp-word { font-weight: 500; color: #555; }
-    
-    /* Gender Highlights */
-    .g-masc { color: var(--g-masc); }
-    .g-fem { color: var(--g-fem); }
-    .g-neut { color: var(--g-neut); }
-    
-    .close-flip {
-        margin-top: auto; padding: 8px 20px; border-radius: 20px;
-        background: #eee; border: none; font-family: 'Fredoka One'; color: #555;
-        cursor: pointer;
-    }
+    .g-masc { color: var(--g-masc); } .g-fem { color: var(--g-fem); } .g-neut { color: var(--g-neut); }
+    .close-flip { margin-top: auto; padding: 8px 20px; border-radius: 20px; background: #eee; border: none; font-family: 'Fredoka One'; color: #555; cursor: pointer; }
 
     /* --- CHILD MODE --- */
     #child-mode { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #fff; z-index: 200; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    
+    .child-toggles { 
+        display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;
+        margin-bottom: 20px;
+    }
+
     .focus-card { width: 85vw; max-width: 400px; aspect-ratio: 3/4; background: white; border-radius: 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.1); display: flex; flex-direction: column; overflow: hidden; }
     .focus-card img { flex: 1; object-fit: contain; padding: 40px; filter: brightness(1.03) contrast(1.03); mix-blend-mode: multiply; }
     .focus-card .word-box { height: 140px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 10px; box-sizing: border-box;}
@@ -172,7 +147,6 @@
         .grid-poker img { flex: 1; width: 100%; object-fit: contain; padding: 10px; }
         .grid-poker .txt { height: 25mm; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 18pt; color: #333; margin-bottom: 2mm; text-align: center;}
         .grid-poker .bar { height: 3mm; width: 100%; position: absolute; bottom: 0; left: 0; }
-        
         .layout-a4 .page { break-after: page; width: 100vw; height: 100vh; display: flex; align-items: center; justify-content: center; }
         .layout-a4 .cut-guide { width: 260mm; height: 180mm; border: none; flex-direction: row; }
         .layout-a4 img { flex: 2; object-fit: contain; padding: 0; }
@@ -203,7 +177,7 @@
         </div>
     </div>
     
-    <div class="controls-row" id="toggle-container"></div>
+    <div class="controls-row" id="header-toggles"></div>
 </header>
 
 <div class="container">
@@ -212,6 +186,9 @@
 
 <div id="child-mode" style="display:none;">
     <button onclick="exitChild()" style="position:absolute; top:30px; right:30px; border:none; background:none; font-size:2rem; opacity:0.3; cursor:pointer;">✕</button>
+    
+    <div id="child-toggles" class="child-toggles"></div>
+
     <div class="focus-card" id="focus-display">
         <img id="c-img" src="">
         <div class="word-box">
@@ -235,7 +212,6 @@
     let currentIndex = 0;
     let currentLang = 'en';
 
-    // --- CONFIGS ---
     const langConfig = {
         'en': { toggles: ['article', 'plural'] },
         'fr': { toggles: ['article', 'plural', 'gender'] },
@@ -251,35 +227,42 @@
     let toggleState = { plural:false, article:false, gender:false, pinyin:false, latin:false, hiragana:false, hanja:false, traditional:false };
     const colors = { animal: '#7CB342', food: '#FDD835', body: '#42A5F5', home: '#EF5350', act: '#AB47BC' };
 
-    // --- INIT ---
     fetch('data.json').then(res => res.json()).then(data => { 
-        deck = data; updateControls(); renderGrid(); 
+        deck = data; updateControls('header-toggles'); renderGrid(); 
     }).catch(err => console.error(err));
 
     document.getElementById('lang-select').addEventListener('change', (e) => {
         currentLang = e.target.value;
         Object.keys(toggleState).forEach(k => toggleState[k] = false);
-        updateControls(); renderGrid();
+        updateControls('header-toggles'); 
+        renderGrid();
     });
 
-    // --- FONT HELPER ---
+    // --- FONT LOGIC ---
     function getFontClass() {
         if (currentLang === 'ja') return 'font-ja';
         if (currentLang === 'ko') return 'font-ko';
         if (currentLang === 'zh') return toggleState.traditional ? 'font-zh-tw' : 'font-zh-cn';
-        return 'font-en'; // Default for En, Fr, De, It, Ru
+        return 'font-en';
     }
 
     // --- CONTROLS UI ---
-    function updateControls() {
-        const container = document.getElementById('toggle-container');
+    function updateControls(containerId) {
+        const container = document.getElementById(containerId);
         container.innerHTML = '';
         const config = langConfig[currentLang];
+        
         config.toggles.forEach(key => {
+            const inputID = `chk-${containerId}-${key}`;
+            const labelID = `lbl-${containerId}-${key}`;
+            
             const html = `
-                <label class="toggle-group" id="lbl-${key}">
+                <label class="toggle-group" id="${labelID}">
                     <span class="switch">
-                        <input type="checkbox" id="chk-${key}" onchange="toggleFeature('${key}', this.checked)" ${toggleState[key] ? 'checked' : ''}>
+                        <input type="checkbox" id="${inputID}" 
+                            data-key="${key}" 
+                            onchange="toggleFeature('${key}', this.checked)" 
+                            ${toggleState[key] ? 'checked' : ''}>
                         <span class="slider"></span>
                     </span>
                     ${toggleLabels[key]}
@@ -290,23 +273,29 @@
     }
 
     window.toggleFeature = function(key, isChecked) {
+        // Sync State
         toggleState[key] = isChecked;
+        // Sync All UI inputs
+        const allInputs = document.querySelectorAll(`input[data-key="${key}"]`);
+        allInputs.forEach(el => el.checked = isChecked);
+        
         if(key==='plural') checkDependency();
         renderGrid();
         if(document.getElementById('child-mode').style.display === 'flex') updateDisplay();
     };
 
     function checkDependency() {
-        const pluralChk = document.getElementById('chk-plural');
-        const artChk = document.getElementById('chk-article');
-        if (pluralChk && artChk) {
-            if (pluralChk.checked) {
-                artChk.checked = false; artChk.disabled = true; toggleState.article = false;
-                document.getElementById('lbl-article').classList.add('disabled');
-            } else {
-                artChk.disabled = false;
-                document.getElementById('lbl-article').classList.remove('disabled');
-            }
+        const isPlural = toggleState.plural;
+        const artInputs = document.querySelectorAll(`input[data-key="article"]`);
+        const artLabels = document.querySelectorAll(`label[id*="-article"]`);
+
+        if (isPlural) {
+            toggleState.article = false;
+            artInputs.forEach(el => { el.checked = false; el.disabled = true; });
+            artLabels.forEach(el => el.classList.add('disabled'));
+        } else {
+            artInputs.forEach(el => { el.disabled = false; });
+            artLabels.forEach(el => el.classList.remove('disabled'));
         }
     }
 
@@ -327,52 +316,16 @@
         if (currentLang === 'ko' && toggleState.hanja && raw.hj) { subText = `(${mainText})`; mainText = raw.hj; }
 
         let genderText = (toggleState.gender && raw.g) ? raw.g : '';
-
         return { main: mainText, sub: subText, gender: genderText };
     }
 
-    // --- COMPARISON LOGIC ---
-    function getGenderClass(g) {
-        if(!g) return '';
-        if(g.includes('masc')) return 'g-masc';
-        if(g.includes('fem')) return 'g-fem';
-        if(g.includes('neut')) return 'g-neut';
-        return '';
-    }
-
-    function buildCompRow(card, langCode, flag) {
-        const data = card.translations[langCode];
-        if(!data) return '';
-        const art = data.art || '';
-        const word = data.n || '';
-        const gen = data.g || '';
-        const gClass = getGenderClass(gen);
-        
-        return `
-            <tr>
-                <td class="comp-flag">${flag}</td>
-                <td class="comp-art ${gClass}">${art}</td>
-                <td class="comp-word ${gClass}">${word}</td>
-            </tr>
-        `;
-    }
-
-    // --- RENDER GRID ---
+    // --- RENDERERS ---
     function renderGrid() {
         const fontClass = getFontClass();
-        
         document.getElementById('grid').innerHTML = deck.map(card => {
             const txt = getTextDisplay(card);
             const col = colors[card.cat] || '#ccc';
-            
-            const comparisonHTML = `
-                <table class="comp-table">
-                    ${buildCompRow(card, 'fr', '🇫🇷')}
-                    ${buildCompRow(card, 'de', '🇩🇪')}
-                    ${buildCompRow(card, 'it', '🇮🇹')}
-                    ${buildCompRow(card, 'ru', '🇷🇺')}
-                </table>
-            `;
+            const comp = `<table class="comp-table">${buildCompRow(card, 'fr', '🇫🇷')}${buildCompRow(card, 'de', '🇩🇪')}${buildCompRow(card, 'it', '🇮🇹')}${buildCompRow(card, 'ru', '🇷🇺')}</table>`;
 
             return `
             <div class="vocab-card" onclick="startChildAt('${card.id}')">
@@ -388,8 +341,7 @@
                         </div>
                     </div>
                     <div class="card-back">
-                        <div class="back-title">Gender Compare</div>
-                        ${comparisonHTML}
+                        <div class="back-title">Gender Compare</div>${comp}
                         <button class="close-flip" onclick="flipCard(event, '${card.id}')">Close</button>
                     </div>
                 </div>
@@ -397,31 +349,24 @@
         }).join('');
     }
 
-    // Flip Logic
-    window.flipCard = function(e, id) {
-        e.stopPropagation(); 
-        const cardInner = document.getElementById(`card-${id}`);
-        const parent = cardInner.parentElement;
-        if (parent.classList.contains('flipped')) {
-            parent.classList.remove('flipped');
-        } else {
-            document.querySelectorAll('.vocab-card').forEach(c => c.classList.remove('flipped'));
-            parent.classList.add('flipped');
-        }
-    };
-
-    // --- CHILD MODE ---
     function startChildAt(id) { currentIndex = deck.findIndex(c => c.id === id); startChild(); }
-    function startChild() { if(deck.length>0){ document.getElementById('child-mode').style.display = 'flex'; updateDisplay(); } }
+    
+    function startChild() { 
+        if(deck.length > 0) { 
+            document.getElementById('child-mode').style.display = 'flex'; 
+            updateControls('child-toggles'); // Render toggles in Child Mode
+            updateDisplay(); 
+        } 
+    }
+    
     function exitChild() { document.getElementById('child-mode').style.display = 'none'; window.speechSynthesis.cancel(); }
     
     function updateDisplay() {
         const card = deck[currentIndex];
         const txt = getTextDisplay(card);
         const col = colors[card.cat] || '#333';
-        
-        // Font Logic
         const fontClass = getFontClass();
+        
         const wordEl = document.getElementById('c-word');
         wordEl.className = ''; wordEl.classList.add(fontClass);
 
@@ -431,7 +376,12 @@
         document.getElementById('c-gender').innerText = txt.gender;
         document.getElementById('c-stripe').style.background = col;
     }
+
+    // --- UTILS ---
     function move(dir) { window.speechSynthesis.cancel(); currentIndex = (currentIndex + dir + deck.length) % deck.length; updateDisplay(); }
+    function getGenderClass(g) { if(!g)return''; if(g.includes('masc'))return'g-masc'; if(g.includes('fem'))return'g-fem'; if(g.includes('neut'))return'g-neut'; return ''; }
+    function buildCompRow(c,l,f) { const d=c.translations[l]; if(!d)return''; const g=getGenderClass(d.g||''); return `<tr><td class="comp-flag">${f}</td><td class="comp-art ${g}">${d.art||''}</td><td class="comp-word ${g}">${d.n||''}</td></tr>`; }
+    window.flipCard = function(e, id) { e.stopPropagation(); const p = document.getElementById(`card-${id}`).parentElement; if(p.classList.contains('flipped')) p.classList.remove('flipped'); else { document.querySelectorAll('.vocab-card').forEach(c=>c.classList.remove('flipped')); p.classList.add('flipped'); } };
 
     function speakDrill() {
         const card = deck[currentIndex];
@@ -439,52 +389,22 @@
         let textToSpeak = raw.n; 
         if(toggleState.plural && raw.p) textToSpeak = raw.p;
         if(toggleState.article && !toggleState.plural && raw.art) textToSpeak = `${raw.art} ${textToSpeak}`;
-
         const locales = { 'en':'en-GB', 'fr':'fr-FR', 'de':'de-DE', 'it':'it-IT', 'ru':'ru-RU', 'zh':'zh-CN', 'ja':'ja-JP', 'ko':'ko-KR' };
-        const target = locales[currentLang] || 'en-US';
-        const voice = window.speechSynthesis.getVoices().find(v => v.lang.includes(target)) || window.speechSynthesis.getVoices()[0];
-        
+        const voice = window.speechSynthesis.getVoices().find(v => v.lang.includes(locales[currentLang]||'en-US')) || window.speechSynthesis.getVoices()[0];
         window.speechSynthesis.cancel();
-        
-        // Drill: Normal -> Slow -> Normal
-        const u1 = new SpeechSynthesisUtterance(textToSpeak); u1.voice = voice; u1.rate = 1.0;
-        const u2 = new SpeechSynthesisUtterance(textToSpeak); u2.voice = voice; u2.rate = 0.6;
-        const u3 = new SpeechSynthesisUtterance(textToSpeak); u3.voice = voice; u3.rate = 1.0;
-        
-        u1.onend = () => setTimeout(() => window.speechSynthesis.speak(u2), 600);
-        u2.onend = () => setTimeout(() => window.speechSynthesis.speak(u3), 600);
-        window.speechSynthesis.speak(u1);
+        const u1=new SpeechSynthesisUtterance(textToSpeak); u1.voice=voice; u1.rate=1.0;
+        const u2=new SpeechSynthesisUtterance(textToSpeak); u2.voice=voice; u2.rate=0.6;
+        const u3=new SpeechSynthesisUtterance(textToSpeak); u3.voice=voice; u3.rate=1.0;
+        u1.onend=()=>setTimeout(()=>window.speechSynthesis.speak(u2),600); u2.onend=()=>setTimeout(()=>window.speechSynthesis.speak(u3),600); window.speechSynthesis.speak(u1);
     }
-
-    // --- PRINTING ---
+    
     function printPoker() {
-        const fontClass = getFontClass();
-        document.getElementById('print-area').className = 'grid-poker';
-        document.getElementById('print-area').innerHTML = deck.map(c => {
-            const txt = getTextDisplay(c);
-            return `<div class="cut-guide"><img src="${c.img}">
-                <div class="txt">
-                    <div class="${fontClass}">${txt.main}</div>
-                    ${txt.sub ? `<div style="font-size:0.6em; color:#666;">${txt.sub}</div>` : ''}
-                </div>
-                <div class="bar" style="background:${colors[c.cat]||'#ccc'}"></div>
-            </div>`;
-        }).join('');
-        window.print();
+        const f = getFontClass(); document.getElementById('print-area').className='grid-poker';
+        document.getElementById('print-area').innerHTML=deck.map(c=>{const t=getTextDisplay(c); return `<div class="cut-guide"><img src="${c.img}"><div class="txt"><div class="${f}">${t.main}</div>${t.sub?`<div style="font-size:0.6em;color:#666;">${t.sub}</div>`:''}</div><div class="bar" style="background:${colors[c.cat]||'#ccc'}"></div></div>`;}).join(''); window.print();
     }
     function printA4() {
-        const fontClass = getFontClass();
-        document.getElementById('print-area').className = 'layout-a4';
-        document.getElementById('print-area').innerHTML = deck.map(c => {
-            const txt = getTextDisplay(c);
-            return `<div class="page"><div class="cut-guide"><img src="${c.img}"><div class="bar" style="background:${colors[c.cat]||'#ccc'}"></div>
-                <div class="txt">
-                    <div class="${fontClass}">${txt.main}</div>
-                    ${txt.sub ? `<div style="font-size:0.4em; color:#666;">${txt.sub}</div>` : ''}
-                </div>
-            </div></div>`;
-        }).join('');
-        window.print();
+        const f = getFontClass(); document.getElementById('print-area').className='layout-a4';
+        document.getElementById('print-area').innerHTML=deck.map(c=>{const t=getTextDisplay(c); return `<div class="page"><div class="cut-guide"><img src="${c.img}"><div class="bar" style="background:${colors[c.cat]||'#ccc'}"></div><div class="txt"><div class="${f}">${t.main}</div>${t.sub?`<div style="font-size:0.4em;color:#666;">${t.sub}</div>`:''}</div></div></div>`;}).join(''); window.print();
     }
 </script>
 </body>
