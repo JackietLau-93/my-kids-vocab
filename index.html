@@ -169,7 +169,7 @@
         'fr': { plural: true, detail: 'Show Gender' },
         'de': { plural: true, detail: 'Show Gender' },
         'it': { plural: true, detail: 'Show Gender' },
-        'ru': { plural: true, detail: 'Show Gender' }, // Russian cases are complex, we treat detail as gender article hint if added, or keep simple
+        'ru': { plural: true, detail: 'Show Gender' },
         'zh': { plural: false, detail: null },
         'ja': { plural: false, detail: 'Hiragana' },
         'ko': { plural: false, detail: null }
@@ -178,7 +178,14 @@
     const colors = { animal: '#7CB342', food: '#FDD835', body: '#42A5F5', home: '#EF5350', act: '#AB47BC' };
 
     // Load Data
-    fetch('data.json').then(res => res.json()).then(data => { deck = data; updateUIControls(); renderGrid(); });
+    fetch('data.json').then(res => res.json()).then(data => { 
+        deck = data; 
+        updateUIControls(); 
+        renderGrid(); 
+    }).catch(err => {
+        alert("Error loading data.json. Check your GitHub file formatting!");
+        console.error(err);
+    });
 
     // UI Logic
     const langSelect = document.getElementById('lang-select');
@@ -187,7 +194,7 @@
 
     langSelect.addEventListener('change', (e) => {
         currentLang = e.target.value;
-        togPlural.checked = false; // Reset toggles on lang change
+        togPlural.checked = false; 
         togDetail.checked = false;
         updateUIControls();
         renderGrid();
@@ -200,10 +207,8 @@
 
     function updateUIControls() {
         const feat = features[currentLang];
-        // Show/Hide Plural Toggle
         document.getElementById('ctrl-plural').classList.toggle('hidden', !feat.plural);
         
-        // Show/Hide Detail Toggle & update label
         const detailCtrl = document.getElementById('ctrl-detail');
         if (feat.detail) {
             detailCtrl.classList.remove('hidden');
@@ -213,27 +218,37 @@
         }
     }
 
-    // --- TEXT GENERATION LOGIC ---
+    // --- ROBUST TEXT LOGIC (Fixes "Undefined") ---
     function getTextDisplay(card) {
-        const data = card.translations[currentLang];
-        if (!data) return { main: card.translations['en'].n, sub: '' }; // Fallback
+        // 1. Get the raw data for this language
+        let raw = card.translations[currentLang];
 
-        let mainText = data.n; // Default: Noun
+        // Fallback to English if translation is missing
+        if (!raw) raw = card.translations['en']; 
+
+        // SAFETY CHECK: If data is still missing, show error
+        if (!raw) return { main: '?', sub: '' };
+
+        // SCENARIO A: Old Data Format (It's just a string, e.g., "Dog")
+        if (typeof raw === 'string') {
+            return { main: raw, sub: '' };
+        }
+
+        // SCENARIO B: New Data Format (It's an object, e.g., { n: "Dog", p: "Dogs" })
+        let mainText = raw.n || '?'; // Default to Noun
         let subText = '';
 
-        // 1. Handle Plural
-        if (togPlural.checked && features[currentLang].plural && data.p) {
-            mainText = data.p;
+        // Handle Plural
+        if (togPlural.checked && features[currentLang].plural && raw.p) {
+            mainText = raw.p;
         } 
-        // 2. Handle Details (Articles / Readings)
+        // Handle Details
         else if (togDetail.checked && features[currentLang].detail) {
-            if (currentLang === 'ja' && data.r) {
-                // Japanese: Kanji + Hiragana
-                mainText = `${data.n}`;
-                subText = `(${data.r})`; 
-            } else if (data.art) {
-                // European: Article + Noun
-                mainText = `${data.art} ${data.n}`;
+            if (currentLang === 'ja' && raw.r) {
+                mainText = `${raw.n}`;
+                subText = `(${raw.r})`; 
+            } else if (raw.art) {
+                mainText = `${raw.art} ${raw.n}`;
             }
         }
 
@@ -243,10 +258,10 @@
     function renderGrid() {
         document.getElementById('grid').innerHTML = deck.map(card => {
             const txt = getTextDisplay(card);
-            const col = colors[card.cat];
+            const col = colors[card.cat] || '#ccc';
             return `
             <div class="vocab-card" onclick="startChildAt('${card.id}')">
-                <div class="card-art"><img src="${card.img}" loading="lazy"></div>
+                <div class="card-art"><img src="${card.img}" onerror="this.src='https://via.placeholder.com/300?text=Image+Error'" loading="lazy"></div>
                 <div class="card-obi">
                     <div class="word">${txt.main}</div>
                     ${txt.sub ? `<div class="sub-word">${txt.sub}</div>` : ''}
@@ -268,7 +283,8 @@
         
         document.getElementById('c-img').src = card.img;
         document.getElementById('c-word').innerText = txt.main;
-        document.getElementById('c-sub').innerText = txt.sub;
+        const sub = document.getElementById('c-sub');
+        if(sub) sub.innerText = txt.sub;
         document.getElementById('c-stripe').style.background = col;
     }
     function move(dir) { window.speechSynthesis.cancel(); currentIndex = (currentIndex + dir + deck.length) % deck.length; updateDisplay(); }
@@ -277,11 +293,13 @@
     function speakDrill() {
         const card = deck[currentIndex];
         const txt = getTextDisplay(card);
-        const textToSpeak = txt.main; // Speak what is shown (e.g., "Dogs" or "Le Chien")
+        const textToSpeak = txt.main; 
         
-        // Basic locale mapping
+        // Locale mapping
         const locales = { 'en':'en-GB', 'fr':'fr-FR', 'de':'de-DE', 'it':'it-IT', 'ru':'ru-RU', 'zh':'zh-CN', 'ja':'ja-JP', 'ko':'ko-KR' };
-        const voice = window.speechSynthesis.getVoices().find(v => v.lang.includes(locales[currentLang])) || window.speechSynthesis.getVoices()[0];
+        // Find voice
+        const target = locales[currentLang] || 'en-US';
+        const voice = window.speechSynthesis.getVoices().find(v => v.lang.includes(target)) || window.speechSynthesis.getVoices()[0];
         
         window.speechSynthesis.cancel();
         const u = new SpeechSynthesisUtterance(textToSpeak);
@@ -300,7 +318,7 @@
                     <div>${txt.main}</div>
                     ${txt.sub ? `<div style="font-size:0.5em; color:#666;">${txt.sub}</div>` : ''}
                 </div>
-                <div class="bar" style="background:${colors[c.cat]}"></div>
+                <div class="bar" style="background:${colors[c.cat] || '#ccc'}"></div>
             </div>`;
         }).join('');
         window.print();
@@ -310,7 +328,7 @@
         document.getElementById('print-area').className = 'layout-a4';
         document.getElementById('print-area').innerHTML = deck.map(c => {
             const txt = getTextDisplay(c);
-            return `<div class="page"><div class="cut-guide"><img src="${c.img}"><div class="bar" style="background:${colors[c.cat]}"></div>
+            return `<div class="page"><div class="cut-guide"><img src="${c.img}"><div class="bar" style="background:${colors[c.cat] || '#ccc'}"></div>
                 <div class="txt">
                     <div>${txt.main}</div>
                     ${txt.sub ? `<div style="font-size:0.4em; color:#666;">${txt.sub}</div>` : ''}
@@ -319,6 +337,7 @@
         }).join('');
         window.print();
     }
+</script>
 </script>
 </body>
 </html>

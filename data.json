@@ -2,7 +2,7 @@
   {
     "id": "dog",
     "cat": "animal",
-    "img": "images/dog.jpg",
+    "img": "images/dog.png",
     "translations": {
       "en": { "n": "dog", "art": "a", "p": "dogs" },
       "zh": { "n": "狗" },
@@ -17,7 +17,7 @@
   {
     "id": "banana",
     "cat": "food",
-    "img": "images/banana.jpg",
+    "img": "images/banana.png",
     "translations": {
       "en": { "n": "banana", "art": "a", "p": "bananas" },
       "zh": { "n": "香蕉" },
@@ -32,7 +32,7 @@
   {
     "id": "nose",
     "cat": "body",
-    "img": "images/nose.jpg",
+    "img": "images/nose.png",
     "translations": {
       "en": { "n": "nose", "art": "a", "p": "noses" },
       "zh": { "n": "鼻子" },
