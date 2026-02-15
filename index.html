@@ -65,10 +65,13 @@
         padding: 15px; box-sizing: border-box;
         background: var(--card-bg);
     }
+    
     .card-art img { 
         max-width: 100%; max-height: 100%; 
         object-fit: contain; 
-        /* This is the secret sauce: */
+        /* NEW: This pushes light grey pixels to pure white */
+        filter: brightness(1.03) contrast(1.03);
+        /* Then this blends them away completely */
         mix-blend-mode: multiply; 
     }
 
@@ -105,7 +108,9 @@
     }
     .focus-card img { 
         flex: 1; object-fit: contain; padding: 40px; 
-        mix-blend-mode: multiply; /* Applied here too */
+        /* Apply the same fix here */
+        filter: brightness(1.03) contrast(1.03);
+        mix-blend-mode: multiply;
     }
     .focus-card .word-box { height: 100px; display: flex; align-items: center; justify-content: center; }
     .focus-card h1 { font-family: 'Fredoka One'; font-size: 3.5rem; margin: 0; color: #333; }
