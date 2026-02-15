@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>TinyVocab Grammar</title>
+<title>TinyVocab Linguist</title>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Zen+Maru+Gothic:wght@500;700&display=swap" rel="stylesheet">
 <style>
     :root {
@@ -25,8 +25,8 @@
         display: flex; flex-direction: column; gap: 10px;
     }
     
-    .top-row { display: flex; justify-content: space-between; align-items: center; width: 100%; }
-    .controls-row { display: flex; gap: 15px; align-items: center; padding-top: 5px; border-top: 1px solid #f0f0f0; }
+    .top-row { display: flex; justify-content: space-between; align-items: center; width: 100%; flex-wrap: wrap; gap: 10px;}
+    .controls-row { display: flex; gap: 12px; align-items: center; padding-top: 5px; border-top: 1px solid #f0f0f0; flex-wrap: wrap;}
 
     .btn { padding: 8px 16px; border: 1px solid #ddd; border-radius: 20px; cursor: pointer; background: white; font-family: 'Fredoka One'; color: #555; font-size: 0.85rem;}
     .btn-primary { background: #333; color: white; border-color: #333; }
@@ -37,11 +37,11 @@
     }
 
     /* TOGGLE SWITCH STYLES */
-    .toggle-group { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; font-weight: bold; color: #555; cursor: pointer; }
-    .switch { position: relative; display: inline-block; width: 40px; height: 24px; }
+    .toggle-group { display: flex; align-items: center; gap: 6px; font-size: 0.85rem; font-weight: bold; color: #555; cursor: pointer; background: #fff; padding: 4px 8px; border-radius: 15px; border: 1px solid #eee; }
+    .switch { position: relative; display: inline-block; width: 36px; height: 20px; }
     .switch input { opacity: 0; width: 0; height: 0; }
     .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
-    .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+    .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; }
     input:checked + .slider { background-color: #333; }
     input:checked + .slider:before { transform: translateX(16px); }
     .hidden { display: none !important; }
@@ -61,18 +61,20 @@
     .card-art { flex: 1; width: 100%; display: flex; align-items: center; justify-content: center; padding: 15px; box-sizing: border-box; }
     .card-art img { max-width: 100%; max-height: 100%; object-fit: contain; filter: brightness(1.03) contrast(1.03); mix-blend-mode: multiply; }
 
-    .card-obi { min-height: 70px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding-bottom: 5px; position: relative; }
+    .card-obi { min-height: 80px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding-bottom: 5px; position: relative; }
     .color-stroke { position: absolute; bottom: 0; left: 0; width: 100%; height: 6px; }
-    .word { font-family: 'Fredoka One'; font-size: 1.6rem; color: #333; text-align: center; line-height: 1.1; }
-    .sub-word { font-size: 0.9rem; color: #888; font-family: 'Zen Maru Gothic'; margin-top: 2px; }
+    
+    .word { font-family: 'Fredoka One'; font-size: 1.6rem; color: #333; text-align: center; line-height: 1.1; margin-bottom: 2px;}
+    .sub-word { font-size: 0.9rem; color: #777; font-family: 'Zen Maru Gothic'; text-align: center; font-weight: 500;}
+    .gender-badge { font-size: 0.75rem; color: #999; font-style: italic; margin-top: 2px; }
 
     /* --- CHILD MODE --- */
     #child-mode { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #fff; z-index: 200; display: flex; flex-direction: column; align-items: center; justify-content: center; }
     .focus-card { width: 85vw; max-width: 400px; aspect-ratio: 3/4; background: white; border-radius: 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.1); display: flex; flex-direction: column; overflow: hidden; }
     .focus-card img { flex: 1; object-fit: contain; padding: 40px; filter: brightness(1.03) contrast(1.03); mix-blend-mode: multiply; }
-    .focus-card .word-box { height: 120px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+    .focus-card .word-box { height: 140px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 10px; box-sizing: border-box;}
     .focus-card h1 { font-family: 'Fredoka One'; font-size: 3rem; margin: 0; color: #333; line-height: 1; }
-    .focus-card h2 { font-family: 'Zen Maru Gothic'; font-size: 1.5rem; margin: 5px 0 0 0; color: #888; font-weight: normal; }
+    .focus-card h2 { font-family: 'Zen Maru Gothic'; font-size: 1.5rem; margin: 8px 0 0 0; color: #888; font-weight: normal; }
     .focus-stripe { height: 10px; width: 100%; }
     
     .controls { margin-top: 30px; display: flex; gap: 20px; }
@@ -84,12 +86,11 @@
     @media print {
         header, .container, #child-mode { display: none !important; }
         #print-area { display: block !important; width: 100%; height: 100%; }
-        /* Clean white print layout */
         .cut-guide { border: 1px dashed #e0e0e0; box-sizing: border-box; background: white; position: relative; display: flex; flex-direction: column; border-radius: 6px; }
         .grid-poker { display: grid; grid-template-columns: repeat(3, 63.5mm); grid-template-rows: repeat(3, 88.9mm); padding: 10mm; gap: 2mm; }
         .grid-poker .cut-guide { width: 63.5mm; height: 88.9mm; }
         .grid-poker img { flex: 1; width: 100%; object-fit: contain; padding: 10px; }
-        .grid-poker .txt { height: 20mm; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: 'Fredoka One'; font-size: 16pt; color: #333; margin-bottom: 2mm; text-align: center;}
+        .grid-poker .txt { height: 25mm; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: 'Fredoka One'; font-size: 16pt; color: #333; margin-bottom: 2mm; text-align: center;}
         .grid-poker .bar { height: 3mm; width: 100%; position: absolute; bottom: 0; left: 0; }
         
         .layout-a4 .page { break-after: page; width: 100vw; height: 100vh; display: flex; align-items: center; justify-content: center; }
@@ -122,17 +123,8 @@
         </div>
     </div>
     
-    <div class="controls-row">
-        <label class="toggle-group" id="ctrl-plural">
-            <span class="switch"><input type="checkbox" id="tog-plural"><span class="slider"></span></span>
-            Many (Plural)
-        </label>
-        
-        <label class="toggle-group" id="ctrl-detail">
-            <span class="switch"><input type="checkbox" id="tog-detail"><span class="slider"></span></span>
-            <span id="lbl-detail">Show Article</span>
-        </label>
-    </div>
+    <div class="controls-row" id="toggle-container">
+        </div>
 </header>
 
 <div class="container">
@@ -146,6 +138,7 @@
         <div class="word-box">
             <h1 id="c-word">Word</h1>
             <h2 id="c-sub"></h2>
+            <div id="c-gender" class="gender-badge" style="font-size: 1.2rem;"></div>
         </div>
         <div class="focus-stripe" id="c-stripe"></div>
     </div>
@@ -163,96 +156,128 @@
     let currentIndex = 0;
     let currentLang = 'en';
 
-    // Config: Which languages support which features
-    const features = {
-        'en': { plural: true, detail: 'Show Article' },
-        'fr': { plural: true, detail: 'Show Gender' },
-        'de': { plural: true, detail: 'Show Gender' },
-        'it': { plural: true, detail: 'Show Gender' },
-        'ru': { plural: true, detail: 'Show Gender' },
-        'zh': { plural: false, detail: null },
-        'ja': { plural: false, detail: 'Hiragana' },
-        'ko': { plural: false, detail: null }
+    // --- CONFIGURATION ---
+    // Defines which toggles appear for which language
+    const langConfig = {
+        'en': { toggles: ['plural', 'article'] },
+        'fr': { toggles: ['plural', 'article', 'gender'] },
+        'de': { toggles: ['plural', 'article', 'gender'] },
+        'it': { toggles: ['plural', 'article', 'gender'] },
+        'ru': { toggles: ['plural', 'article', 'gender', 'latin'] }, // 'article' kept per request, though usually empty
+        'zh': { toggles: ['pinyin'] },
+        'ja': { toggles: ['hiragana'] },
+        'ko': { toggles: ['hanja'] }
+    };
+
+    // Defines the Label for each toggle ID
+    const toggleLabels = {
+        'plural': 'Plural',
+        'article': 'Article',
+        'gender': 'Gender',
+        'pinyin': 'Pinyin',
+        'latin': 'Latin',
+        'hiragana': 'Hiragana',
+        'hanja': 'Hanja'
+    };
+
+    // State of toggles
+    let toggleState = {
+        plural: false, article: false, gender: false, 
+        pinyin: false, latin: false, hiragana: false, hanja: false
     };
 
     const colors = { animal: '#7CB342', food: '#FDD835', body: '#42A5F5', home: '#EF5350', act: '#AB47BC' };
 
-    // Load Data
+    // --- INIT ---
     fetch('data.json').then(res => res.json()).then(data => { 
         deck = data; 
-        updateUIControls(); 
+        updateControls();
         renderGrid(); 
-    }).catch(err => {
-        alert("Error loading data.json. Check your GitHub file formatting!");
-        console.error(err);
-    });
+    }).catch(err => console.error(err));
 
-    // UI Logic
     const langSelect = document.getElementById('lang-select');
-    const togPlural = document.getElementById('tog-plural');
-    const togDetail = document.getElementById('tog-detail');
-
     langSelect.addEventListener('change', (e) => {
         currentLang = e.target.value;
-        togPlural.checked = false; 
-        togDetail.checked = false;
-        updateUIControls();
+        // Reset specific toggles when switching lang
+        toggleState = { plural: false, article: false, gender: false, pinyin: false, latin: false, hiragana: false, hanja: false };
+        updateControls();
         renderGrid();
     });
 
-    [togPlural, togDetail].forEach(t => t.addEventListener('change', () => {
-        renderGrid();
-        if(document.getElementById('child-mode').style.display === 'flex') updateDisplay();
-    }));
-
-    function updateUIControls() {
-        const feat = features[currentLang];
-        document.getElementById('ctrl-plural').classList.toggle('hidden', !feat.plural);
+    // --- DYNAMIC CONTROL BUILDER ---
+    function updateControls() {
+        const container = document.getElementById('toggle-container');
+        container.innerHTML = ''; // Clear existing
         
-        const detailCtrl = document.getElementById('ctrl-detail');
-        if (feat.detail) {
-            detailCtrl.classList.remove('hidden');
-            document.getElementById('lbl-detail').innerText = feat.detail;
-        } else {
-            detailCtrl.classList.add('hidden');
-        }
+        const config = langConfig[currentLang];
+        
+        config.toggles.forEach(key => {
+            const label = toggleLabels[key];
+            const html = `
+                <label class="toggle-group">
+                    <span class="switch">
+                        <input type="checkbox" onchange="toggleFeature('${key}', this.checked)" ${toggleState[key] ? 'checked' : ''}>
+                        <span class="slider"></span>
+                    </span>
+                    ${label}
+                </label>
+            `;
+            container.insertAdjacentHTML('beforeend', html);
+        });
     }
 
-    // --- ROBUST TEXT LOGIC (Fixes "Undefined") ---
+    window.toggleFeature = function(key, isChecked) {
+        toggleState[key] = isChecked;
+        renderGrid();
+        if(document.getElementById('child-mode').style.display === 'flex') updateDisplay();
+    };
+
+    // --- TEXT LOGIC ---
     function getTextDisplay(card) {
-        // 1. Get the raw data for this language
         let raw = card.translations[currentLang];
-
-        // Fallback to English if translation is missing
         if (!raw) raw = card.translations['en']; 
+        if (!raw) return { main: '?', sub: '', gender: '' };
+        if (typeof raw === 'string') return { main: raw, sub: '', gender: '' };
 
-        // SAFETY CHECK: If data is still missing, show error
-        if (!raw) return { main: '?', sub: '' };
+        let mainText = raw.n || '?';
+        let subText = '';
+        let genderText = '';
 
-        // SCENARIO A: Old Data Format (It's just a string, e.g., "Dog")
-        if (typeof raw === 'string') {
-            return { main: raw, sub: '' };
+        // 1. Plural Logic
+        if (toggleState.plural && raw.p) {
+            mainText = raw.p;
         }
 
-        // SCENARIO B: New Data Format (It's an object, e.g., { n: "Dog", p: "Dogs" })
-        let mainText = raw.n || '?'; // Default to Noun
-        let subText = '';
+        // 2. Article Logic (Prepend)
+        if (toggleState.article && raw.art) {
+            mainText = `${raw.art} ${mainText}`;
+        }
 
-        // Handle Plural
-        if (togPlural.checked && features[currentLang].plural && raw.p) {
-            mainText = raw.p;
-        } 
-        // Handle Details
-        else if (togDetail.checked && features[currentLang].detail) {
-            if (currentLang === 'ja' && raw.r) {
-                mainText = `${raw.n}`;
-                subText = `(${raw.r})`; 
-            } else if (raw.art) {
-                mainText = `${raw.art} ${raw.n}`;
+        // 3. Gender Logic
+        if (toggleState.gender && raw.g) {
+            genderText = raw.g;
+        }
+
+        // 4. Romanization Logic (Chinese Pinyin / Russian Latin)
+        if (toggleState.pinyin && raw.py) subText = raw.py;
+        if (toggleState.latin && raw.lt) subText = raw.lt;
+
+        // 5. Alt Script Logic (Japanese / Korean)
+        // Japanese: Kanji Main, Hiragana Sub
+        if (currentLang === 'ja') {
+             if(toggleState.hiragana && raw.r) subText = `(${raw.r})`;
+        }
+        
+        // Korean: If Hanja ON -> Main: Hanja, Sub: Hangul
+        //         If Hanja OFF -> Main: Hangul
+        if (currentLang === 'ko') {
+            if (toggleState.hanja && raw.hj) {
+                subText = `(${mainText})`; // Move Hangul to sub
+                mainText = raw.hj; // Set Main to Hanja
             }
         }
 
-        return { main: mainText, sub: subText };
+        return { main: mainText, sub: subText, gender: genderText };
     }
 
     function renderGrid() {
@@ -261,10 +286,11 @@
             const col = colors[card.cat] || '#ccc';
             return `
             <div class="vocab-card" onclick="startChildAt('${card.id}')">
-                <div class="card-art"><img src="${card.img}" onerror="this.src='https://via.placeholder.com/300?text=Image+Error'" loading="lazy"></div>
+                <div class="card-art"><img src="${card.img}" onerror="this.src='https://via.placeholder.com/300'" loading="lazy"></div>
                 <div class="card-obi">
                     <div class="word">${txt.main}</div>
                     ${txt.sub ? `<div class="sub-word">${txt.sub}</div>` : ''}
+                    ${txt.gender ? `<div class="gender-badge">${txt.gender}</div>` : ''}
                     <div class="color-stroke" style="background:${col}"></div>
                 </div>
             </div>`;
@@ -283,8 +309,8 @@
         
         document.getElementById('c-img').src = card.img;
         document.getElementById('c-word').innerText = txt.main;
-        const sub = document.getElementById('c-sub');
-        if(sub) sub.innerText = txt.sub;
+        document.getElementById('c-sub').innerText = txt.sub;
+        document.getElementById('c-gender').innerText = txt.gender;
         document.getElementById('c-stripe').style.background = col;
     }
     function move(dir) { window.speechSynthesis.cancel(); currentIndex = (currentIndex + dir + deck.length) % deck.length; updateDisplay(); }
@@ -292,12 +318,14 @@
     // --- SPEECH ---
     function speakDrill() {
         const card = deck[currentIndex];
-        const txt = getTextDisplay(card);
-        const textToSpeak = txt.main; 
-        
-        // Locale mapping
+        const raw = card.translations[currentLang] || card.translations['en'];
+        // Speak the natural noun form, not the Kanji/Hanja unless specifically desired.
+        // Usually better to speak the pronunciation (n) or plural (p).
+        let textToSpeak = raw.n; 
+        if(toggleState.plural && raw.p) textToSpeak = raw.p;
+        if(toggleState.article && raw.art) textToSpeak = `${raw.art} ${textToSpeak}`;
+
         const locales = { 'en':'en-GB', 'fr':'fr-FR', 'de':'de-DE', 'it':'it-IT', 'ru':'ru-RU', 'zh':'zh-CN', 'ja':'ja-JP', 'ko':'ko-KR' };
-        // Find voice
         const target = locales[currentLang] || 'en-US';
         const voice = window.speechSynthesis.getVoices().find(v => v.lang.includes(target)) || window.speechSynthesis.getVoices()[0];
         
@@ -316,7 +344,8 @@
             return `<div class="cut-guide"><img src="${c.img}">
                 <div class="txt">
                     <div>${txt.main}</div>
-                    ${txt.sub ? `<div style="font-size:0.5em; color:#666;">${txt.sub}</div>` : ''}
+                    ${txt.sub ? `<div style="font-size:0.6em; color:#666;">${txt.sub}</div>` : ''}
+                    ${txt.gender ? `<div style="font-size:0.5em; color:#999; font-style:italic;">${txt.gender}</div>` : ''}
                 </div>
                 <div class="bar" style="background:${colors[c.cat] || '#ccc'}"></div>
             </div>`;
@@ -332,12 +361,12 @@
                 <div class="txt">
                     <div>${txt.main}</div>
                     ${txt.sub ? `<div style="font-size:0.4em; color:#666;">${txt.sub}</div>` : ''}
+                    ${txt.gender ? `<div style="font-size:0.3em; color:#999; font-style:italic;">${txt.gender}</div>` : ''}
                 </div>
             </div></div>`;
         }).join('');
         window.print();
     }
-</script>
 </script>
 </body>
 </html>
