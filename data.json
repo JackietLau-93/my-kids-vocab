@@ -2,14 +2,15 @@
   {
     "id": "dog",
     "cat": "animal",
+    "pos": "noun",
     "img": "images/dog.png",
     "translations": {
-      "en": { "n": "dog", "art": "a", "p": "dogs" },
+      "en": { "n": "dog", "art": "a", "p": "dogs", "ipa": "/dɒɡ/" },
       "zh": { "n": "狗", "t": "狗", "py": "gǒu" },
-      "fr": { "n": "chien", "art": "le", "p": "les chiens", "g": "masc." },
-      "de": { "n": "Hund", "art": "der", "p": "die Hunde", "g": "masc." },
-      "it": { "n": "cane", "art": "il", "p": "i cani", "g": "masc." },
-      "ru": { "n": "собака", "p": "собаки", "g": "fem.", "lt": "sobaka" },
+      "fr": { "n": "chien", "art": "le", "p": "les chiens", "g": "masc.", "ipa": "/ʃjɛ̃/" },
+      "de": { "n": "Hund", "art": "der", "p": "die Hunde", "g": "masc.", "ipa": "/hʊnt/" },
+      "it": { "n": "cane", "art": "il", "p": "i cani", "g": "masc.", "ipa": "/ˈka.ne/" },
+      "ru": { "n": "собака", "p": "собаки", "g": "fem.", "lt": "sobaka", "ipa": "/sɐˈbakə/" },
       "ja": { "n": "犬", "r": "いぬ" },
       "ko": { "n": "개", "hj": "" }
     }
@@ -17,14 +18,15 @@
   {
     "id": "banana",
     "cat": "food",
+    "pos": "noun",
     "img": "images/banana.png",
     "translations": {
-      "en": { "n": "banana", "art": "a", "p": "bananas" },
+      "en": { "n": "banana", "art": "a", "p": "bananas", "ipa": "/bəˈnɑːnə/" },
       "zh": { "n": "香蕉", "t": "香蕉", "py": "xiāngjiāo" },
-      "fr": { "n": "banane", "art": "la", "p": "les bananes", "g": "fem." },
-      "de": { "n": "Banane", "art": "die", "p": "die Bananen", "g": "fem." },
-      "it": { "n": "banana", "art": "la", "p": "le banane", "g": "fem." },
-      "ru": { "n": "банан", "p": "бананы", "g": "masc.", "lt": "banan" },
+      "fr": { "n": "banane", "art": "la", "p": "les bananes", "g": "fem.", "ipa": "/ba.nan/" },
+      "de": { "n": "Banane", "art": "die", "p": "die Bananen", "g": "fem.", "ipa": "/baˈnaːnə/" },
+      "it": { "n": "banana", "art": "la", "p": "le banane", "g": "fem.", "ipa": "/baˈna.na/" },
+      "ru": { "n": "банан", "p": "бананы", "g": "masc.", "lt": "banan", "ipa": "/bɐˈnan/" },
       "ja": { "n": "バナナ", "r": "ばなな" },
       "ko": { "n": "바나나", "hj": "" }
     }
@@ -32,14 +34,15 @@
   {
     "id": "nose",
     "cat": "body",
+    "pos": "noun",
     "img": "images/nose.png",
     "translations": {
-      "en": { "n": "nose", "art": "a", "p": "noses" },
+      "en": { "n": "nose", "art": "a", "p": "noses", "ipa": "/nəʊz/" },
       "zh": { "n": "鼻子", "t": "鼻子", "py": "bízi" },
-      "fr": { "n": "nez", "art": "le", "p": "les nez", "g": "masc." },
-      "de": { "n": "Nase", "art": "die", "p": "die Nasen", "g": "fem." },
-      "it": { "n": "naso", "art": "il", "p": "i nasi", "g": "masc." },
-      "ru": { "n": "нос", "p": "носы", "g": "masc.", "lt": "nos" },
+      "fr": { "n": "nez", "art": "le", "p": "les nez", "g": "masc.", "ipa": "/ne/" },
+      "de": { "n": "Nase", "art": "die", "p": "die Nasen", "g": "fem.", "ipa": "/ˈnaːzə/" },
+      "it": { "n": "naso", "art": "il", "p": "i nasi", "g": "masc.", "ipa": "/ˈna.zo/" },
+      "ru": { "n": "нос", "p": "носы", "g": "masc.", "lt": "nos", "ipa": "/nos/" },
       "ja": { "n": "鼻", "r": "はな" },
       "ko": { "n": "코", "hj": "" }
     }

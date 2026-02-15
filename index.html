@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>TinyVocab Educational</title>
+<title>TinyVocab Phonetic</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,12 +11,19 @@
 
 <style>
     :root {
+        /* Semantic Colors (Card Style) */
         --c-animal: #7CB342; --c-food: #FDD835; --c-body: #42A5F5; 
         --c-home: #EF5350; --c-act: #AB47BC;
-        --bg: #F2F2F2; --card-bg: #FFFFFF;
         
+        /* Grammar Colors (POS Badges) */
+        --pos-noun: #2196F3; /* Blue */
+        --pos-verb: #E91E63; /* Red */
+        --pos-adj:  #9C27B0; /* Purple */
+
         /* Gender Colors */
         --g-masc: #2196F3; --g-fem: #E91E63; --g-neut: #4CAF50;
+        
+        --bg: #F2F2F2; --card-bg: #FFFFFF;
     }
 
     body { 
@@ -24,37 +31,29 @@
         margin: 0; color: #333; -webkit-font-smoothing: antialiased;
     }
 
-    /* --- FONTS --- */
+    /* FONTS */
     .font-en, .font-fr, .font-de, .font-it, .font-ru { font-family: 'Fredoka One', cursive; }
-    
     .font-ja { font-family: 'Zen Maru Gothic', sans-serif; font-weight: 700; }
-    
     .font-ko { font-family: 'Jua', sans-serif; }
-    
-    /* NEW: Standard Textbook Fonts for Chinese */
     .font-zh-cn { font-family: 'Noto Sans SC', sans-serif; font-weight: 700; letter-spacing: 1px; }
     .font-zh-tw { font-family: 'Noto Sans TC', sans-serif; font-weight: 700; letter-spacing: 1px; }
 
-    /* --- HEADER --- */
+    /* HEADER */
     header { 
         background: rgba(255,255,255,0.98); padding: 15px 20px; 
         position: sticky; top: 0; z-index: 100;
         box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         display: flex; flex-direction: column; gap: 10px;
     }
-    
     .top-row { display: flex; justify-content: space-between; align-items: center; width: 100%; flex-wrap: wrap; gap: 10px;}
     .controls-row { display: flex; gap: 12px; align-items: center; padding-top: 5px; border-top: 1px solid #f0f0f0; flex-wrap: wrap;}
 
     .btn { padding: 8px 16px; border: 1px solid #ddd; border-radius: 20px; cursor: pointer; background: white; font-family: 'Fredoka One'; color: #555; font-size: 0.85rem;}
     .btn-primary { background: #333; color: white; border-color: #333; }
     
-    #lang-select {
-        padding: 8px 12px; border: 1px solid #ddd; border-radius: 20px;
-        font-family: 'Zen Maru Gothic'; font-weight: bold; color: #333; background: white; outline: none;
-    }
+    #lang-select { padding: 8px 12px; border: 1px solid #ddd; border-radius: 20px; font-family: 'Zen Maru Gothic'; font-weight: bold; outline: none; }
 
-    /* TOGGLE SWITCHES */
+    /* TOGGLES */
     .toggle-group { display: flex; align-items: center; gap: 6px; font-size: 0.85rem; font-weight: bold; color: #555; cursor: pointer; background: #fff; padding: 4px 8px; border-radius: 15px; border: 1px solid #eee; transition: opacity 0.3s; }
     .switch { position: relative; display: inline-block; width: 36px; height: 20px; }
     .switch input { opacity: 0; width: 0; height: 0; }
@@ -64,79 +63,58 @@
     input:checked + .slider:before { transform: translateX(16px); }
     .toggle-group.disabled { opacity: 0.4; pointer-events: none; filter: grayscale(1); }
 
-    /* --- CARD GRID --- */
+    /* CARD GRID */
     .container { max-width: 1200px; margin: 0 auto; padding: 30px 20px; }
     .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 25px; }
     
-    .vocab-card {
-        aspect-ratio: 3/4; background-color: transparent; perspective: 1000px; cursor: pointer;
-    }
-    .card-inner {
-        position: relative; width: 100%; height: 100%; text-align: center;
-        transition: transform 0.6s; transform-style: preserve-3d;
-        border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.06);
-    }
+    .vocab-card { aspect-ratio: 3/4; background-color: transparent; perspective: 1000px; cursor: pointer; }
+    .card-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s; transform-style: preserve-3d; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.06); }
     .vocab-card.flipped .card-inner { transform: rotateY(180deg); }
-    .card-front, .card-back {
-        position: absolute; width: 100%; height: 100%;
-        -webkit-backface-visibility: hidden; backface-visibility: hidden;
-        border-radius: 16px; overflow: hidden; background: var(--card-bg);
-        display: flex; flex-direction: column;
-    }
-    .card-back {
-        transform: rotateY(180deg); background: #fdfdfd;
-        padding: 15px; box-sizing: border-box; align-items: center; justify-content: flex-start;
-    }
+    .card-front, .card-back { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; border-radius: 16px; overflow: hidden; background: var(--card-bg); display: flex; flex-direction: column; }
+    .card-back { transform: rotateY(180deg); background: #fdfdfd; padding: 15px; box-sizing: border-box; align-items: center; justify-content: flex-start; }
 
-    /* FRONT CONTENT */
+    /* CARD CONTENT */
     .card-art { flex: 1; width: 100%; display: flex; align-items: center; justify-content: center; padding: 15px; box-sizing: border-box; }
     .card-art img { max-width: 100%; max-height: 100%; object-fit: contain; filter: brightness(1.03) contrast(1.03); mix-blend-mode: multiply; }
     
     .card-obi { min-height: 80px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding-bottom: 5px; position: relative; }
     .color-stroke { position: absolute; bottom: 0; left: 0; width: 100%; height: 6px; }
     
-    /* Base Word Style - Fonts applied via class */
-    .word { font-size: 1.8rem; color: #333; text-align: center; line-height: 1.2; margin-bottom: 2px;}
-    .sub-word { font-size: 0.9rem; color: #777; font-family: 'Zen Maru Gothic'; text-align: center; font-weight: 500;}
-    .gender-badge { font-size: 0.75rem; color: #999; font-style: italic; margin-top: 2px; font-family: 'Zen Maru Gothic';}
+    .word-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 2px; }
+    .word { font-size: 1.8rem; color: #333; text-align: center; line-height: 1.2; }
+    .sub-word { font-size: 0.9rem; color: #777; font-family: 'Zen Maru Gothic'; text-align: center; font-weight: 500; }
+    .gender-badge { font-size: 0.75rem; color: #999; font-style: italic; margin-top: 2px; font-family: 'Zen Maru Gothic'; }
 
-    .flip-btn {
-        position: absolute; top: 10px; right: 10px; width: 32px; height: 32px; border-radius: 50%;
-        background: rgba(255,255,255,0.9); border: 1px solid #eee; display: flex; align-items: center; justify-content: center;
-        font-size: 1.2rem; cursor: pointer; z-index: 10; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    /* POS Badge */
+    .pos-badge { 
+        font-size: 0.6rem; color: white; padding: 2px 6px; border-radius: 10px; font-family: 'Zen Maru Gothic'; font-weight: bold; text-transform: uppercase; margin-top: 4px; display: inline-block;
     }
+    .pos-noun { background: var(--pos-noun); }
+    .pos-verb { background: var(--pos-verb); }
+    .pos-adj { background: var(--pos-adj); }
 
-    /* BACK CONTENT */
+    .flip-btn { position: absolute; top: 10px; right: 10px; width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.9); border: 1px solid #eee; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; cursor: pointer; z-index: 10; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+
+    /* BACK TABLE */
     .back-title { font-family: 'Fredoka One'; font-size: 1.1rem; color: #333; margin-bottom: 15px; margin-top: 10px; }
     .comp-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; text-align: left; }
     .comp-table tr { border-bottom: 1px solid #eee; }
     .comp-table td { padding: 8px 4px; }
-    .comp-flag { font-size: 1.2rem; width: 30px; }
-    .comp-art { font-weight: bold; width: 30px; }
-    .comp-word { font-weight: 500; color: #555; }
     .g-masc { color: var(--g-masc); } .g-fem { color: var(--g-fem); } .g-neut { color: var(--g-neut); }
     .close-flip { margin-top: auto; padding: 8px 20px; border-radius: 20px; background: #eee; border: none; font-family: 'Fredoka One'; color: #555; cursor: pointer; }
 
-    /* --- CHILD MODE --- */
+    /* CHILD MODE */
     #child-mode { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #fff; z-index: 200; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-    
-    .child-toggles { 
-        display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;
-        margin-bottom: 20px;
-    }
-
+    .child-toggles { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-bottom: 20px; }
     .focus-card { width: 85vw; max-width: 400px; aspect-ratio: 3/4; background: white; border-radius: 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.1); display: flex; flex-direction: column; overflow: hidden; }
     .focus-card img { flex: 1; object-fit: contain; padding: 40px; filter: brightness(1.03) contrast(1.03); mix-blend-mode: multiply; }
-    .focus-card .word-box { height: 140px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 10px; box-sizing: border-box;}
+    .focus-card .word-box { height: 160px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 10px; box-sizing: border-box;}
     .focus-card h1 { font-size: 3.5rem; margin: 0; color: #333; line-height: 1; }
-    .focus-card h2 { font-family: 'Zen Maru Gothic'; font-size: 1.5rem; margin: 8px 0 0 0; color: #888; font-weight: normal; }
-    .focus-stripe { height: 10px; width: 100%; }
-    
     .controls { margin-top: 30px; display: flex; gap: 20px; }
     .nav-btn { width: 70px; height: 70px; border-radius: 50%; border: none; font-size: 2rem; background: #f5f5f5; cursor: pointer; color: #333; }
     .play-btn { width: 90px; height: 90px; font-size: 3rem; background: #333; color: white; }
 
-    /* --- PRINT STYLES --- */
+    /* PRINT */
     #print-area { display: none; }
     @media print {
         header, .container, #child-mode { display: none !important; }
@@ -186,14 +164,13 @@
 
 <div id="child-mode" style="display:none;">
     <button onclick="exitChild()" style="position:absolute; top:30px; right:30px; border:none; background:none; font-size:2rem; opacity:0.3; cursor:pointer;">✕</button>
-    
     <div id="child-toggles" class="child-toggles"></div>
-
     <div class="focus-card" id="focus-display">
         <img id="c-img" src="">
         <div class="word-box">
             <h1 id="c-word">Word</h1>
             <h2 id="c-sub"></h2>
+            <div id="c-pos" class="pos-badge"></div>
             <div id="c-gender" class="gender-badge" style="font-size: 1.2rem;"></div>
         </div>
         <div class="focus-stripe" id="c-stripe"></div>
@@ -212,19 +189,28 @@
     let currentIndex = 0;
     let currentLang = 'en';
 
+    // CONFIGS
+    // Added 'ipa' to en, fr, de, it, ru
     const langConfig = {
-        'en': { toggles: ['article', 'plural'] },
-        'fr': { toggles: ['article', 'plural', 'gender'] },
-        'de': { toggles: ['article', 'plural', 'gender'] },
-        'it': { toggles: ['article', 'plural', 'gender'] },
-        'ru': { toggles: ['plural', 'gender', 'latin'] },
+        'en': { toggles: ['article', 'plural', 'ipa'] },
+        'fr': { toggles: ['article', 'plural', 'gender', 'ipa'] },
+        'de': { toggles: ['article', 'plural', 'gender', 'ipa'] },
+        'it': { toggles: ['article', 'plural', 'gender', 'ipa'] },
+        'ru': { toggles: ['plural', 'gender', 'latin', 'ipa'] },
         'zh': { toggles: ['traditional', 'pinyin'] },
         'ja': { toggles: ['hiragana'] },
         'ko': { toggles: ['hanja'] }
     };
 
-    const toggleLabels = { 'plural':'Plural', 'article':'Article', 'gender':'Gender', 'pinyin':'Pinyin', 'latin':'Latin', 'hiragana':'Hiragana', 'hanja':'Hanja', 'traditional':'Traditional' };
-    let toggleState = { plural:false, article:false, gender:false, pinyin:false, latin:false, hiragana:false, hanja:false, traditional:false };
+    const toggleLabels = { 
+        'plural':'Plural', 'article':'Article', 'gender':'Gender', 
+        'pinyin':'Pinyin', 'latin':'Latin', 'ipa':'IPA',
+        'hiragana':'Hiragana', 'hanja':'Hanja', 'traditional':'Traditional' 
+    };
+
+    let toggleState = { plural:false, article:false, gender:false, pinyin:false, latin:false, ipa:false, hiragana:false, hanja:false, traditional:false };
+    
+    // Semantic Colors (Bars)
     const colors = { animal: '#7CB342', food: '#FDD835', body: '#42A5F5', home: '#EF5350', act: '#AB47BC' };
 
     fetch('data.json').then(res => res.json()).then(data => { 
@@ -234,11 +220,9 @@
     document.getElementById('lang-select').addEventListener('change', (e) => {
         currentLang = e.target.value;
         Object.keys(toggleState).forEach(k => toggleState[k] = false);
-        updateControls('header-toggles'); 
-        renderGrid();
+        updateControls('header-toggles'); renderGrid();
     });
 
-    // --- FONT LOGIC ---
     function getFontClass() {
         if (currentLang === 'ja') return 'font-ja';
         if (currentLang === 'ko') return 'font-ko';
@@ -246,23 +230,17 @@
         return 'font-en';
     }
 
-    // --- CONTROLS UI ---
+    // --- CONTROLS ---
     function updateControls(containerId) {
         const container = document.getElementById(containerId);
         container.innerHTML = '';
         const config = langConfig[currentLang];
-        
         config.toggles.forEach(key => {
             const inputID = `chk-${containerId}-${key}`;
-            const labelID = `lbl-${containerId}-${key}`;
-            
             const html = `
-                <label class="toggle-group" id="${labelID}">
+                <label class="toggle-group" id="lbl-${containerId}-${key}">
                     <span class="switch">
-                        <input type="checkbox" id="${inputID}" 
-                            data-key="${key}" 
-                            onchange="toggleFeature('${key}', this.checked)" 
-                            ${toggleState[key] ? 'checked' : ''}>
+                        <input type="checkbox" id="${inputID}" data-key="${key}" onchange="toggleFeature('${key}', this.checked)" ${toggleState[key]?'checked':''}>
                         <span class="slider"></span>
                     </span>
                     ${toggleLabels[key]}
@@ -273,12 +251,8 @@
     }
 
     window.toggleFeature = function(key, isChecked) {
-        // Sync State
         toggleState[key] = isChecked;
-        // Sync All UI inputs
-        const allInputs = document.querySelectorAll(`input[data-key="${key}"]`);
-        allInputs.forEach(el => el.checked = isChecked);
-        
+        document.querySelectorAll(`input[data-key="${key}"]`).forEach(el => el.checked = isChecked);
         if(key==='plural') checkDependency();
         renderGrid();
         if(document.getElementById('child-mode').style.display === 'flex') updateDisplay();
@@ -288,7 +262,6 @@
         const isPlural = toggleState.plural;
         const artInputs = document.querySelectorAll(`input[data-key="article"]`);
         const artLabels = document.querySelectorAll(`label[id*="-article"]`);
-
         if (isPlural) {
             toggleState.article = false;
             artInputs.forEach(el => { el.checked = false; el.disabled = true; });
@@ -305,13 +278,15 @@
         if (!raw || typeof raw === 'string') return { main: raw || '?', sub: '', gender: '' };
 
         let mainText = (currentLang === 'zh' && toggleState.traditional && raw.t) ? raw.t : (raw.n || '?');
-        
         if (toggleState.plural && raw.p) mainText = raw.p;
         if (toggleState.article && !toggleState.plural && raw.art) mainText = `${raw.art} ${mainText}`;
 
         let subText = '';
         if (toggleState.pinyin && raw.py) subText = raw.py;
         if (toggleState.latin && raw.lt) subText = raw.lt;
+        // IPA Logic: Overrides Latin/Pinyin if enabled
+        if (toggleState.ipa && raw.ipa) subText = `[${raw.ipa}]`;
+        
         if (currentLang === 'ja' && toggleState.hiragana && raw.r) subText = `(${raw.r})`;
         if (currentLang === 'ko' && toggleState.hanja && raw.hj) { subText = `(${mainText})`; mainText = raw.hj; }
 
@@ -325,7 +300,9 @@
         document.getElementById('grid').innerHTML = deck.map(card => {
             const txt = getTextDisplay(card);
             const col = colors[card.cat] || '#ccc';
-            const comp = `<table class="comp-table">${buildCompRow(card, 'fr', '🇫🇷')}${buildCompRow(card, 'de', '🇩🇪')}${buildCompRow(card, 'it', '🇮🇹')}${buildCompRow(card, 'ru', '🇷🇺')}</table>`;
+            // POS Badge Logic
+            const posClass = `pos-${card.pos || 'noun'}`;
+            const posLabel = card.pos || '';
 
             return `
             <div class="vocab-card" onclick="startChildAt('${card.id}')">
@@ -334,14 +311,21 @@
                         <div class="flip-btn" onclick="flipCard(event, '${card.id}')">🔄</div>
                         <div class="card-art"><img src="${card.img}" onerror="this.src='https://via.placeholder.com/300'" loading="lazy"></div>
                         <div class="card-obi">
-                            <div class="word ${fontClass}">${txt.main}</div>
+                            <div class="word-row">
+                                <div class="word ${fontClass}">${txt.main}</div>
+                                <div class="pos-badge ${posClass}">${posLabel}</div>
+                            </div>
                             ${txt.sub ? `<div class="sub-word">${txt.sub}</div>` : ''}
                             ${txt.gender ? `<div class="gender-badge">${txt.gender}</div>` : ''}
                             <div class="color-stroke" style="background:${col}"></div>
                         </div>
                     </div>
                     <div class="card-back">
-                        <div class="back-title">Gender Compare</div>${comp}
+                        <div class="back-title">Gender Compare</div>
+                        <table class="comp-table">
+                            ${buildCompRow(card, 'fr', '🇫🇷')}${buildCompRow(card, 'de', '🇩🇪')}
+                            ${buildCompRow(card, 'it', '🇮🇹')}${buildCompRow(card, 'ru', '🇷🇺')}
+                        </table>
                         <button class="close-flip" onclick="flipCard(event, '${card.id}')">Close</button>
                     </div>
                 </div>
@@ -349,16 +333,9 @@
         }).join('');
     }
 
+    // --- CHILD MODE ---
     function startChildAt(id) { currentIndex = deck.findIndex(c => c.id === id); startChild(); }
-    
-    function startChild() { 
-        if(deck.length > 0) { 
-            document.getElementById('child-mode').style.display = 'flex'; 
-            updateControls('child-toggles'); // Render toggles in Child Mode
-            updateDisplay(); 
-        } 
-    }
-    
+    function startChild() { if(deck.length>0){ document.getElementById('child-mode').style.display = 'flex'; updateControls('child-toggles'); updateDisplay(); } }
     function exitChild() { document.getElementById('child-mode').style.display = 'none'; window.speechSynthesis.cancel(); }
     
     function updateDisplay() {
@@ -375,13 +352,18 @@
         document.getElementById('c-sub').innerText = txt.sub;
         document.getElementById('c-gender').innerText = txt.gender;
         document.getElementById('c-stripe').style.background = col;
+        
+        // Update POS Badge in Child Mode
+        const posEl = document.getElementById('c-pos');
+        posEl.className = `pos-badge pos-${card.pos || 'noun'}`;
+        posEl.innerText = card.pos || '';
     }
 
     // --- UTILS ---
     function move(dir) { window.speechSynthesis.cancel(); currentIndex = (currentIndex + dir + deck.length) % deck.length; updateDisplay(); }
     function getGenderClass(g) { if(!g)return''; if(g.includes('masc'))return'g-masc'; if(g.includes('fem'))return'g-fem'; if(g.includes('neut'))return'g-neut'; return ''; }
     function buildCompRow(c,l,f) { const d=c.translations[l]; if(!d)return''; const g=getGenderClass(d.g||''); return `<tr><td class="comp-flag">${f}</td><td class="comp-art ${g}">${d.art||''}</td><td class="comp-word ${g}">${d.n||''}</td></tr>`; }
-    window.flipCard = function(e, id) { e.stopPropagation(); const p = document.getElementById(`card-${id}`).parentElement; if(p.classList.contains('flipped')) p.classList.remove('flipped'); else { document.querySelectorAll('.vocab-card').forEach(c=>c.classList.remove('flipped')); p.classList.add('flipped'); } };
+    window.flipCard = function(e, id) { e.stopPropagation(); const p=document.getElementById(`card-${id}`).parentElement; if(p.classList.contains('flipped'))p.classList.remove('flipped'); else {document.querySelectorAll('.vocab-card').forEach(c=>c.classList.remove('flipped')); p.classList.add('flipped');} };
 
     function speakDrill() {
         const card = deck[currentIndex];
