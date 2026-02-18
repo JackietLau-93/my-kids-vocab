@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>TinyVocab Master</title>
+<title>TinyVocab Time Traveler</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,8 +21,10 @@
         
         --bg: #F2F2F2; --card-bg: #FFFFFF;
         
-        /* Level Colors */
-        --lvl-1: #4CAF50; --lvl-2: #FF9800; --lvl-3: #F44336; --lvl-4: #9C27B0; --lvl-5: #212121;
+        /* Level Colors (Spectrum) */
+        --lvl-1: #4CAF50; --lvl-2: #FF9800; --lvl-3: #F44336; 
+        --lvl-4: #9C27B0; --lvl-5: #673AB7; --lvl-6: #3F51B5;
+        --lvl-7: #2196F3; --lvl-8: #00BCD4; --lvl-9: #009688;
     }
 
     body { font-family: 'Zen Maru Gothic', sans-serif; background: var(--bg); margin: 0; color: #333; -webkit-font-smoothing: antialiased; }
@@ -58,6 +60,10 @@
     .lvl-3::-webkit-slider-thumb { background: var(--lvl-3) !important; }
     .lvl-4::-webkit-slider-thumb { background: var(--lvl-4) !important; }
     .lvl-5::-webkit-slider-thumb { background: var(--lvl-5) !important; }
+    .lvl-6::-webkit-slider-thumb { background: var(--lvl-6) !important; }
+    .lvl-7::-webkit-slider-thumb { background: var(--lvl-7) !important; }
+    .lvl-8::-webkit-slider-thumb { background: var(--lvl-8) !important; }
+    .lvl-9::-webkit-slider-thumb { background: var(--lvl-9) !important; }
 
     /* CONTROLS */
     .controls-container { display: flex; flex-direction: column; gap: 5px; width: 100%; }
@@ -76,7 +82,6 @@
     /* CARD GRID */
     .container { max-width: 1200px; margin: 0 auto; padding: 30px 20px; }
     .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 25px; }
-    
     .vocab-card { aspect-ratio: 3/4; background-color: transparent; perspective: 1000px; cursor: pointer; }
     .card-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s; transform-style: preserve-3d; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.06); }
     .vocab-card.flipped .card-inner { transform: rotateY(180deg); }
@@ -89,8 +94,8 @@
     .color-stroke { position: absolute; bottom: 0; left: 0; width: 100%; height: 6px; }
     
     .word-row { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; margin-bottom: 2px; }
-    .word { font-size: 1.8rem; color: #333; text-align: center; line-height: 1.2; }
-    .sub-word { font-size: 0.9rem; color: #777; font-family: 'Zen Maru Gothic'; text-align: center; font-weight: 500; }
+    .word { font-size: 1.6rem; color: #333; text-align: center; line-height: 1.1; }
+    .sub-word { font-size: 0.8rem; color: #777; font-family: 'Zen Maru Gothic'; text-align: center; font-weight: 500; }
     .gender-badge { font-size: 0.75rem; color: #999; font-style: italic; margin-top: 2px; font-family: 'Zen Maru Gothic'; }
 
     .pos-badge { font-size: 0.6rem; color: white; padding: 3px 8px; border-radius: 10px; font-family: 'Zen Maru Gothic'; font-weight: bold; letter-spacing: 0.5px; text-transform: lowercase; margin-top: 4px; display: none; }
@@ -157,7 +162,7 @@
     
     <div class="level-container">
         <div class="level-label" id="lvl-txt">Level 1</div>
-        <input type="range" min="1" max="5" value="1" class="lvl-1" id="level-slider" oninput="updateLevel(this.value)">
+        <input type="range" min="1" max="9" value="1" class="lvl-1" id="level-slider" oninput="updateLevel(this.value)">
     </div>
 
     <div class="controls-container" id="header-toggles"></div>
@@ -201,13 +206,28 @@
         { id: 'phon', label: 'Sound', keys: ['ipa', 'latin', 'pinyin', 'hiragana', 'hanja', 'traditional'] },
         { id: 'meta', label: 'Meta',  keys: ['pos', 'gender'] },
         { id: 'noun', label: 'Noun',  keys: ['article', 'plural_noun'] },
-        { id: 'verb', label: 'Verb',  keys: ['conjugate', 'past', 'future', 'imperative', 'conditional'] },
+        { id: 'verb', label: 'Verb',  keys: [
+            'pres_sim', 'pres_cont', 
+            'fut_sim', 'past_sim', 
+            'pres_perf', 
+            'past_cont', 'pres_perf_cont', 
+            'past_perf', 'fut_cont',
+            'fut_perf', 'past_perf_cont', 'fut_perf_cont',
+            // Legacy for other langs
+            'conjugate', 'past', 'future', 'imperative', 'conditional'
+        ]},
         { id: 'adj',  label: 'Adj',   keys: ['fem', 'neut', 'plural_adj', 'acc', 'dat', 'gen', 'ins', 'pre'] }
     ];
 
     // Allowed Toggles per Language
     const langConfig = {
-        'en': ['pos', 'article', 'plural_noun', 'plural_adj', 'ipa', 'conjugate', 'past', 'future', 'imperative', 'conditional'],
+        'en': [
+            'pos', 'article', 'plural_noun', 'plural_adj', 'ipa', 
+            // 12 Tenses
+            'pres_sim', 'pres_cont', 'fut_sim', 'past_sim', 'pres_perf', 
+            'past_cont', 'pres_perf_cont', 'past_perf', 'fut_cont',
+            'fut_perf', 'past_perf_cont', 'fut_perf_cont'
+        ],
         'fr': ['pos', 'article', 'plural_noun', 'plural_adj', 'gender', 'ipa', 'fem', 'conjugate', 'past', 'future', 'imperative', 'conditional'],
         'de': ['pos', 'article', 'plural_noun', 'plural_adj', 'gender', 'ipa', 'fem', 'neut', 'conjugate', 'past', 'future', 'imperative', 'conditional', 'acc', 'dat', 'gen'],
         'it': ['pos', 'article', 'plural_noun', 'plural_adj', 'gender', 'ipa', 'fem', 'conjugate', 'past', 'future', 'imperative', 'conditional'],
@@ -222,6 +242,14 @@
         'ipa': 1, 'pinyin': 1, 'latin': 1, 'hiragana': 1, 'hanja': 1, 'traditional': 1, 'gender': 1,
         'pos': 2, 'article': 2, 'plural_noun': 2, 
         'plural_adj': 3, 'fem': 3, 'neut': 3, 'conjugate': 3,
+        // EN Tenses Logic
+        'pres_sim': 4, 'pres_cont': 4,
+        'fut_sim': 5, 'past_sim': 5,
+        'pres_perf': 6,
+        'past_cont': 7, 'pres_perf_cont': 7,
+        'past_perf': 8, 'fut_cont': 8,
+        'fut_perf': 9, 'past_perf_cont': 9, 'fut_perf_cont': 9,
+        // Other Lang Logic
         'past': 4, 'future': 4, 'acc': 4, 'dat': 4, 'gen': 4,
         'imperative': 5, 'conditional': 5, 'ins': 5, 'pre': 5
     };
@@ -229,16 +257,27 @@
     const toggleLabels = { 
         'pos': 'Part of Speech', 'gender':'Gender', 
         'article':'Article', 'plural_noun':'Plural (N)',
-        'conjugate': 'Present', 'past': 'Past', 'future': 'Future', 'imperative': 'Cmd', 'conditional': 'Cond',
         'plural_adj': 'Plural (Adj)', 'fem': 'Fem', 'neut': 'Neut',
         'acc': 'Acc', 'dat': 'Dat', 'gen': 'Gen', 'ins': 'Ins', 'pre': 'Pre',
+        // Tenses
+        'pres_sim': 'Simple Pres', 'pres_cont': 'Pres Cont',
+        'fut_sim': 'Simple Fut', 'past_sim': 'Simple Past',
+        'pres_perf': 'Pres Perf',
+        'past_cont': 'Past Cont', 'pres_perf_cont': 'Pres Perf Cont',
+        'past_perf': 'Past Perf', 'fut_cont': 'Fut Cont',
+        'fut_perf': 'Fut Perf', 'past_perf_cont': 'Past Perf Cont', 'fut_perf_cont': 'Fut Perf Cont',
+        // Legacy
+        'conjugate': 'Present', 'past': 'Past', 'future': 'Future', 'imperative': 'Cmd', 'conditional': 'Cond',
         'pinyin':'Pinyin', 'latin':'Latin', 'ipa':'IPA', 'hiragana':'Hiragana', 'hanja':'Hanja', 'traditional':'Traditional'
     };
 
     let toggleState = { 
-        pos: false, gender: false, article: false, plural_noun: false,
+        pos: false, gender: false, article: false, plural_noun: false, plural_adj: false,
+        pres_sim: false, pres_cont: false, fut_sim: false, past_sim: false, pres_perf: false,
+        past_cont: false, pres_perf_cont: false, past_perf: false, fut_cont: false,
+        fut_perf: false, past_perf_cont: false, fut_perf_cont: false,
         conjugate: false, past: false, future: false, imperative: false, conditional: false,
-        plural_adj: false, fem: false, neut: false, acc: false, dat: false, gen: false, ins: false, pre: false,
+        fem: false, neut: false, acc: false, dat: false, gen: false, ins: false, pre: false,
         pinyin: false, latin: false, ipa: false, hiragana: false, hanja: false, traditional: false
     };
 
@@ -254,7 +293,6 @@
         updateUI();
     });
 
-    // --- LEVEL LOGIC ---
     function updateLevel(val) {
         currentLevel = parseInt(val);
         document.getElementById('lvl-txt').innerText = `Level ${currentLevel}`;
@@ -272,7 +310,6 @@
         return 'font-en';
     }
 
-    // --- CONTROLS ---
     function updateControls(containerId) {
         const container = document.getElementById(containerId);
         container.innerHTML = '';
@@ -300,18 +337,18 @@
     window.toggleFeature = function(key, isChecked) {
         toggleState[key] = isChecked;
         
-        // Exclusivity Logic
         if(isChecked) {
-            // Adjective Gender/Case Exclusivity
+            // English 12 Tense Exclusivity
+            const enTenses = ['pres_sim', 'pres_cont', 'fut_sim', 'past_sim', 'pres_perf', 'past_cont', 'pres_perf_cont', 'past_perf', 'fut_cont', 'fut_perf', 'past_perf_cont', 'fut_perf_cont'];
+            if(enTenses.includes(key)) enTenses.forEach(k => { if(k !== key) toggleState[k] = false; });
+
             const adjMut = ['fem', 'neut', 'acc', 'dat', 'gen', 'ins', 'pre'];
             if(adjMut.includes(key)) adjMut.forEach(k => { if(k !== key) toggleState[k] = false; });
             
-            // Verb Tense Exclusivity
             const verbMut = ['conjugate', 'past', 'future', 'imperative', 'conditional'];
             if(verbMut.includes(key)) verbMut.forEach(k => { if(k !== key) toggleState[k] = false; });
         }
 
-        // Sync Inputs
         document.querySelectorAll(`input[data-key]`).forEach(el => {
             const k = el.getAttribute('data-key');
             el.checked = toggleState[k];
@@ -333,7 +370,6 @@
         }
     }
 
-    // --- TEXT GENERATION ---
     function getTextDisplay(card) {
         let raw = card.translations[currentLang] || card.translations['en']; 
         if (!raw || typeof raw === 'string') return { main: raw || '?', sub: '', gender: '' };
@@ -342,41 +378,48 @@
         let genderText = (toggleState.gender && raw.g) ? raw.g : '';
         let subText = '';
 
-        // NOUN
         if (card.pos === 'noun') {
             if (toggleState.plural_noun && raw.p) mainText = raw.p;
             if (toggleState.article && !toggleState.plural_noun && raw.art) mainText = `${raw.art} ${mainText}`;
         }
 
-        // VERB (Hierarchy: Mood > Tense > Present)
         if (card.pos === 'verb') {
-            if (toggleState.conditional && raw.cond) mainText = raw.cond;
+            // EN Logic
+            if (toggleState.pres_sim && raw.pres_sim) mainText = raw.pres_sim;
+            else if (toggleState.pres_cont && raw.pres_cont) mainText = raw.pres_cont;
+            else if (toggleState.fut_sim && raw.fut_sim) mainText = raw.fut_sim;
+            else if (toggleState.past_sim && raw.past_sim) mainText = raw.past_sim;
+            else if (toggleState.pres_perf && raw.pres_perf) mainText = raw.pres_perf;
+            else if (toggleState.past_cont && raw.past_cont) mainText = raw.past_cont;
+            else if (toggleState.pres_perf_cont && raw.pres_perf_cont) mainText = raw.pres_perf_cont;
+            else if (toggleState.past_perf && raw.past_perf) mainText = raw.past_perf;
+            else if (toggleState.fut_cont && raw.fut_cont) mainText = raw.fut_cont;
+            else if (toggleState.fut_perf && raw.fut_perf) mainText = raw.fut_perf;
+            else if (toggleState.past_perf_cont && raw.past_perf_cont) mainText = raw.past_perf_cont;
+            else if (toggleState.fut_perf_cont && raw.fut_perf_cont) mainText = raw.fut_perf_cont;
+            // Other Logic
+            else if (toggleState.conditional && raw.cond) mainText = raw.cond;
             else if (toggleState.imperative && raw.imp) mainText = raw.imp;
             else if (toggleState.future && raw.fut) mainText = raw.fut;
             else if (toggleState.past && raw.past) mainText = raw.past;
             else if (toggleState.conjugate && raw.pres) mainText = raw.pres;
         }
 
-        // ADJECTIVE (Hierarchy: Case > Plural > Gender)
         if (card.pos === 'adj') {
-             // Case Overrides (Level 4/5)
             if (toggleState.acc && raw.acc) mainText = raw.acc;
             else if (toggleState.dat && raw.dat) mainText = raw.dat;
             else if (toggleState.gen && raw.gen) mainText = raw.gen;
             else if (toggleState.ins && raw.ins) mainText = raw.ins;
             else if (toggleState.pre && raw.pre) mainText = raw.pre;
-            // Plural
             else if (toggleState.plural_adj) {
                 if (toggleState.fem && raw.fp) mainText = raw.fp;
                 else if (raw.mp) mainText = raw.mp;
                 else if (raw.p) mainText = raw.p;
             } 
-            // Gender
             else if (toggleState.fem && raw.f) mainText = raw.f;
             else if (toggleState.neut && raw.nt) mainText = raw.nt;
         }
 
-        // SUBTEXT
         if (toggleState.pinyin && raw.py) subText = raw.py;
         if (toggleState.latin && raw.lt) subText = raw.lt;
         if (toggleState.ipa && raw.ipa) subText = `[${raw.ipa}]`;
@@ -386,7 +429,6 @@
         return { main: mainText, sub: subText, gender: genderText };
     }
 
-    // --- RENDERERS ---
     function renderGrid() {
         const fontClass = getFontClass();
         document.getElementById('grid').innerHTML = deck.map(card => {
@@ -425,7 +467,6 @@
         }).join('');
     }
 
-    // --- CHILD MODE ---
     function startChildAt(id) { currentIndex = deck.findIndex(c => c.id === id); startChild(); }
     function startChild() { if(deck.length>0){ document.getElementById('child-mode').style.display = 'flex'; updateUI(); updateDisplay(); } }
     function exitChild() { document.getElementById('child-mode').style.display = 'none'; window.speechSynthesis.cancel(); }
@@ -451,7 +492,6 @@
         posEl.style.display = toggleState.pos ? 'inline-block' : 'none';
     }
 
-    // --- UTILS ---
     function move(dir) { window.speechSynthesis.cancel(); currentIndex = (currentIndex + dir + deck.length) % deck.length; updateDisplay(); }
     function getGenderClass(g) { if(!g)return''; if(g.includes('masc'))return'g-masc'; if(g.includes('fem'))return'g-fem'; if(g.includes('neut'))return'g-neut'; return ''; }
     function buildCompRow(c,l,f) { const d=c.translations[l]; if(!d)return''; const g=getGenderClass(d.g||''); return `<tr><td class="comp-flag">${f}</td><td class="comp-art ${g}">${d.art||''}</td><td class="comp-word ${g}">${d.n||''}</td></tr>`; }
