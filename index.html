@@ -266,6 +266,15 @@
 
     const colors = { animal: '#7CB342', food: '#FDD835', body: '#42A5F5', act: '#AB47BC' };
 
+    function updateUI() {
+    updateControls('header-toggles');
+    renderGrid();
+    
+    // Also update the child mode display if it happens to be open
+    if (document.getElementById('child-mode').style.display === 'flex') {
+        updateDisplay();
+    }
+}
     // --- ROBUST FETCH WITH ERROR HANDLING ---
     fetch('data.json')
         .then(res => {
