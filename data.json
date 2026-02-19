@@ -6,13 +6,7 @@
     "img": "images/dog.png",
     "translations": {
       "en": { "n": "dog", "art": "a", "p": "dogs", "ipa": "/dɒɡ/" },
-      "zh": { "n": "狗", "t": "狗", "py": "gǒu" },
-      "fr": { "n": "chien", "art": "le", "p": "les chiens", "g": "masc.", "ipa": "/ʃjɛ̃/" },
-      "de": { "n": "Hund", "art": "der", "p": "die Hunde", "g": "masc.", "ipa": "/hʊnt/" },
-      "it": { "n": "cane", "art": "il", "p": "i cani", "g": "masc.", "ipa": "/ˈka.ne/" },
-      "ru": { "n": "собака", "p": "собаки", "g": "fem.", "lt": "sobaka", "ipa": "/sɐˈbakə/" },
-      "ja": { "n": "犬", "r": "いぬ" },
-      "ko": { "n": "개", "hj": "" }
+      "fr": { "n": "chien", "art": "le", "p": "les chiens", "g": "masc.", "ipa": "/ʃjɛ̃/" }
     }
   },
   {
@@ -22,13 +16,7 @@
     "img": "images/banana.png",
     "translations": {
       "en": { "n": "banana", "art": "a", "p": "bananas", "ipa": "/bəˈnɑːnə/" },
-      "zh": { "n": "香蕉", "t": "香蕉", "py": "xiāngjiāo" },
-      "fr": { "n": "banane", "art": "la", "p": "les bananes", "g": "fem.", "ipa": "/ba.nan/" },
-      "de": { "n": "Banane", "art": "die", "p": "die Bananen", "g": "fem.", "ipa": "/baˈnaːnə/" },
-      "it": { "n": "banana", "art": "la", "p": "le banane", "g": "fem.", "ipa": "/baˈna.na/" },
-      "ru": { "n": "банан", "p": "бананы", "g": "masc.", "lt": "banan", "ipa": "/bɐˈnan/" },
-      "ja": { "n": "バナナ", "r": "ばなな" },
-      "ko": { "n": "바나나", "hj": "" }
+      "fr": { "n": "banane", "art": "la", "p": "les bananes", "g": "fem.", "ipa": "/ba.nan/" }
     }
   },
   {
@@ -38,13 +26,7 @@
     "img": "images/nose.png",
     "translations": {
       "en": { "n": "nose", "art": "a", "p": "noses", "ipa": "/nəʊz/" },
-      "zh": { "n": "鼻子", "t": "鼻子", "py": "bízi" },
-      "fr": { "n": "nez", "art": "le", "p": "les nez", "g": "masc.", "ipa": "/ne/" },
-      "de": { "n": "Nase", "art": "die", "p": "die Nasen", "g": "fem.", "ipa": "/ˈnaːzə/" },
-      "it": { "n": "naso", "art": "il", "p": "i nasi", "g": "masc.", "ipa": "/ˈna.zo/" },
-      "ru": { "n": "нос", "p": "носы", "g": "masc.", "lt": "nos", "ipa": "/nos/" },
-      "ja": { "n": "鼻", "r": "はな" },
-      "ko": { "n": "코", "hj": "" }
+      "fr": { "n": "nez", "art": "le", "p": "les nez", "g": "masc.", "ipa": "/ne/" }
     }
   },
   {
@@ -55,20 +37,24 @@
     "translations": {
       "en": { 
         "n": "eat", "ipa": "/iːt/",
-        "pres_sim": "eats", "pres_cont": "is eating",
-        "fut_sim": "will eat", "past_sim": "ate",
-        "pres_perf": "has eaten",
-        "past_cont": "was eating", "pres_perf_cont": "has been eating",
-        "past_perf": "had eaten", "fut_cont": "will be eating",
-        "fut_perf": "will have eaten", "past_perf_cont": "had been eating", "fut_perf_cont": "will have been eating"
+        "pres_sim": ["eat", "eat", "eats", "eat", "eat", "eat"], 
+        "pres_cont": ["am eating", "are eating", "is eating", "are eating", "are eating", "are eating"],
+        "fut_sim": ["will eat", "will eat", "will eat", "will eat", "will eat", "will eat"], 
+        "past_sim": ["ate", "ate", "ate", "ate", "ate", "ate"],
+        "pres_perf": ["have eaten", "have eaten", "has eaten", "have eaten", "have eaten", "have eaten"],
+        "past_cont": ["was eating", "were eating", "was eating", "were eating", "were eating", "were eating"], 
+        "pres_perf_cont": ["have been eating", "have been eating", "has been eating", "have been eating", "have been eating", "have been eating"],
+        "past_perf": ["had eaten", "had eaten", "had eaten", "had eaten", "had eaten", "had eaten"], 
+        "fut_cont": ["will be eating", "will be eating", "will be eating", "will be eating", "will be eating", "will be eating"],
+        "fut_perf": ["will have eaten", "will have eaten", "will have eaten", "will have eaten", "will have eaten", "will have eaten"], 
+        "past_perf_cont": ["had been eating", "had been eating", "had been eating", "had been eating", "had been eating", "had been eating"], 
+        "fut_perf_cont": ["will have been eating", "will have been eating", "will have been eating", "will have been eating", "will have been eating", "will have been eating"]
       },
-      "zh": { "n": "吃", "py": "chī" },
-      "fr": { "n": "manger", "pres": "il mange", "past": "il a mangé", "fut": "il mangera", "imp": "mange!", "cond": "il mangerait", "ipa": "/mɑ̃.ʒe/" },
-      "de": { "n": "essen", "pres": "er isst", "past": "er aß", "fut": "er wird essen", "imp": "iss!", "cond": "er würde essen", "ipa": "/ˈɛsn̩/" },
-      "it": { "n": "mangiare", "pres": "lui mangia", "past": "ha mangiato", "fut": "mangerà", "imp": "mangia!", "cond": "mangerebbe", "ipa": "/manˈdʒa.re/" },
-      "ru": { "n": "есть", "pres": "он ест", "past": "он ел", "fut": "он будет есть", "imp": "ешь!", "cond": "он бы ел", "lt": "yest'", "ipa": "/jesʲtʲ/" },
-      "ja": { "n": "食べる", "r": "たべる" },
-      "ko": { "n": "먹다", "hj": "" }
+      "fr": { 
+        "n": "manger", "ipa": "/mɑ̃.ʒe/",
+        "pres": ["mange", "manges", "mange", "mangeons", "mangez", "mangent"],
+        "past": ["ai mangé", "as mangé", "a mangé", "avons mangé", "avez mangé", "ont mangé"]
+      }
     }
   },
   {
@@ -79,12 +65,18 @@
     "translations": { 
       "en": { 
         "n": "run", "ipa": "/rʌn/",
-        "pres_sim": "runs", "pres_cont": "is running",
-        "fut_sim": "will run", "past_sim": "ran",
-        "pres_perf": "has run",
-        "past_cont": "was running", "pres_perf_cont": "has been running",
-        "past_perf": "had run", "fut_cont": "will be running",
-        "fut_perf": "will have run", "past_perf_cont": "had been running", "fut_perf_cont": "will have been running"
+        "pres_sim": ["run", "run", "runs", "run", "run", "run"], 
+        "pres_cont": ["am running", "are running", "is running", "are running", "are running", "are running"],
+        "fut_sim": ["will run", "will run", "will run", "will run", "will run", "will run"], 
+        "past_sim": ["ran", "ran", "ran", "ran", "ran", "ran"],
+        "pres_perf": ["have run", "have run", "has run", "have run", "have run", "have run"],
+        "past_cont": ["was running", "were running", "was running", "were running", "were running", "were running"], 
+        "pres_perf_cont": ["have been running", "have been running", "has been running", "have been running", "have been running", "have been running"],
+        "past_perf": ["had run", "had run", "had run", "had run", "had run", "had run"], 
+        "fut_cont": ["will be running", "will be running", "will be running", "will be running", "will be running", "will be running"],
+        "fut_perf": ["will have run", "will have run", "will have run", "will have run", "will have run", "will have run"], 
+        "past_perf_cont": ["had been running", "had been running", "had been running", "had been running", "had been running", "had been running"], 
+        "fut_perf_cont": ["will have been running", "will have been running", "will have been running", "will have been running", "will have been running", "will have been running"]
       } 
     }
   },
@@ -95,20 +87,7 @@
     "img": "images/big.png",
     "translations": {
       "en": { "n": "big", "ipa": "/bɪɡ/" },
-      "zh": { "n": "大", "py": "dà" },
-      "fr": { "n": "grand", "f": "grande", "mp": "grands", "fp": "grandes", "ipa": "/ɡʁɑ̃/" },
-      "de": { "n": "großer", "f": "große", "nt": "großes", "p": "große", "acc": "großen", "dat": "großem", "gen": "großen", "ipa": "/ˈɡʁoːsɐ/" },
-      "it": { "n": "grande", "f": "grande", "p": "grandi", "ipa": "/ˈɡran.de/" },
-      "ru": { "n": "большой", "f": "большая", "nt": "большое", "p": "большие", "acc": "большого", "dat": "большому", "gen": "большого", "ins": "большим", "pre": "большом", "lt": "bolshoy", "ipa": "/bɐlʲˈʂoj/" },
-      "ja": { "n": "大きい", "r": "おおきい" },
-      "ko": { "n": "크다", "hj": "" }
+      "fr": { "n": "grand", "f": "grande", "mp": "grands", "fp": "grandes", "ipa": "/ɡʁɑ̃/" }
     }
-  },
-  {
-    "id": "he",
-    "cat": "body",
-    "pos": "pron",
-    "img": "images/he.png",
-    "translations": { "en": { "n": "he", "ipa": "/hiː/" } }
   }
 ]
