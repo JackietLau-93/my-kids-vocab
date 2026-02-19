@@ -6,7 +6,7 @@
     "img": "images/dog.png",
     "translations": {
       "en": { "n": "dog", "art": "a", "p": "dogs", "ipa": "/dɒɡ/" },
-      "fr": { "n": "chien", "art": "le", "p": "les chiens", "g": "masc.", "ipa": "/ʃjɛ̃/" }
+      "de": { "n": "Hund", "art": "der", "p": "die Hunde", "g": "masc.", "ipa": "/hʊnt/" }
     }
   },
   {
@@ -16,17 +16,7 @@
     "img": "images/banana.png",
     "translations": {
       "en": { "n": "banana", "art": "a", "p": "bananas", "ipa": "/bəˈnɑːnə/" },
-      "fr": { "n": "banane", "art": "la", "p": "les bananes", "g": "fem.", "ipa": "/ba.nan/" }
-    }
-  },
-  {
-    "id": "nose",
-    "cat": "body",
-    "pos": "noun",
-    "img": "images/nose.png",
-    "translations": {
-      "en": { "n": "nose", "art": "a", "p": "noses", "ipa": "/nəʊz/" },
-      "fr": { "n": "nez", "art": "le", "p": "les nez", "g": "masc.", "ipa": "/ne/" }
+      "de": { "n": "Banane", "art": "die", "p": "die Bananen", "g": "fem.", "ipa": "/baˈnaːnə/" }
     }
   },
   {
@@ -37,23 +27,28 @@
     "translations": {
       "en": { 
         "n": "eat", "ipa": "/iːt/",
-        "pres_sim": ["eat", "eat", "eats", "eat", "eat", "eat"], 
-        "pres_cont": ["am eating", "are eating", "is eating", "are eating", "are eating", "are eating"],
-        "fut_sim": ["will eat", "will eat", "will eat", "will eat", "will eat", "will eat"], 
-        "past_sim": ["ate", "ate", "ate", "ate", "ate", "ate"],
-        "pres_perf": ["have eaten", "have eaten", "has eaten", "have eaten", "have eaten", "have eaten"],
-        "past_cont": ["was eating", "were eating", "was eating", "were eating", "were eating", "were eating"], 
-        "pres_perf_cont": ["have been eating", "have been eating", "has been eating", "have been eating", "have been eating", "have been eating"],
-        "past_perf": ["had eaten", "had eaten", "had eaten", "had eaten", "had eaten", "had eaten"], 
-        "fut_cont": ["will be eating", "will be eating", "will be eating", "will be eating", "will be eating", "will be eating"],
-        "fut_perf": ["will have eaten", "will have eaten", "will have eaten", "will have eaten", "will have eaten", "will have eaten"], 
-        "past_perf_cont": ["had been eating", "had been eating", "had been eating", "had been eating", "had been eating", "had been eating"], 
-        "fut_perf_cont": ["will have been eating", "will have been eating", "will have been eating", "will have been eating", "will have been eating", "will have been eating"]
+        "pres_sim": ["eat", "eat", "eats", "eat", "eat", "eat"]
       },
-      "fr": { 
-        "n": "manger", "ipa": "/mɑ̃.ʒe/",
-        "pres": ["mange", "manges", "mange", "mangeons", "mangez", "mangent"],
-        "past": ["ai mangé", "as mangé", "a mangé", "avons mangé", "avez mangé", "ont mangé"]
+      "de": { 
+        "n": "essen", "ipa": "/ˈɛsn̩/",
+        "de_pres": ["esse", "isst", "isst", "essen", "esst", "essen"],
+        "de_imp": ["-", "iss", "-", "essen wir", "esst", "essen Sie"],
+        "de_perf": ["habe gegessen", "hast gegessen", "hat gegessen", "haben gegessen", "habt gegessen", "haben gegessen"],
+        "de_fut1": ["werde essen", "wirst essen", "wird essen", "werden essen", "werdet essen", "werden essen"],
+        "de_prat": ["aß", "aßt", "aß", "aßen", "aßt", "aßen"],
+        "de_plus": ["hatte gegessen", "hattest gegessen", "hatte gegessen", "hatten gegessen", "hattet gegessen", "hatten gegessen"],
+        "de_k2_pres": ["äße", "äßest", "äße", "äßen", "äßet", "äßen"],
+        "de_k2_past": ["hätte gegessen", "hättest gegessen", "hätte gegessen", "hätten gegessen", "hättet gegessen", "hätten gegessen"],
+        "de_k2_fut1": ["würde essen", "würdest essen", "würde essen", "würden essen", "würdet essen", "würden essen"],
+        "de_k2_fut2": ["würde gegessen haben", "würdest gegessen haben", "würde gegessen haben", "würden gegessen haben", "würdet gegessen haben", "würden gegessen haben"],
+        "de_k1_pres": ["esse", "essest", "esse", "essen", "esset", "essen"],
+        "de_k1_perf": ["habe gegessen", "habest gegessen", "habe gegessen", "haben gegessen", "habet gegessen", "haben gegessen"],
+        "de_k1_fut1": ["werde essen", "werdest essen", "werde essen", "werden essen", "werdet essen", "werden essen"],
+        "de_k1_fut2": ["werde gegessen haben", "werdest gegessen haben", "werde gegessen haben", "werden gegessen haben", "werdet gegessen haben", "werden gegessen haben"],
+        "de_fut2": ["werde gegessen haben", "wirst gegessen haben", "wird gegessen haben", "werden gegessen haben", "werdet gegessen haben", "werden gegessen haben"],
+        "de_part1": ["essend", "essend", "essend", "essend", "essend", "essend"],
+        "de_part2": ["gegessen", "gegessen", "gegessen", "gegessen", "gegessen", "gegessen"],
+        "de_gerund": ["zu essend", "zu essend", "zu essend", "zu essend", "zu essend", "zu essend"]
       }
     }
   },
@@ -65,29 +60,29 @@
     "translations": { 
       "en": { 
         "n": "run", "ipa": "/rʌn/",
-        "pres_sim": ["run", "run", "runs", "run", "run", "run"], 
-        "pres_cont": ["am running", "are running", "is running", "are running", "are running", "are running"],
-        "fut_sim": ["will run", "will run", "will run", "will run", "will run", "will run"], 
-        "past_sim": ["ran", "ran", "ran", "ran", "ran", "ran"],
-        "pres_perf": ["have run", "have run", "has run", "have run", "have run", "have run"],
-        "past_cont": ["was running", "were running", "was running", "were running", "were running", "were running"], 
-        "pres_perf_cont": ["have been running", "have been running", "has been running", "have been running", "have been running", "have been running"],
-        "past_perf": ["had run", "had run", "had run", "had run", "had run", "had run"], 
-        "fut_cont": ["will be running", "will be running", "will be running", "will be running", "will be running", "will be running"],
-        "fut_perf": ["will have run", "will have run", "will have run", "will have run", "will have run", "will have run"], 
-        "past_perf_cont": ["had been running", "had been running", "had been running", "had been running", "had been running", "had been running"], 
-        "fut_perf_cont": ["will have been running", "will have been running", "will have been running", "will have been running", "will have been running", "will have been running"]
-      } 
-    }
-  },
-  {
-    "id": "big",
-    "cat": "act",
-    "pos": "adj",
-    "img": "images/big.png",
-    "translations": {
-      "en": { "n": "big", "ipa": "/bɪɡ/" },
-      "fr": { "n": "grand", "f": "grande", "mp": "grands", "fp": "grandes", "ipa": "/ɡʁɑ̃/" }
+        "pres_sim": ["run", "run", "runs", "run", "run", "run"]
+      },
+      "de": { 
+        "n": "rennen", "ipa": "/ˈʁɛnən/",
+        "de_pres": ["renne", "rennst", "rennt", "rennen", "rennt", "rennen"],
+        "de_imp": ["-", "renn", "-", "rennen wir", "rennt", "rennen Sie"],
+        "de_perf": ["bin gerannt", "bist gerannt", "ist gerannt", "sind gerannt", "seid gerannt", "sind gerannt"],
+        "de_fut1": ["werde rennen", "wirst rennen", "wird rennen", "werden rennen", "werdet rennen", "werden rennen"],
+        "de_prat": ["rannte", "ranntest", "rannte", "rannten", "ranntet", "rannten"],
+        "de_plus": ["war gerannt", "warst gerannt", "war gerannt", "waren gerannt", "wart gerannt", "waren gerannt"],
+        "de_k2_pres": ["rennte", "renntest", "rennte", "rennten", "renntet", "rennten"],
+        "de_k2_past": ["wäre gerannt", "wärest gerannt", "wäre gerannt", "wären gerannt", "wäret gerannt", "wären gerannt"],
+        "de_k2_fut1": ["würde rennen", "würdest rennen", "würde rennen", "würden rennen", "würdet rennen", "würden rennen"],
+        "de_k2_fut2": ["würde gerannt sein", "würdest gerannt sein", "würde gerannt sein", "würden gerannt sein", "würdet gerannt sein", "würden gerannt sein"],
+        "de_k1_pres": ["renne", "rennest", "renne", "rennen", "rennet", "rennen"],
+        "de_k1_perf": ["sei gerannt", "seiest gerannt", "sei gerannt", "seien gerannt", "seiet gerannt", "seien gerannt"],
+        "de_k1_fut1": ["werde rennen", "werdest rennen", "werde rennen", "werden rennen", "werdet rennen", "werden rennen"],
+        "de_k1_fut2": ["werde gerannt sein", "werdest gerannt sein", "werde gerannt sein", "werden gerannt sein", "werdet gerannt sein", "werden gerannt sein"],
+        "de_fut2": ["werde gerannt sein", "wirst gerannt sein", "wird gerannt sein", "werden gerannt sein", "werdet gerannt sein", "werden gerannt sein"],
+        "de_part1": ["rennend", "rennend", "rennend", "rennend", "rennend", "rennend"],
+        "de_part2": ["gerannt", "gerannt", "gerannt", "gerannt", "gerannt", "gerannt"],
+        "de_gerund": ["zu rennend", "zu rennend", "zu rennend", "zu rennend", "zu rennend", "zu rennend"]
+      }
     }
   }
 ]

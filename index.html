@@ -211,20 +211,21 @@
         { id: 'pronoun', keys: ['pron_0', 'pron_1', 'pron_2', 'pron_3', 'pron_4', 'pron_5'] },
         { id: 'noun', keys: ['article', 'plural_noun'] },
         { id: 'verb', keys: [
-            'pres_sim', 'pres_cont', 'fut_sim', 'past_sim', 'pres_perf', 
-            'past_cont', 'pres_perf_cont', 'past_perf', 'fut_cont',
-            'fut_perf', 'past_perf_cont', 'fut_perf_cont',
+            // English
+            'pres_sim', 'pres_cont', 'fut_sim', 'past_sim', 'pres_perf', 'past_cont', 'pres_perf_cont', 'past_perf', 'fut_cont', 'fut_perf', 'past_perf_cont', 'fut_perf_cont',
+            // German
+            'de_pres', 'de_imp', 'de_perf', 'de_fut1', 'de_prat', 'de_plus', 'de_k2_pres', 'de_k2_past', 'de_k2_fut1', 'de_k2_fut2', 'de_k1_pres', 'de_k1_perf', 'de_k1_fut1', 'de_k1_fut2', 'de_fut2', 'de_part1', 'de_part2', 'de_gerund',
+            // Legacy 
             'conjugate', 'past', 'future', 'imperative', 'conditional'
         ]},
         { id: 'adj',  keys: ['fem', 'neut', 'plural_adj', 'acc', 'dat', 'gen', 'ins', 'pre'] }
     ];
 
+    // Allowed Toggles per Language
     const langConfig = {
-        'en': ['pos', 'article', 'plural_noun', 'plural_adj', 'ipa', 
-               'pron_0', 'pron_1', 'pron_2', 'pron_3', 'pron_4', 'pron_5',
-               'pres_sim', 'pres_cont', 'fut_sim', 'past_sim', 'pres_perf', 'past_cont', 'pres_perf_cont', 'past_perf', 'fut_cont', 'fut_perf', 'past_perf_cont', 'fut_perf_cont'],
+        'en': ['pos', 'article', 'plural_noun', 'plural_adj', 'ipa', 'pron_0', 'pron_1', 'pron_2', 'pron_3', 'pron_4', 'pron_5', 'pres_sim', 'pres_cont', 'fut_sim', 'past_sim', 'pres_perf', 'past_cont', 'pres_perf_cont', 'past_perf', 'fut_cont', 'fut_perf', 'past_perf_cont', 'fut_perf_cont'],
+        'de': ['pos', 'article', 'plural_noun', 'plural_adj', 'gender', 'ipa', 'fem', 'neut', 'acc', 'dat', 'gen', 'pron_0', 'pron_1', 'pron_2', 'pron_3', 'pron_4', 'pron_5', 'de_pres', 'de_imp', 'de_perf', 'de_fut1', 'de_prat', 'de_plus', 'de_k2_pres', 'de_k2_past', 'de_k2_fut1', 'de_k2_fut2', 'de_k1_pres', 'de_k1_perf', 'de_k1_fut1', 'de_k1_fut2', 'de_fut2', 'de_part1', 'de_part2', 'de_gerund'],
         'fr': ['pos', 'article', 'plural_noun', 'plural_adj', 'gender', 'ipa', 'fem', 'pron_0', 'pron_1', 'pron_2', 'pron_3', 'pron_4', 'pron_5', 'conjugate', 'past', 'future', 'imperative', 'conditional'],
-        'de': ['pos', 'article', 'plural_noun', 'plural_adj', 'gender', 'ipa', 'fem', 'neut', 'acc', 'dat', 'gen'],
         'it': ['pos', 'article', 'plural_noun', 'plural_adj', 'gender', 'ipa', 'fem'],
         'ru': ['pos', 'plural_noun', 'plural_adj', 'gender', 'latin', 'ipa', 'fem', 'neut', 'acc', 'dat', 'gen', 'ins', 'pre'],
         'zh': ['pos', 'traditional', 'pinyin'],
@@ -232,24 +233,31 @@
         'ko': ['pos', 'hanja']
     };
 
+    // Minimum Level Requirement
     const levelConfig = {
         'ipa': 1, 'pinyin': 1, 'latin': 1, 'hiragana': 1, 'hanja': 1, 'traditional': 1, 'gender': 1,
         'pos': 2, 'article': 2, 'plural_noun': 2, 
-        'plural_adj': 3, 'fem': 3, 'neut': 3, 'conjugate': 3,
-        'pron_0':3, 'pron_1':3, 'pron_2':3, 'pron_3':3, 'pron_4':3, 'pron_5':3,
-        'pres_sim': 4, 'pres_cont': 4, 'fut_sim': 5, 'past_sim': 5, 'pres_perf': 6,
-        'past_cont': 7, 'pres_perf_cont': 7, 'past_perf': 8, 'fut_cont': 8, 'fut_perf': 9, 'past_perf_cont': 9, 'fut_perf_cont': 9,
+        'plural_adj': 3, 'fem': 3, 'neut': 3, 'conjugate': 3, 'pron_0':3, 'pron_1':3, 'pron_2':3, 'pron_3':3, 'pron_4':3, 'pron_5':3,
+        // EN Tenses
+        'pres_sim': 4, 'pres_cont': 4, 'fut_sim': 5, 'past_sim': 5, 'pres_perf': 6, 'past_cont': 7, 'pres_perf_cont': 7, 'past_perf': 8, 'fut_cont': 8, 'fut_perf': 9, 'past_perf_cont': 9, 'fut_perf_cont': 9,
+        // DE Tenses
+        'de_pres': 4, 'de_imp': 4,
+        'de_perf': 5, 'de_fut1': 5,
+        'de_prat': 6, 'de_plus': 6,
+        'de_k2_pres': 7, 'de_k2_past': 7, 'de_k2_fut1': 7, 'de_k2_fut2': 7,
+        'de_k1_pres': 8, 'de_k1_perf': 8, 'de_k1_fut1': 8, 'de_k1_fut2': 8,
+        'de_fut2': 9, 'de_part1': 9, 'de_part2': 9, 'de_gerund': 9,
+        // Legacy
         'past': 4, 'future': 4, 'acc': 4, 'dat': 4, 'gen': 4, 'imperative': 5, 'conditional': 5, 'ins': 5, 'pre': 5
     };
 
     const toggleLabels = { 
-        'pos': 'Part of Speech', 'gender':'Gender', 'article':'Article', 'plural_noun':'Plural (N)',
-        'plural_adj': 'Plural (Adj)', 'fem': 'Fem', 'neut': 'Neut',
+        'pos': 'Part of Speech', 'gender':'Gender', 'article':'Article', 'plural_noun':'Plural (N)', 'plural_adj': 'Plural (Adj)', 'fem': 'Fem', 'neut': 'Neut',
         'acc': 'Acc', 'dat': 'Dat', 'gen': 'Gen', 'ins': 'Ins', 'pre': 'Pre',
         'pron_0': 'I', 'pron_1': 'You', 'pron_2': 'He/It', 'pron_3': 'We', 'pron_4': 'Y\'all', 'pron_5': 'They',
-        'pres_sim': 'Simple Pres', 'pres_cont': 'Pres Cont', 'fut_sim': 'Simple Fut', 'past_sim': 'Simple Past', 'pres_perf': 'Pres Perf',
-        'past_cont': 'Past Cont', 'pres_perf_cont': 'Pres Perf Cont', 'past_perf': 'Past Perf', 'fut_cont': 'Fut Cont',
-        'fut_perf': 'Fut Perf', 'past_perf_cont': 'Past Perf Cont', 'fut_perf_cont': 'Fut Perf Cont',
+        'pres_sim': 'Simple Pres', 'pres_cont': 'Pres Cont', 'fut_sim': 'Simple Fut', 'past_sim': 'Simple Past', 'pres_perf': 'Pres Perf', 'past_cont': 'Past Cont', 'pres_perf_cont': 'Pres Perf Cont', 'past_perf': 'Past Perf', 'fut_cont': 'Fut Cont', 'fut_perf': 'Fut Perf', 'past_perf_cont': 'Past Perf Cont', 'fut_perf_cont': 'Fut Perf Cont',
+        // DE Labels
+        'de_pres': 'Präsens', 'de_imp': 'Imperativ', 'de_perf': 'Perfekt', 'de_fut1': 'Futur I', 'de_prat': 'Präteritum', 'de_plus': 'Plusquamperfekt', 'de_k2_pres': 'K2 Präsens', 'de_k2_past': 'K2 Vergang.', 'de_k2_fut1': 'K2 Futur I', 'de_k2_fut2': 'K2 Futur II', 'de_k1_pres': 'K1 Präsens', 'de_k1_perf': 'K1 Perfekt', 'de_k1_fut1': 'K1 Futur I', 'de_k1_fut2': 'K1 Futur II', 'de_fut2': 'Futur II', 'de_part1': 'Partizip I', 'de_part2': 'Partizip II', 'de_gerund': 'Gerundivum',
         'conjugate': 'Present', 'past': 'Past', 'future': 'Future', 'imperative': 'Cmd', 'conditional': 'Cond',
         'pinyin':'Pinyin', 'latin':'Latin', 'ipa':'IPA', 'hiragana':'Hiragana', 'hanja':'Hanja', 'traditional':'Traditional'
     };
@@ -257,8 +265,8 @@
     let toggleState = { 
         pos: false, gender: false, article: false, plural_noun: false, plural_adj: false,
         pron_0: false, pron_1: false, pron_2: true, pron_3: false, pron_4: false, pron_5: false,
-        pres_sim: false, pres_cont: false, fut_sim: false, past_sim: false, pres_perf: false,
-        past_cont: false, pres_perf_cont: false, past_perf: false, fut_cont: false, fut_perf: false, past_perf_cont: false, fut_perf_cont: false,
+        pres_sim: false, pres_cont: false, fut_sim: false, past_sim: false, pres_perf: false, past_cont: false, pres_perf_cont: false, past_perf: false, fut_cont: false, fut_perf: false, past_perf_cont: false, fut_perf_cont: false,
+        de_pres: false, de_imp: false, de_perf: false, de_fut1: false, de_prat: false, de_plus: false, de_k2_pres: false, de_k2_past: false, de_k2_fut1: false, de_k2_fut2: false, de_k1_pres: false, de_k1_perf: false, de_k1_fut1: false, de_k1_fut2: false, de_fut2: false, de_part1: false, de_part2: false, de_gerund: false,
         conjugate: false, past: false, future: false, imperative: false, conditional: false,
         fem: false, neut: false, acc: false, dat: false, gen: false, ins: false, pre: false,
         pinyin: false, latin: false, ipa: false, hiragana: false, hanja: false, traditional: false
@@ -357,6 +365,9 @@
         if(isChecked && !key.startsWith('pron_')) {
             const enTenses = ['pres_sim', 'pres_cont', 'fut_sim', 'past_sim', 'pres_perf', 'past_cont', 'pres_perf_cont', 'past_perf', 'fut_cont', 'fut_perf', 'past_perf_cont', 'fut_perf_cont'];
             if(enTenses.includes(key)) enTenses.forEach(k => { if(k !== key) toggleState[k] = false; });
+            
+            const deTenses = ['de_pres', 'de_imp', 'de_perf', 'de_fut1', 'de_prat', 'de_plus', 'de_k2_pres', 'de_k2_past', 'de_k2_fut1', 'de_k2_fut2', 'de_k1_pres', 'de_k1_perf', 'de_k1_fut1', 'de_k1_fut2', 'de_fut2', 'de_part1', 'de_part2', 'de_gerund'];
+            if(deTenses.includes(key)) deTenses.forEach(k => { if(k !== key) toggleState[k] = false; });
 
             const adjMut = ['fem', 'neut', 'acc', 'dat', 'gen', 'ins', 'pre'];
             if(adjMut.includes(key)) adjMut.forEach(k => { if(k !== key) toggleState[k] = false; });
@@ -397,8 +408,12 @@
         return data; 
     }
 
-    function getActiveTenseKey() {
-        const keys = ['pres_sim', 'pres_cont', 'fut_sim', 'past_sim', 'pres_perf', 'past_cont', 'pres_perf_cont', 'past_perf', 'fut_cont', 'fut_perf', 'past_perf_cont', 'fut_perf_cont', 'conjugate', 'past', 'future', 'imperative', 'conditional'];
+     function getActiveTenseKey() {
+        const keys = [
+            'pres_sim', 'pres_cont', 'fut_sim', 'past_sim', 'pres_perf', 'past_cont', 'pres_perf_cont', 'past_perf', 'fut_cont', 'fut_perf', 'past_perf_cont', 'fut_perf_cont', 
+            'de_pres', 'de_imp', 'de_perf', 'de_fut1', 'de_prat', 'de_plus', 'de_k2_pres', 'de_k2_past', 'de_k2_fut1', 'de_k2_fut2', 'de_k1_pres', 'de_k1_perf', 'de_k1_fut1', 'de_k1_fut2', 'de_fut2', 'de_part1', 'de_part2', 'de_gerund',
+            'conjugate', 'past', 'future', 'imperative', 'conditional'
+        ];
         for(let k of keys) { if(toggleState[k]) return k; }
         return null;
     }
