@@ -126,20 +126,6 @@
     .controls { margin-top: 30px; display: flex; gap: 20px; }
     .nav-btn { width: 70px; height: 70px; border-radius: 50%; border: none; font-size: 2rem; background: #f5f5f5; cursor: pointer; color: #333; }
     .play-btn { width: 90px; height: 90px; font-size: 3rem; background: #333; color: white; }
-
-    /* PRINT */
-    #print-area { display: none; }
-    @media print {
-        header, .container, #child-mode { display: none !important; }
-        #print-area { display: block !important; width: 100%; height: 100%; }
-        .grid-poker { display: grid; grid-template-columns: repeat(3, 63.5mm); grid-template-rows: repeat(3, 88.9mm); padding: 10mm; gap: 2mm; }
-        .grid-poker img { flex: 1; width: 100%; object-fit: contain; padding: 10px; }
-        .grid-poker .txt { height: 25mm; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 18pt; color: #333; margin-bottom: 2mm; text-align: center;}
-        .grid-poker .bar { height: 3mm; width: 100%; position: absolute; bottom: 0; left: 0; }
-        .layout-a4 .page { break-after: page; width: 100vw; height: 100vh; display: flex; align-items: center; justify-content: center; }
-        .layout-a4 .txt { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 80pt; color: #333; text-align: center; }
-        .layout-a4 .bar { width: 15px; height: 100%; position: static; }
-    }
 </style>
 </head>
 <body>
@@ -226,8 +212,8 @@
         'en': ['pos', 'article', 'plural_noun', 'plural_adj', 'ipa', 'pron_0', 'pron_1', 'pron_2', 'pron_3', 'pron_4', 'pron_5', 'pres_sim', 'pres_cont', 'fut_sim', 'past_sim', 'pres_perf', 'past_cont', 'pres_perf_cont', 'past_perf', 'fut_cont', 'fut_perf', 'past_perf_cont', 'fut_perf_cont'],
         'de': ['pos', 'article', 'plural_noun', 'plural_adj', 'gender', 'ipa', 'fem', 'neut', 'acc', 'dat', 'gen', 'pron_0', 'pron_1', 'pron_2', 'pron_3', 'pron_4', 'pron_5', 'de_pres', 'de_imp', 'de_perf', 'de_fut1', 'de_prat', 'de_plus', 'de_k2_pres', 'de_k2_past', 'de_k2_fut1', 'de_k2_fut2', 'de_k1_pres', 'de_k1_perf', 'de_k1_fut1', 'de_k1_fut2', 'de_fut2', 'de_part1', 'de_part2', 'de_gerund'],
         'fr': ['pos', 'article', 'plural_noun', 'plural_adj', 'gender', 'ipa', 'fem', 'pron_0', 'pron_1', 'pron_2', 'pron_3', 'pron_4', 'pron_5', 'conjugate', 'past', 'future', 'imperative', 'conditional'],
-        'it': ['pos', 'article', 'plural_noun', 'plural_adj', 'gender', 'ipa', 'fem'],
-        'ru': ['pos', 'plural_noun', 'plural_adj', 'gender', 'latin', 'ipa', 'fem', 'neut', 'acc', 'dat', 'gen', 'ins', 'pre'],
+        'it': ['pos', 'article', 'plural_noun', 'plural_adj', 'gender', 'ipa', 'fem', 'conjugate', 'past', 'future', 'imperative', 'conditional'],
+        'ru': ['pos', 'plural_noun', 'plural_adj', 'gender', 'latin', 'ipa', 'fem', 'neut', 'acc', 'dat', 'gen', 'ins', 'pre', 'conjugate', 'past', 'future', 'imperative', 'conditional'],
         'zh': ['pos', 'traditional', 'pinyin'],
         'ja': ['pos', 'hiragana'],
         'ko': ['pos', 'hanja']
@@ -241,12 +227,7 @@
         // EN Tenses
         'pres_sim': 4, 'pres_cont': 4, 'fut_sim': 5, 'past_sim': 5, 'pres_perf': 6, 'past_cont': 7, 'pres_perf_cont': 7, 'past_perf': 8, 'fut_cont': 8, 'fut_perf': 9, 'past_perf_cont': 9, 'fut_perf_cont': 9,
         // DE Tenses
-        'de_pres': 4, 'de_imp': 4,
-        'de_perf': 5, 'de_fut1': 5,
-        'de_prat': 6, 'de_plus': 6,
-        'de_k2_pres': 7, 'de_k2_past': 7, 'de_k2_fut1': 7, 'de_k2_fut2': 7,
-        'de_k1_pres': 8, 'de_k1_perf': 8, 'de_k1_fut1': 8, 'de_k1_fut2': 8,
-        'de_fut2': 9, 'de_part1': 9, 'de_part2': 9, 'de_gerund': 9,
+        'de_pres': 4, 'de_imp': 4, 'de_perf': 5, 'de_fut1': 5, 'de_prat': 6, 'de_plus': 6, 'de_k2_pres': 7, 'de_k2_past': 7, 'de_k2_fut1': 7, 'de_k2_fut2': 7, 'de_k1_pres': 8, 'de_k1_perf': 8, 'de_k1_fut1': 8, 'de_k1_fut2': 8, 'de_fut2': 9, 'de_part1': 9, 'de_part2': 9, 'de_gerund': 9,
         // Legacy
         'past': 4, 'future': 4, 'acc': 4, 'dat': 4, 'gen': 4, 'imperative': 5, 'conditional': 5, 'ins': 5, 'pre': 5
     };
@@ -257,7 +238,7 @@
         'pron_0': 'I', 'pron_1': 'You', 'pron_2': 'He/It', 'pron_3': 'We', 'pron_4': 'Y\'all', 'pron_5': 'They',
         'pres_sim': 'Simple Pres', 'pres_cont': 'Pres Cont', 'fut_sim': 'Simple Fut', 'past_sim': 'Simple Past', 'pres_perf': 'Pres Perf', 'past_cont': 'Past Cont', 'pres_perf_cont': 'Pres Perf Cont', 'past_perf': 'Past Perf', 'fut_cont': 'Fut Cont', 'fut_perf': 'Fut Perf', 'past_perf_cont': 'Past Perf Cont', 'fut_perf_cont': 'Fut Perf Cont',
         // DE Labels
-        'de_pres': 'Präsens', 'de_imp': 'Imperativ', 'de_perf': 'Perfekt', 'de_fut1': 'Futur I', 'de_prat': 'Präteritum', 'de_plus': 'Plusquamperfekt', 'de_k2_pres': 'K2 Präsens', 'de_k2_past': 'K2 Vergang.', 'de_k2_fut1': 'K2 Futur I', 'de_k2_fut2': 'K2 Futur II', 'de_k1_pres': 'K1 Präsens', 'de_k1_perf': 'K1 Perfekt', 'de_k1_fut1': 'K1 Futur I', 'de_k1_fut2': 'K1 Futur II', 'de_fut2': 'Futur II', 'de_part1': 'Partizip I', 'de_part2': 'Partizip II', 'de_gerund': 'Gerundivum',
+        'de_pres': 'Präsens', 'de_imp': 'Imperativ', 'de_perf': 'Perfekt', 'de_fut1': 'Futur I', 'de_prat': 'Präteritum', 'de_plus': 'Plusquam.', 'de_k2_pres': 'K2 Präsens', 'de_k2_past': 'K2 Verg.', 'de_k2_fut1': 'K2 Futur I', 'de_k2_fut2': 'K2 Futur II', 'de_k1_pres': 'K1 Präsens', 'de_k1_perf': 'K1 Perfekt', 'de_k1_fut1': 'K1 Futur I', 'de_k1_fut2': 'K1 Futur II', 'de_fut2': 'Futur II', 'de_part1': 'Partizip I', 'de_part2': 'Partizip II', 'de_gerund': 'Gerundivum',
         'conjugate': 'Present', 'past': 'Past', 'future': 'Future', 'imperative': 'Cmd', 'conditional': 'Cond',
         'pinyin':'Pinyin', 'latin':'Latin', 'ipa':'IPA', 'hiragana':'Hiragana', 'hanja':'Hanja', 'traditional':'Traditional'
     };
@@ -274,18 +255,7 @@
 
     const colors = { animal: '#7CB342', food: '#FDD835', body: '#42A5F5', act: '#AB47BC' };
 
-    // --- NEW FUNCTION ADDED HERE ---
-    function updateUI() {
-        updateControls('header-toggles');
-        renderGrid();
-        
-        // Update child mode display if it is currently open
-        if (document.getElementById('child-mode').style.display === 'flex') {
-            updateDisplay();
-        }
-    }
-
-    // --- ROBUST FETCH WITH ERROR HANDLING ---
+    // --- ROBUST FETCH ---
     fetch('data.json')
         .then(res => {
             if (!res.ok) throw new Error("HTTP error " + res.status);
@@ -300,9 +270,15 @@
             document.getElementById('grid').innerHTML = `
                 <div style="grid-column: 1 / -1; background: #ffebee; color: #c62828; padding: 20px; border-radius: 10px; text-align: center; font-family: 'Fredoka One'; font-size: 1.5rem;">
                     ⚠️ Error loading data.json!<br>
-                    <span style="font-family: 'Zen Maru Gothic'; font-size: 1rem; font-weight: normal;">Please check if the file exists and has correct JSON formatting (no missing brackets or extra commas).</span>
+                    <span style="font-family: 'Zen Maru Gothic'; font-size: 1rem; font-weight: normal;">Please check if the file exists and has correct JSON formatting.</span>
                 </div>`;
         });
+
+    function updateUI() {
+        updateControls('header-toggles');
+        if(document.getElementById('child-mode').style.display === 'flex') updateControls('child-toggles');
+        renderGrid();
+    }
 
     document.getElementById('lang-select').addEventListener('change', (e) => {
         currentLang = e.target.value;
@@ -408,7 +384,7 @@
         return data; 
     }
 
-     function getActiveTenseKey() {
+    function getActiveTenseKey() {
         const keys = [
             'pres_sim', 'pres_cont', 'fut_sim', 'past_sim', 'pres_perf', 'past_cont', 'pres_perf_cont', 'past_perf', 'fut_cont', 'fut_perf', 'past_perf_cont', 'fut_perf_cont', 
             'de_pres', 'de_imp', 'de_perf', 'de_fut1', 'de_prat', 'de_plus', 'de_k2_pres', 'de_k2_past', 'de_k2_fut1', 'de_k2_fut2', 'de_k1_pres', 'de_k1_perf', 'de_k1_fut1', 'de_k1_fut2', 'de_fut2', 'de_part1', 'de_part2', 'de_gerund',
@@ -420,7 +396,8 @@
 
     function getTextDisplay(card) {
         let raw = card.translations[currentLang]; 
-        if (!raw) raw = card.translations['en']; // Fallback
+        // SAFETY FALLBACK: If language missing for this specific word, default to English.
+        if (!raw) raw = card.translations['en']; 
         if (!raw || typeof raw === 'string') return { main: raw || '?', sub: '', gender: '' };
 
         let mainText = (currentLang === 'zh' && toggleState.traditional && raw.t) ? raw.t : (raw.n || '?');
@@ -433,14 +410,20 @@
         }
 
         if (card.pos === 'verb') {
-            const activeTense = getActiveTenseKey();
-            if (activeTense) {
-                // Fixed: Map 'conjugate' to 'pres' for legacy langs
-                const jsonKey = activeTense === 'conjugate' ? 'pres' : activeTense;
-                if (raw[jsonKey]) {
-                    const result = extractText(raw[jsonKey]);
-                    if(result) mainText = result;
-                }
+            let activeTense = getActiveTenseKey();
+            // --- FIX FOR ENGLISH TENSE ERROR ---
+            // If we are looking at a verb, and NO tense is toggled (e.g. just changed level or language)
+            // we must establish a background default so the Pronoun switches have something to extract from!
+            if (!activeTense) {
+                if (currentLang === 'en') activeTense = 'pres_sim';
+                else if (currentLang === 'de') activeTense = 'de_pres';
+                else activeTense = 'conjugate'; 
+            }
+            
+            const jsonKey = activeTense === 'conjugate' ? 'pres' : activeTense;
+            if (raw[jsonKey]) {
+                const result = extractText(raw[jsonKey]);
+                if(result) mainText = result;
             }
         }
 
@@ -471,9 +454,13 @@
     function buildBackTable(card) {
         if(card.pos === 'verb' && currentLevel >= 3) {
             const raw = card.translations[currentLang] || card.translations['en'];
-            // Safe fallback if language doesn't have the tense
+            
             let activeTense = getActiveTenseKey();
-            if (!activeTense) { activeTense = (currentLang === 'en') ? 'pres_sim' : 'conjugate'; }
+            if (!activeTense) { 
+                if (currentLang === 'en') activeTense = 'pres_sim';
+                else if (currentLang === 'de') activeTense = 'de_pres';
+                else activeTense = 'conjugate'; 
+            }
             
             const jsonKey = activeTense === 'conjugate' ? 'pres' : activeTense;
             const tenseData = raw ? raw[jsonKey] : null;
@@ -564,7 +551,8 @@
 
     function speakDrill() {
         const card = deck[currentIndex]; const txt = getTextDisplay(card);
-        const voice = window.speechSynthesis.getVoices().find(v => v.lang.includes({'en':'en-GB', 'fr':'fr-FR'}[currentLang]||'en-US')) || window.speechSynthesis.getVoices()[0];
+        const locales = { 'en':'en-GB', 'fr':'fr-FR', 'de':'de-DE', 'it':'it-IT', 'ru':'ru-RU', 'zh':'zh-CN', 'ja':'ja-JP', 'ko':'ko-KR' };
+        const voice = window.speechSynthesis.getVoices().find(v => v.lang.includes(locales[currentLang]||'en-US')) || window.speechSynthesis.getVoices()[0];
         window.speechSynthesis.cancel();
         const u = new SpeechSynthesisUtterance(txt.main); u.voice=voice; u.rate=0.9; window.speechSynthesis.speak(u);
     }
