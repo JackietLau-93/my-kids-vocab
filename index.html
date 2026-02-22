@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>TinyVocab Grammar Engine</title>
+<title>TinyVocab Master Engine</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -84,6 +84,7 @@
     .word-row { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; margin-bottom: 2px; }
     .word { font-size: 1.6rem; color: #333; text-align: center; line-height: 1.1; }
     .sub-word { font-size: 0.8rem; color: #777; font-family: 'Zen Maru Gothic'; text-align: center; font-weight: 500; }
+    .gender-badge { font-size: 0.75rem; color: #999; font-style: italic; margin-top: 2px; font-family: 'Zen Maru Gothic'; }
 
     .pos-badge { font-size: 0.6rem; color: white; padding: 3px 8px; border-radius: 10px; font-family: 'Zen Maru Gothic'; font-weight: bold; letter-spacing: 0.5px; text-transform: lowercase; margin-top: 4px; display: none; }
     .pos-noun { background: var(--pos-noun); } .pos-verb { background: var(--pos-verb); } .pos-adj { background: var(--pos-adj); } 
@@ -95,6 +96,7 @@
     .back-title { font-family: 'Fredoka One'; font-size: 1rem; color: #333; margin-bottom: 10px; margin-top: 5px; line-height:1.2;}
     .comp-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; text-align: left; }
     .comp-table td { padding: 8px 4px; border-bottom: 1px solid #eee;}
+    .g-masc { color: var(--pos-noun); } .g-fem { color: var(--pos-prep); }
     
     /* Matrix Grid */
     .verb-matrix { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; }
@@ -108,6 +110,17 @@
     .verbal-type { font-weight: bold; color: #777; font-size: 0.65rem; text-transform: uppercase;}
 
     .close-flip { margin-top: auto; padding: 8px 20px; border-radius: 20px; background: #eee; border: none; font-family: 'Fredoka One'; color: #555; cursor: pointer; }
+
+    /* CHILD MODE */
+    #child-mode { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #fff; z-index: 200; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .child-toggles { display: flex; flex-direction: column; gap: 5px; width: 90%; max-width: 400px; margin-bottom: 15px; background: #f9f9f9; padding: 10px; border-radius: 15px; }
+    .focus-card { width: 85vw; max-width: 400px; aspect-ratio: 3/4; background: white; border-radius: 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.1); display: flex; flex-direction: column; overflow: hidden; }
+    .focus-card img { flex: 1; object-fit: contain; padding: 40px; filter: brightness(1.03) contrast(1.03); mix-blend-mode: multiply; }
+    .focus-card .word-box { height: 160px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 10px; box-sizing: border-box;}
+    .focus-card h1 { font-size: 3.5rem; margin: 0; color: #333; line-height: 1; }
+    .controls { margin-top: 30px; display: flex; gap: 20px; }
+    .nav-btn { width: 70px; height: 70px; border-radius: 50%; border: none; font-size: 2rem; background: #f5f5f5; cursor: pointer; color: #333; }
+    .play-btn { width: 90px; height: 90px; font-size: 3rem; background: #333; color: white; }
 </style>
 </head>
 <body>
@@ -122,7 +135,10 @@
             <option value="ru">🇷🇺 Russian</option>
             <option value="it">🇮🇹 Italian</option>
             <option value="zh">🇨🇳 Chinese</option>
+            <option value="ja">🇯🇵 Japanese</option>
+            <option value="ko">🇰🇷 Korean</option>
         </select>
+        <button class="btn btn-primary" onclick="startChild()">▶ Child Mode</button>
     </div>
     
     <div class="level-container">
@@ -136,53 +152,86 @@
 <div class="container">
     <div class="card-grid" id="grid"></div>
 </div>
-
-<div id="print-area"></div>
+<div id="child-mode" style="display:none;">
+    <button onclick="exitChild()" style="position:absolute; top:30px; right:30px; border:none; background:none; font-size:2rem; opacity:0.3; cursor:pointer;">✕</button>
+    <div id="child-toggles" class="child-toggles" style="display:none;"></div> <div class="focus-card" id="focus-display">
+        <img id="c-img" src="">
+        <div class="word-box">
+            <h1 id="c-word">Word</h1>
+            <h2 id="c-sub"></h2>
+            <div id="c-pos" class="pos-badge"></div>
+            <div id="c-gender" class="gender-badge" style="font-size: 1.2rem;"></div>
+        </div>
+        <div class="focus-stripe" id="c-stripe"></div>
+    </div>
+    <div class="controls">
+        <button class="nav-btn" onclick="move(-1)">👈</button>
+        <button class="nav-btn play-btn" onclick="speakDrill()">🔊</button>
+        <button class="nav-btn" onclick="move(1)">👉</button>
+    </div>
+</div>
 
 <script>
     let deck = [];
     let currentLang = 'en';
     let currentLevel = 1;
+    let currentIndex = 0;
     const pronLabels = ['I', 'You', 'He/She/It', 'We', 'You (pl)', 'They'];
 
     // --- UNIVERSAL GRAMMAR STATE ---
     let state = {
-        // Core Toggles
-        pos: false, article: false, plural_noun: false, plural_adj: false,
+        pos: false, article: false, plural_noun: false, plural_adj: false, gender: false,
         fem: false, neut: false, acc: false, dat: false, gen: false, ins: false, pre: false,
-        ipa: false, pinyin: false,
-        
-        // The Verb Engine (Radio Variables)
-        v_mode: 'conj',   // conj | verbals
-        v_voice: 'act',   // act | pass
-        v_mood: 'ind',    // ind | subj | cond | rep | imp
-        v_time: 'pres',   // past | pres | fut
-        v_aspect: 'sim',  // sim | cont | perf | perfcont
-        v_type: 'v_inf',  // v_inf | v_pres_part | v_past_part | v_ger_noun | v_ger_adv
-        pronoun: 2        // 0 to 5 (Default He/She)
+        ipa: false, pinyin: false, latin: false, hiragana: false, hanja: false, traditional: false,
+        v_mode: 'conj', v_voice: 'act', v_mood: 'ind', v_time: 'pres', v_aspect: 'sim', v_type: 'v_inf', pronoun: 2
     };
 
-    // UI Configuration Mapping
+    // --- CONFIGURATIONS ---
+    const toggleLabels = { 
+        'pos': 'Part of Speech', 'gender':'Gender', 'article':'Article', 'plural_noun':'Plural (N)',
+        'plural_adj': 'Plural (Adj)', 'fem': 'Fem', 'neut': 'Neut',
+        'acc': 'Acc', 'dat': 'Dat', 'gen': 'Gen', 'ins': 'Ins', 'pre': 'Pre',
+        'pinyin':'Pinyin', 'latin':'Latin', 'ipa':'IPA', 'hiragana':'Hiragana', 'hanja':'Hanja', 'traditional':'Traditional'
+    };
+
+    const levelConfig = {
+        'ipa': 1, 'pinyin': 1, 'latin': 1, 'hiragana': 1, 'hanja': 1, 'traditional': 1, 'gender': 1,
+        'pos': 2, 'article': 2, 'plural_noun': 2, 
+        'plural_adj': 3, 'fem': 3, 'neut': 3,
+        'acc': 4, 'dat': 4, 'gen': 4, 'ins': 5, 'pre': 5
+    };
+
+    const groupConfig = [
+        { id: 'Sound', keys: ['ipa', 'latin', 'pinyin', 'hiragana', 'hanja', 'traditional'] },
+        { id: 'Meta', keys: ['pos', 'gender'] },
+        { id: 'Noun', keys: ['article', 'plural_noun'] },
+        { id: 'Adj',  keys: ['fem', 'neut', 'plural_adj', 'acc', 'dat', 'gen', 'ins', 'pre'] }
+    ];
+
+    const langConfig = {
+        'en': ['pos', 'article', 'plural_noun', 'plural_adj', 'ipa', 'v_engine'],
+        'de': ['pos', 'article', 'plural_noun', 'plural_adj', 'gender', 'ipa', 'fem', 'neut', 'acc', 'dat', 'gen', 'v_engine'],
+        'fr': ['pos', 'article', 'plural_noun', 'plural_adj', 'gender', 'ipa', 'fem', 'v_engine'],
+        'it': ['pos', 'article', 'plural_noun', 'plural_adj', 'gender', 'ipa', 'fem', 'v_engine'],
+        'ru': ['pos', 'plural_noun', 'plural_adj', 'gender', 'latin', 'ipa', 'fem', 'neut', 'acc', 'dat', 'gen', 'ins', 'pre', 'v_engine'],
+        'zh': ['pos', 'traditional', 'pinyin'],
+        'ja': ['pos', 'hiragana'],
+        'ko': ['pos', 'hanja']
+    };
+
     const verbOptions = {
         mode: [{id:'conj', lbl:'Conjugation', lvl:4}, {id:'verbals', lbl:'Verbals', lvl:4}],
         voice: [{id:'act', lbl:'Active', lvl:4}, {id:'pass', lbl:'Passive', lvl:7}],
-        mood: [{id:'ind', lbl:'Indicative', lvl:4}, {id:'subj', lbl:'Subjunctive', lvl:8}, {id:'cond', lbl:'Conditional', lvl:8}, {id:'rep', lbl:'Reported', lvl:9}, {id:'imp', lbl:'Imperative', lvl:9}],
+        mood: [{id:'ind', lbl:'Indicative', lvl:4}, {id:'subj', lbl:'Subjunctive', lvl:8}, {id:'cond', lbl:'Conditional', lvl:8}, {id:'imp', lbl:'Imperative', lvl:9}],
         time: [{id:'past', lbl:'Past', lvl:5}, {id:'pres', lbl:'Present', lvl:4}, {id:'fut', lbl:'Future', lvl:5}],
         aspect: [{id:'sim', lbl:'Simple', lvl:4}, {id:'cont', lbl:'Continuous', lvl:4}, {id:'perf', lbl:'Perfect', lvl:6}, {id:'perfcont', lbl:'Perf. Cont.', lvl:7}],
-        verbals: [
-            {id:'v_inf', lbl:'Infinitive', lvl:4}, {id:'v_pres_part', lbl:'Pres Participle', lvl:4}, 
-            {id:'v_past_part', lbl:'Past Participle', lvl:4}, {id:'v_ger_noun', lbl:'Gerund (Noun)', lvl:8}, {id:'v_ger_adv', lbl:'Gerund (Adv)', lvl:8}
-        ]
+        verbals: [{id:'v_inf', lbl:'Infinitive', lvl:4}, {id:'v_pres_part', lbl:'Pres Participle', lvl:4}, {id:'v_past_part', lbl:'Past Participle', lvl:4}, {id:'v_ger_noun', lbl:'Gerund (Noun)', lvl:8}, {id:'v_ger_adv', lbl:'Gerund (Adv)', lvl:8}]
     };
 
     const colors = { animal: '#7CB342', food: '#FDD835', body: '#42A5F5', act: '#AB47BC' };
 
-    fetch('data.json')
-        .then(res => { if (!res.ok) throw new Error(); return res.json(); })
-        .then(data => { deck = data; updateUI(); })
-        .catch(err => { 
-            document.getElementById('grid').innerHTML = `<div style="padding:20px; background:#ffebee; color:#c62828; text-align:center; border-radius:10px;">⚠️ Error loading data.json</div>`;
-        });
+    fetch('data.json').then(res => res.json()).then(data => { deck = data; updateUI(); })
+        .catch(err => { document.getElementById('grid').innerHTML = `<div style="padding:20px; background:#ffebee; color:#c62828; text-align:center; border-radius:10px;">⚠️ Error loading data.json</div>`; });
 
     document.getElementById('lang-select').addEventListener('change', (e) => {
         currentLang = e.target.value;
@@ -198,44 +247,37 @@
         updateUI();
     }
 
-    function getFontClass() { return {'zh':'font-zh-cn', 'ru':'font-ru'}[currentLang] || 'font-en'; }
+    function getFontClass() { return {'zh':'font-zh-cn', 'ru':'font-ru', 'ja': 'font-ja', 'ko': 'font-ko'}[currentLang] || 'font-en'; }
 
     // --- UI BUILDER ---
     function updateUI() {
         const c = document.getElementById('header-toggles');
         c.innerHTML = '';
+        const allowed = langConfig[currentLang] || [];
 
-        // 1. Meta Row
-        if (currentLevel >= 2) {
-            c.insertAdjacentHTML('beforeend', `
-                <div class="control-row">
-                    <div class="row-label">Meta</div>
-                    ${buildSwitch('pos', 'Part of Speech', currentLevel >= 2)}
-                    ${buildSwitch('ipa', 'IPA', currentLevel >= 1)}
-                    ${buildSwitch('plural_noun', 'Plural Noun', currentLevel >= 2)}
-                </div>
-            `);
-        }
+        // 1. Render Non-Verb Groups (Meta, Sound, Noun, Adj)
+        groupConfig.forEach(grp => {
+            const validKeys = grp.keys.filter(k => allowed.includes(k) && currentLevel >= levelConfig[k]);
+            if (validKeys.length > 0) {
+                const row = document.createElement('div'); row.className = 'control-row';
+                row.innerHTML = `<div class="row-label">${grp.id}</div>`;
+                validKeys.forEach(key => {
+                    row.insertAdjacentHTML('beforeend', `<label class="toggle-group"><span class="switch"><input type="checkbox" onchange="setSwitch('${key}', this.checked)" ${state[key]?'checked':''}><span class="slider"></span></span>${toggleLabels[key]}</label>`);
+                });
+                c.appendChild(row);
+            }
+        });
 
-        // 2. The Verb Engine (Level 4+)
-        if (currentLevel >= 4) {
-            let verbHTML = `<div class="verb-box"><div class="control-row" style="border:none;">
-                <div class="row-label">Mode</div>${buildRadios('v_mode', verbOptions.mode)}
-            </div>`;
+        // 2. Render Verb Engine (Level 4+)
+        if (currentLevel >= 4 && allowed.includes('v_engine')) {
+            let verbHTML = `<div class="verb-box"><div class="control-row" style="border:none;"><div class="row-label">Mode</div>${buildRadios('v_mode', verbOptions.mode)}</div>`;
 
             if (state.v_mode === 'conj') {
-                verbHTML += `
-                    <div class="control-row" style="border:none;"><div class="row-label">Pronoun</div>
-                    ${pronLabels.map((lbl, i) => `<div class="pill-btn ${state.pronoun===i?'active-pronoun':''}" onclick="setRadio('pronoun', ${i})">${lbl}</div>`).join('')}
-                    </div>
-                    <div class="control-row" style="border:none;"><div class="row-label">Mood</div>${buildRadios('v_mood', verbOptions.mood)}</div>
-                    <div class="control-row" style="border:none;"><div class="row-label">Time</div>${buildRadios('v_time', verbOptions.time)}</div>
-                    <div class="control-row" style="border:none;"><div class="row-label">Aspect</div>${buildRadios('v_aspect', verbOptions.aspect)}</div>
-                `;
-                // Add Voice if unlocked
-                if(currentLevel >= 7) {
-                    verbHTML += `<div class="control-row" style="border:none;"><div class="row-label">Voice</div>${buildRadios('v_voice', verbOptions.voice)}</div>`;
-                }
+                verbHTML += `<div class="control-row" style="border:none;"><div class="row-label">Pronoun</div>${pronLabels.map((lbl, i) => `<div class="pill-btn ${state.pronoun===i?'active-pronoun':''}" onclick="setRadio('pronoun', ${i})">${lbl}</div>`).join('')}</div>`;
+                verbHTML += `<div class="control-row" style="border:none;"><div class="row-label">Mood</div>${buildRadios('v_mood', verbOptions.mood)}</div>`;
+                verbHTML += `<div class="control-row" style="border:none;"><div class="row-label">Time</div>${buildRadios('v_time', verbOptions.time)}</div>`;
+                verbHTML += `<div class="control-row" style="border:none;"><div class="row-label">Aspect</div>${buildRadios('v_aspect', verbOptions.aspect)}</div>`;
+                if(currentLevel >= 7) verbHTML += `<div class="control-row" style="border:none;"><div class="row-label">Voice</div>${buildRadios('v_voice', verbOptions.voice)}</div>`;
             } else {
                 verbHTML += `<div class="control-row" style="border:none;"><div class="row-label">Type</div>${buildRadios('v_type', verbOptions.verbals)}</div>`;
             }
@@ -244,47 +286,42 @@
         }
 
         renderGrid();
-    }
-
-    function buildSwitch(key, label, isUnlocked) {
-        if(!isUnlocked) return '';
-        return `<label class="toggle-group"><span class="switch"><input type="checkbox" onchange="setSwitch('${key}', this.checked)" ${state[key]?'checked':''}><span class="slider"></span></span>${label}</label>`;
+        if(document.getElementById('child-mode').style.display === 'flex') updateDisplay();
     }
 
     function buildRadios(stateKey, options) {
         return options.map(opt => {
             if(currentLevel < opt.lvl) return '';
             const isActive = state[stateKey] === opt.id;
-            
-            // SMART DISABLING LOGIC
             let isDisabled = false;
-            // 1. No "Continuous" in French/German
+            // SMART DISABLING
             if(stateKey === 'v_aspect' && opt.id === 'cont' && ['fr','de'].includes(currentLang)) isDisabled = true;
-            // 2. Imperative locks Time to Present & Aspect to Simple
             if(state.v_mood === 'imp') {
                 if(stateKey === 'v_time' && opt.id !== 'pres') isDisabled = true;
                 if(stateKey === 'v_aspect' && opt.id !== 'sim') isDisabled = true;
             }
-            // 3. Russian Perfective has no Present
             if(currentLang === 'ru' && stateKey === 'v_time' && opt.id === 'pres' && state.v_aspect === 'perf') isDisabled = true;
 
             return `<div class="pill-btn ${isActive ? 'active' : ''} ${isDisabled ? 'disabled' : ''}" onclick="setRadio('${stateKey}', '${opt.id}')">${opt.lbl}</div>`;
         }).join('');
     }
 
-    window.setSwitch = function(key, val) { state[key] = val; updateUI(); };
+    window.setSwitch = function(key, val) { 
+        state[key] = val; 
+        if(key === 'fem' && val) state.neut = false;
+        if(key === 'neut' && val) state.fem = false;
+        if(['acc','dat','gen','ins','pre'].includes(key) && val) {
+            ['acc','dat','gen','ins','pre'].forEach(k => { if(k !== key) state[k] = false; });
+        }
+        updateUI(); 
+    };
     
     window.setRadio = function(key, val) { 
         state[key] = val; 
-        
-        // SMART ENFORCEMENT ON CLICK
-        // If clicking Imperative, force Present Simple
+        // Force logical rules instantly
         if(key === 'v_mood' && val === 'imp') { state.v_time = 'pres'; state.v_aspect = 'sim'; }
-        // If Russian & Perfect, force Past if Present was selected
-        if(currentLang === 'ru' && key === 'v_aspect' && val === 'perf' && state.v_time === 'pres') { state.v_time = 'past'; }
-        // If Russian & Present, force Imperfective (Simple or Cont)
-        if(currentLang === 'ru' && key === 'v_time' && val === 'pres' && state.v_aspect === 'perf') { state.v_aspect = 'sim'; }
-        
+        if(currentLang === 'ru' && key === 'v_aspect' && val === 'perf' && state.v_time === 'pres') state.v_time = 'past';
+        if(currentLang === 'ru' && key === 'v_time' && val === 'pres' && state.v_aspect === 'perf') state.v_aspect = 'sim';
         updateUI(); 
     };
 
@@ -295,40 +332,61 @@
     }
 
     function getTextDisplay(card) {
-        let raw = card.translations[currentLang] || card.translations['en']; 
-        let mainText = raw.n || '?';
-        let subText = state.ipa ? (raw.ipa || '') : '';
-
-        if (card.pos === 'noun' && state.plural_noun && raw.p) mainText = raw.p;
+        let raw = card.translations[currentLang]; 
+        if (!raw) raw = card.translations['en']; // Safe fallback
         
+        let mainText = (currentLang === 'zh' && state.traditional && raw.t) ? raw.t : (raw.n || '?');
+        let subText = '';
+        let genderText = (state.gender && raw.g) ? raw.g : '';
+
+        // NOUN LOGIC
+        if (card.pos === 'noun') {
+            if (state.plural_noun && raw.p) mainText = raw.p;
+            if (state.article && !state.plural_noun && raw.art) mainText = `${raw.art} ${mainText}`;
+        }
+        
+        // ADJECTIVE LOGIC
+        if (card.pos === 'adj') {
+            if (state.acc && raw.acc) mainText = raw.acc;
+            else if (state.dat && raw.dat) mainText = raw.dat;
+            else if (state.gen && raw.gen) mainText = raw.gen;
+            else if (state.ins && raw.ins) mainText = raw.ins;
+            else if (state.pre && raw.pre) mainText = raw.pre;
+            else if (state.plural_adj) {
+                if (state.fem && raw.fp) mainText = raw.fp;
+                else if (raw.mp) mainText = raw.mp;
+                else if (raw.p) mainText = raw.p;
+            } 
+            else if (state.fem && raw.f) mainText = raw.f;
+            else if (state.neut && raw.nt) mainText = raw.nt;
+        }
+
         // VERB LOGIC
         if (card.pos === 'verb') {
             if (currentLevel < 4) {
-                // Levels 1-3: Default to Infinitive
-                if (currentLang === 'ru' && raw.inf_impf) {
-                    mainText = raw.inf_impf;
-                    subText = `(${raw.inf_perf || '-'})`;
-                } else if (raw.v_inf) {
-                    mainText = raw.v_inf;
-                }
+                // Levels 1-3 Default
+                if (currentLang === 'ru' && raw.inf_impf) { mainText = raw.inf_impf; subText = `(${raw.inf_perf || '-'})`; } 
+                else if (raw.v_inf) { mainText = raw.v_inf; }
             } else {
-                // Levels 4+: The Engine
+                // Levels 4+ Matrix Engine
                 const key = getVerbKey();
                 const data = raw[key];
-                
-                // Russian Aspect Magic Translation
-                // If Aspect is Sim/Cont -> use Impf root. If Perf -> use Perf root. (Handled in JSON manually, but UI reflects it)
-
                 if (data) {
-                    if (Array.isArray(data)) mainText = data[state.pronoun] || '-';
-                    else mainText = data; // Verbals are strings
+                    mainText = Array.isArray(data) ? (data[state.pronoun] || '-') : data;
                 } else {
-                    mainText = '-'; // Form not available
+                    mainText = '-'; 
                 }
             }
         }
 
-        return { main: mainText, sub: subText };
+        // Subtext Processing
+        if (state.pinyin && raw.py) subText = raw.py;
+        if (state.latin && raw.lt) subText = raw.lt;
+        if (state.ipa && raw.ipa) subText = `[${raw.ipa}]`;
+        if (currentLang === 'ja' && state.hiragana && raw.r) subText = `(${raw.r})`;
+        if (currentLang === 'ko' && state.hanja && raw.hj) { subText = `(${mainText})`; mainText = raw.hj; }
+
+        return { main: mainText, sub: subText, gender: genderText };
     }
 
     function buildBackTable(card) {
@@ -336,42 +394,33 @@
             const raw = card.translations[currentLang] || card.translations['en'];
             
             if (state.v_mode === 'verbals') {
-                // Render List of Verbals
                 return `<div class="back-title">Non-Finite Forms</div>
                         <div class="verbal-list">
-                            ${verbOptions.verbals.map(v => {
-                                const word = raw[v.id] || '-';
-                                return `<div class="verbal-item"><span class="verbal-type">${v.lbl}</span> <span>${word}</span></div>`;
-                            }).join('')}
+                            ${verbOptions.verbals.map(v => `<div class="verbal-item"><span class="verbal-type">${v.lbl}</span> <span>${raw[v.id] || '-'}</span></div>`).join('')}
                         </div>`;
             } else {
-                // Render Conjugation Matrix
                 const key = getVerbKey();
                 const tenseData = raw[key];
                 
-                // User Friendly Title (e.g., "ind pres sim act")
                 const t_mood = verbOptions.mood.find(m=>m.id===state.v_mood).lbl;
                 const t_time = verbOptions.time.find(m=>m.id===state.v_time).lbl;
                 const t_asp = verbOptions.aspect.find(m=>m.id===state.v_aspect).lbl;
                 const title = `${t_mood} ${t_time} ${t_asp}`;
 
                 if(Array.isArray(tenseData)) {
-                    let cellsHTML = '';
-                    for(let i=0; i<6; i++) {
-                        const isActive = i === state.pronoun ? 'active-cell' : '';
-                        cellsHTML += `
-                            <div class="verb-cell ${isActive}">
-                                <div class="pron-label">${pronLabels[i]}</div>
-                                <div class="font-${currentLang}">${tenseData[i]}</div>
+                    return `<div class="back-title" style="font-size:0.85rem">${title}</div>
+                            <div class="verb-matrix">
+                                ${pronLabels.map((lbl, i) => `<div class="verb-cell ${i===state.pronoun?'active-cell':''}"><div class="pron-label">${lbl}</div><div class="font-${currentLang}">${tenseData[i]}</div></div>`).join('')}
                             </div>`;
-                    }
-                    return `<div class="back-title">${title}</div><div class="verb-matrix">${cellsHTML}</div>`;
                 } else {
-                    return `<div class="back-title">${title}</div><p style="font-size:0.8rem; color:#888;">Form not supported or missing in data.</p>`;
+                    return `<div class="back-title">${title}</div><p style="font-size:0.8rem; color:#888; padding: 10px;">Form not supported or missing.</p>`;
                 }
             }
         } else {
-            return `<div class="back-title">Info</div><p style="font-size:0.8rem; color:#888;">Flip details only available for verbs at Level 4+.</p>`;
+            return `<div class="back-title">Gender Compare</div>
+                    <table class="comp-table">
+                        ${buildCompRow(card, 'fr', '🇫🇷')}${buildCompRow(card, 'de', '🇩🇪')}${buildCompRow(card, 'it', '🇮🇹')}${buildCompRow(card, 'ru', '🇷🇺')}
+                    </table>`;
         }
     }
 
@@ -386,12 +435,13 @@
             <div class="vocab-card" onclick="flipCard(event, this)">
                 <div class="card-inner">
                     <div class="card-front">
-                        <div class="flip-btn">🔄</div>
+                        <div class="flip-btn" onclick="event.stopPropagation(); startChildAt('${card.id}')">🔍</div>
                         <div class="card-art"><img src="${card.img}" onerror="this.style.display='none'"></div>
                         <div class="card-obi ${posVisibility}">
                             <div class="word-row"><div class="word ${fontClass}">${txt.main}</div></div>
                             <div class="pos-badge pos-${card.pos || 'noun'}">${card.pos || ''}</div>
                             ${txt.sub ? `<div class="sub-word">${txt.sub}</div>` : ''}
+                            ${txt.gender ? `<div class="gender-badge">${txt.gender}</div>` : ''}
                             <div class="color-stroke" style="background:${col}"></div>
                         </div>
                     </div>
@@ -408,12 +458,31 @@
         e.stopPropagation(); 
         const inner = element.querySelector('.card-inner') || element.closest('.vocab-card');
         if(inner.classList.contains('flipped')) inner.classList.remove('flipped'); 
-        else {
-            document.querySelectorAll('.vocab-card').forEach(c=>c.classList.remove('flipped')); 
-            inner.classList.add('flipped');
-        } 
+        else { document.querySelectorAll('.vocab-card').forEach(c=>c.classList.remove('flipped')); inner.classList.add('flipped'); } 
     };
 
+    function startChildAt(id) { currentIndex = deck.findIndex(c => c.id === id); document.getElementById('child-mode').style.display = 'flex'; updateDisplay(); }
+    function startChild() { if(deck.length>0) startChildAt(deck[0].id); }
+    function exitChild() { document.getElementById('child-mode').style.display = 'none'; window.speechSynthesis.cancel(); }
+    
+    function updateDisplay() {
+        const card = deck[currentIndex]; const txt = getTextDisplay(card);
+        document.getElementById('c-word').className = getFontClass();
+        document.getElementById('c-img').src = card.img; document.getElementById('c-word').innerText = txt.main;
+        document.getElementById('c-sub').innerText = txt.sub; document.getElementById('c-gender').innerText = txt.gender;
+        document.getElementById('c-stripe').style.background = colors[card.cat] || '#333';
+        const posEl = document.getElementById('c-pos'); posEl.className = `pos-badge pos-${card.pos || 'noun'}`; posEl.innerText = card.pos || ''; posEl.style.display = state.pos ? 'inline-block' : 'none';
+    }
+
+    function move(dir) { window.speechSynthesis.cancel(); currentIndex = (currentIndex + dir + deck.length) % deck.length; updateDisplay(); }
+    function buildCompRow(c,l,f) { const d=c.translations[l]; if(!d)return''; const g=(d.g||'').includes('masc')?'g-masc':(d.g||'').includes('fem')?'g-fem':''; return `<tr><td style="width:30px">${f}</td><td class="${g}" style="font-weight:bold">${d.art||''}</td><td class="${g}">${d.n||''}</td></tr>`; }
+    
+    function speakDrill() {
+        const txt = getTextDisplay(deck[currentIndex]);
+        const voice = window.speechSynthesis.getVoices().find(v => v.lang.includes({'en':'en-GB', 'fr':'fr-FR', 'de':'de-DE', 'it':'it-IT', 'ru':'ru-RU', 'zh':'zh-CN', 'ja':'ja-JP', 'ko':'ko-KR'}[currentLang]||'en-US')) || window.speechSynthesis.getVoices()[0];
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(txt.main); u.voice=voice; u.rate=0.9; window.speechSynthesis.speak(u);
+    }
 </script>
 </body>
 </html>
