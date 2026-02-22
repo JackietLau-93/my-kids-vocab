@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>TinyVocab Time Traveler</title>
+<title>TinyVocab Grammar Engine</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,45 +11,29 @@
 
 <style>
     :root {
-        /* Semantic Colors */
-        --c-animal: #7CB342; --c-food: #FDD835; --c-body: #42A5F5; 
-        --c-home: #EF5350; --c-act: #AB47BC;
-        
-        /* Grammar Colors */
+        --c-animal: #7CB342; --c-food: #FDD835; --c-body: #42A5F5; --c-act: #AB47BC;
         --pos-noun: #2196F3; --pos-verb: #F44336; --pos-adj: #4CAF50;
         --pos-adv: #F9A825; --pos-pron: #9C27B0; --pos-prep: #E91E63; --pos-conj: #FF9800;
-        
         --bg: #F2F2F2; --card-bg: #FFFFFF;
         
-        /* Level Colors (Spectrum) */
-        --lvl-1: #4CAF50; --lvl-2: #FF9800; --lvl-3: #F44336; 
-        --lvl-4: #9C27B0; --lvl-5: #673AB7; --lvl-6: #3F51B5;
-        --lvl-7: #2196F3; --lvl-8: #00BCD4; --lvl-9: #009688;
+        --lvl-1: #4CAF50; --lvl-2: #8BC34A; --lvl-3: #CDDC39; 
+        --lvl-4: #FFEB3B; --lvl-5: #FFC107; --lvl-6: #FF9800;
+        --lvl-7: #FF5722; --lvl-8: #F44336; --lvl-9: #D32F2F;
     }
 
     body { font-family: 'Zen Maru Gothic', sans-serif; background: var(--bg); margin: 0; color: #333; -webkit-font-smoothing: antialiased; }
-
-    /* FONTS */
     .font-en, .font-fr, .font-de, .font-it, .font-ru { font-family: 'Fredoka One', cursive; }
     .font-ja { font-family: 'Zen Maru Gothic', sans-serif; font-weight: 700; }
     .font-ko { font-family: 'Jua', sans-serif; }
     .font-zh-cn { font-family: 'Noto Sans SC', sans-serif; font-weight: 700; letter-spacing: 1px; }
     .font-zh-tw { font-family: 'Noto Sans TC', sans-serif; font-weight: 700; letter-spacing: 1px; }
 
-    /* HEADER */
-    header { 
-        background: rgba(255,255,255,0.98); padding: 10px 20px; 
-        position: sticky; top: 0; z-index: 100;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        display: flex; flex-direction: column; gap: 8px;
-    }
+    header { background: rgba(255,255,255,0.98); padding: 10px 20px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: flex; flex-direction: column; gap: 8px; }
     .top-row { display: flex; justify-content: space-between; align-items: center; width: 100%; flex-wrap: wrap; gap: 10px;}
-    
     #lang-select { padding: 8px 12px; border: 1px solid #ddd; border-radius: 20px; font-family: 'Zen Maru Gothic'; font-weight: bold; outline: none; }
     .btn { padding: 8px 16px; border: 1px solid #ddd; border-radius: 20px; cursor: pointer; background: white; font-family: 'Fredoka One'; color: #555; font-size: 0.85rem;}
     .btn-primary { background: #333; color: white; border-color: #333; }
 
-    /* LEVEL SLIDER */
     .level-container { display: flex; align-items: center; gap: 15px; width: 100%; padding: 5px 0; border-top: 1px solid #eee; }
     .level-label { font-family: 'Fredoka One'; font-size: 0.9rem; color: #555; width: 60px; }
     input[type=range] { flex: 1; -webkit-appearance: none; width: 100%; height: 6px; background: #ddd; border-radius: 5px; outline: none; }
@@ -61,32 +45,36 @@
     .lvl-7::-webkit-slider-thumb { background: var(--lvl-7) !important; } .lvl-8::-webkit-slider-thumb { background: var(--lvl-8) !important; }
     .lvl-9::-webkit-slider-thumb { background: var(--lvl-9) !important; }
 
-    /* CONTROLS */
+    /* UI CONTROLS */
     .controls-container { display: flex; flex-direction: column; gap: 5px; width: 100%; }
-    .control-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 2px 0; }
+    .control-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 4px 0; }
     .control-row:not(:last-child) { border-bottom: 1px dashed #eee; }
+    .row-label { font-size: 0.65rem; font-weight: bold; color: #999; text-transform: uppercase; width: 55px; text-align: right; padding-right: 5px; border-right: 2px solid #eee;}
 
-    .toggle-group { display: flex; align-items: center; gap: 6px; font-size: 0.75rem; font-weight: bold; color: #555; cursor: pointer; background: #fff; padding: 3px 8px; border-radius: 12px; border: 1px solid #eee; transition: all 0.3s; }
+    /* Standard Switches */
+    .toggle-group { display: flex; align-items: center; gap: 6px; font-size: 0.75rem; font-weight: bold; color: #555; cursor: pointer; background: #fff; padding: 3px 8px; border-radius: 12px; border: 1px solid #eee; }
     .switch { position: relative; display: inline-block; width: 28px; height: 16px; }
     .switch input { opacity: 0; width: 0; height: 0; }
     .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
     .slider:before { position: absolute; content: ""; height: 12px; width: 12px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; }
     input:checked + .slider { background-color: #333; }
     input:checked + .slider:before { transform: translateX(12px); }
-    
-    /* Active State for Pronoun 'Radio' Buttons */
-    input:checked + .slider.radio-slider { background-color: var(--pos-verb); }
 
-    .toggle-group.disabled { opacity: 0.4; pointer-events: none; filter: grayscale(1); }
+    /* Pill Buttons (For Verb Matrix) */
+    .pill-btn { padding: 4px 10px; border-radius: 15px; border: 1px solid #ddd; font-size: 0.75rem; font-weight: bold; color: #666; background: #fff; cursor: pointer; user-select: none; transition: all 0.2s;}
+    .pill-btn.active { background: var(--pos-verb); color: white; border-color: var(--pos-verb); box-shadow: 0 2px 5px rgba(244, 67, 54, 0.3); }
+    .pill-btn.active-pronoun { background: #333; color: white; border-color: #333; }
+    .pill-btn.disabled { opacity: 0.3; pointer-events: none; filter: grayscale(1); }
+    .verb-box { background: #fff5f5; border-radius: 8px; padding: 4px 8px; border: 1px solid #ffebee; display: flex; flex-direction: column; width: 100%;}
 
     /* CARD GRID */
     .container { max-width: 1200px; margin: 0 auto; padding: 30px 20px; }
-    .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 25px; }
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 25px; }
     .vocab-card { aspect-ratio: 3/4; background-color: transparent; perspective: 1000px; cursor: pointer; }
     .card-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s; transform-style: preserve-3d; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.06); }
     .vocab-card.flipped .card-inner { transform: rotateY(180deg); }
     .card-front, .card-back { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; border-radius: 16px; overflow: hidden; background: var(--card-bg); display: flex; flex-direction: column; }
-    .card-back { transform: rotateY(180deg); background: #fdfdfd; padding: 15px; box-sizing: border-box; align-items: center; justify-content: flex-start; }
+    .card-back { transform: rotateY(180deg); background: #fdfdfd; padding: 15px; box-sizing: border-box; align-items: center; justify-content: flex-start; overflow-y: auto; }
 
     .card-art { flex: 1; width: 100%; display: flex; align-items: center; justify-content: center; padding: 15px; box-sizing: border-box; }
     .card-art img { max-width: 100%; max-height: 100%; object-fit: contain; filter: brightness(1.03) contrast(1.03); mix-blend-mode: multiply; }
@@ -96,56 +84,45 @@
     .word-row { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; margin-bottom: 2px; }
     .word { font-size: 1.6rem; color: #333; text-align: center; line-height: 1.1; }
     .sub-word { font-size: 0.8rem; color: #777; font-family: 'Zen Maru Gothic'; text-align: center; font-weight: 500; }
-    .gender-badge { font-size: 0.75rem; color: #999; font-style: italic; margin-top: 2px; font-family: 'Zen Maru Gothic'; }
 
     .pos-badge { font-size: 0.6rem; color: white; padding: 3px 8px; border-radius: 10px; font-family: 'Zen Maru Gothic'; font-weight: bold; letter-spacing: 0.5px; text-transform: lowercase; margin-top: 4px; display: none; }
-    .pos-noun { background: var(--pos-noun); } .pos-verb { background: var(--pos-verb); } .pos-adj { background: var(--pos-adj); } .pos-pron { background: var(--pos-pron); }
+    .pos-noun { background: var(--pos-noun); } .pos-verb { background: var(--pos-verb); } .pos-adj { background: var(--pos-adj); } 
     .show-pos .pos-badge { display: inline-block; }
     
     .flip-btn { position: absolute; top: 10px; right: 10px; width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.9); border: 1px solid #eee; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; cursor: pointer; z-index: 10; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
 
-    /* BACK TABLE: MATRIX */
-    .back-title { font-family: 'Fredoka One'; font-size: 1rem; color: #333; margin-bottom: 10px; margin-top: 5px; }
+    /* BACK TABLE */
+    .back-title { font-family: 'Fredoka One'; font-size: 1rem; color: #333; margin-bottom: 10px; margin-top: 5px; line-height:1.2;}
     .comp-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; text-align: left; }
     .comp-table td { padding: 8px 4px; border-bottom: 1px solid #eee;}
     
+    /* Matrix Grid */
     .verb-matrix { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; }
-    .verb-cell { background: #f5f5f5; border-radius: 8px; padding: 8px; text-align: center; font-size: 0.8rem; display: flex; flex-direction: column; justify-content: center;}
+    .verb-cell { background: #f5f5f5; border-radius: 8px; padding: 6px; text-align: center; font-size: 0.8rem; display: flex; flex-direction: column; justify-content: center;}
     .verb-cell.active-cell { background: var(--pos-verb); color: white; box-shadow: 0 4px 10px rgba(244, 67, 54, 0.3); }
     .pron-label { font-size: 0.6rem; font-weight: bold; opacity: 0.7; margin-bottom: 2px; text-transform: uppercase; }
 
-    .close-flip { margin-top: auto; padding: 8px 20px; border-radius: 20px; background: #eee; border: none; font-family: 'Fredoka One'; color: #555; cursor: pointer; }
+    /* Verbals List */
+    .verbal-list { display: flex; flex-direction: column; gap: 6px; width: 100%; }
+    .verbal-item { display: flex; justify-content: space-between; font-size: 0.8rem; background: #f9f9f9; padding: 8px 10px; border-radius: 6px; align-items: center;}
+    .verbal-type { font-weight: bold; color: #777; font-size: 0.65rem; text-transform: uppercase;}
 
-    /* CHILD MODE */
-    #child-mode { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #fff; z-index: 200; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-    .child-toggles { display: flex; flex-direction: column; gap: 5px; width: 90%; max-width: 400px; margin-bottom: 15px; background: #f9f9f9; padding: 10px; border-radius: 15px; }
-    .focus-card { width: 85vw; max-width: 400px; aspect-ratio: 3/4; background: white; border-radius: 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.1); display: flex; flex-direction: column; overflow: hidden; }
-    .focus-card img { flex: 1; object-fit: contain; padding: 40px; filter: brightness(1.03) contrast(1.03); mix-blend-mode: multiply; }
-    .focus-card .word-box { height: 160px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 10px; box-sizing: border-box;}
-    .focus-card h1 { font-size: 3.5rem; margin: 0; color: #333; line-height: 1; }
-    .controls { margin-top: 30px; display: flex; gap: 20px; }
-    .nav-btn { width: 70px; height: 70px; border-radius: 50%; border: none; font-size: 2rem; background: #f5f5f5; cursor: pointer; color: #333; }
-    .play-btn { width: 90px; height: 90px; font-size: 3rem; background: #333; color: white; }
+    .close-flip { margin-top: auto; padding: 8px 20px; border-radius: 20px; background: #eee; border: none; font-family: 'Fredoka One'; color: #555; cursor: pointer; }
 </style>
 </head>
 <body>
 
 <header>
     <div class="top-row">
-        <div style="font-weight:bold; font-size:1.2rem; color:#333; font-family:'Fredoka One'">🦁 TinyVocab</div>
+        <div style="font-weight:bold; font-size:1.2rem; color:#333; font-family:'Fredoka One'">🦁 TinyVocab Engine</div>
         <select id="lang-select">
             <option value="en">🇬🇧 English</option>
             <option value="fr">🇫🇷 French</option>
             <option value="de">🇩🇪 German</option>
-            <option value="it">🇮🇹 Italian</option>
             <option value="ru">🇷🇺 Russian</option>
+            <option value="it">🇮🇹 Italian</option>
             <option value="zh">🇨🇳 Chinese</option>
-            <option value="ja">🇯🇵 Japanese</option>
-            <option value="ko">🇰🇷 Korean</option>
         </select>
-        <div style="display:flex; gap:8px;">
-            <button class="btn" onclick="startChild()">▶ Child Mode</button>
-        </div>
     </div>
     
     <div class="level-container">
@@ -160,130 +137,57 @@
     <div class="card-grid" id="grid"></div>
 </div>
 
-<div id="child-mode" style="display:none;">
-    <button onclick="exitChild()" style="position:absolute; top:30px; right:30px; border:none; background:none; font-size:2rem; opacity:0.3; cursor:pointer;">✕</button>
-    <div id="child-toggles" class="child-toggles"></div>
-    <div class="focus-card" id="focus-display">
-        <img id="c-img" src="">
-        <div class="word-box">
-            <h1 id="c-word">Word</h1>
-            <h2 id="c-sub"></h2>
-            <div id="c-pos" class="pos-badge"></div>
-            <div id="c-gender" class="gender-badge" style="font-size: 1.2rem;"></div>
-        </div>
-        <div class="focus-stripe" id="c-stripe"></div>
-    </div>
-    <div class="controls">
-        <button class="nav-btn" onclick="move(-1)">👈</button>
-        <button class="nav-btn play-btn" onclick="speakDrill()">🔊</button>
-        <button class="nav-btn" onclick="move(1)">👉</button>
-    </div>
-</div>
-
 <div id="print-area"></div>
 
 <script>
     let deck = [];
-    let currentIndex = 0;
     let currentLang = 'en';
     let currentLevel = 1;
-
     const pronLabels = ['I', 'You', 'He/She/It', 'We', 'You (pl)', 'They'];
 
-    // GROUPS
-    const groups = [
-        { id: 'phon', keys: ['ipa', 'latin', 'pinyin', 'hiragana', 'hanja', 'traditional'] },
-        { id: 'meta', keys: ['pos', 'gender'] },
-        { id: 'pronoun', keys: ['pron_0', 'pron_1', 'pron_2', 'pron_3', 'pron_4', 'pron_5'] },
-        { id: 'noun', keys: ['article', 'plural_noun'] },
-        { id: 'verb', keys: [
-            // English
-            'pres_sim', 'pres_cont', 'fut_sim', 'past_sim', 'pres_perf', 'past_cont', 'pres_perf_cont', 'past_perf', 'fut_cont', 'fut_perf', 'past_perf_cont', 'fut_perf_cont',
-            // German
-            'de_pres', 'de_imp', 'de_perf', 'de_fut1', 'de_prat', 'de_plus', 'de_k2_pres', 'de_k2_past', 'de_k2_fut1', 'de_k2_fut2', 'de_k1_pres', 'de_k1_perf', 'de_k1_fut1', 'de_k1_fut2', 'de_fut2', 'de_part1', 'de_part2', 'de_gerund',
-            // Legacy 
-            'conjugate', 'past', 'future', 'imperative', 'conditional'
-        ]},
-        { id: 'adj',  keys: ['fem', 'neut', 'plural_adj', 'acc', 'dat', 'gen', 'ins', 'pre'] }
-    ];
-
-    // Allowed Toggles per Language
-    const langConfig = {
-        'en': ['pos', 'article', 'plural_noun', 'plural_adj', 'ipa', 'pron_0', 'pron_1', 'pron_2', 'pron_3', 'pron_4', 'pron_5', 'pres_sim', 'pres_cont', 'fut_sim', 'past_sim', 'pres_perf', 'past_cont', 'pres_perf_cont', 'past_perf', 'fut_cont', 'fut_perf', 'past_perf_cont', 'fut_perf_cont'],
-        'de': ['pos', 'article', 'plural_noun', 'plural_adj', 'gender', 'ipa', 'fem', 'neut', 'acc', 'dat', 'gen', 'pron_0', 'pron_1', 'pron_2', 'pron_3', 'pron_4', 'pron_5', 'de_pres', 'de_imp', 'de_perf', 'de_fut1', 'de_prat', 'de_plus', 'de_k2_pres', 'de_k2_past', 'de_k2_fut1', 'de_k2_fut2', 'de_k1_pres', 'de_k1_perf', 'de_k1_fut1', 'de_k1_fut2', 'de_fut2', 'de_part1', 'de_part2', 'de_gerund'],
-        'fr': ['pos', 'article', 'plural_noun', 'plural_adj', 'gender', 'ipa', 'fem', 'pron_0', 'pron_1', 'pron_2', 'pron_3', 'pron_4', 'pron_5', 'conjugate', 'past', 'future', 'imperative', 'conditional'],
-        'it': ['pos', 'article', 'plural_noun', 'plural_adj', 'gender', 'ipa', 'fem', 'conjugate', 'past', 'future', 'imperative', 'conditional'],
-        'ru': ['pos', 'plural_noun', 'plural_adj', 'gender', 'latin', 'ipa', 'fem', 'neut', 'acc', 'dat', 'gen', 'ins', 'pre', 'conjugate', 'past', 'future', 'imperative', 'conditional'],
-        'zh': ['pos', 'traditional', 'pinyin'],
-        'ja': ['pos', 'hiragana'],
-        'ko': ['pos', 'hanja']
-    };
-
-    // Minimum Level Requirement
-    const levelConfig = {
-        'ipa': 1, 'pinyin': 1, 'latin': 1, 'hiragana': 1, 'hanja': 1, 'traditional': 1, 'gender': 1,
-        'pos': 2, 'article': 2, 'plural_noun': 2, 
-        'plural_adj': 3, 'fem': 3, 'neut': 3, 'conjugate': 3, 'pron_0':3, 'pron_1':3, 'pron_2':3, 'pron_3':3, 'pron_4':3, 'pron_5':3,
-        // EN Tenses
-        'pres_sim': 4, 'pres_cont': 4, 'fut_sim': 5, 'past_sim': 5, 'pres_perf': 6, 'past_cont': 7, 'pres_perf_cont': 7, 'past_perf': 8, 'fut_cont': 8, 'fut_perf': 9, 'past_perf_cont': 9, 'fut_perf_cont': 9,
-        // DE Tenses
-        'de_pres': 4, 'de_imp': 4, 'de_perf': 5, 'de_fut1': 5, 'de_prat': 6, 'de_plus': 6, 'de_k2_pres': 7, 'de_k2_past': 7, 'de_k2_fut1': 7, 'de_k2_fut2': 7, 'de_k1_pres': 8, 'de_k1_perf': 8, 'de_k1_fut1': 8, 'de_k1_fut2': 8, 'de_fut2': 9, 'de_part1': 9, 'de_part2': 9, 'de_gerund': 9,
-        // Legacy
-        'past': 4, 'future': 4, 'acc': 4, 'dat': 4, 'gen': 4, 'imperative': 5, 'conditional': 5, 'ins': 5, 'pre': 5
-    };
-
-    const toggleLabels = { 
-        'pos': 'Part of Speech', 'gender':'Gender', 'article':'Article', 'plural_noun':'Plural (N)', 'plural_adj': 'Plural (Adj)', 'fem': 'Fem', 'neut': 'Neut',
-        'acc': 'Acc', 'dat': 'Dat', 'gen': 'Gen', 'ins': 'Ins', 'pre': 'Pre',
-        'pron_0': 'I', 'pron_1': 'You', 'pron_2': 'He/It', 'pron_3': 'We', 'pron_4': 'Y\'all', 'pron_5': 'They',
-        'pres_sim': 'Simple Pres', 'pres_cont': 'Pres Cont', 'fut_sim': 'Simple Fut', 'past_sim': 'Simple Past', 'pres_perf': 'Pres Perf', 'past_cont': 'Past Cont', 'pres_perf_cont': 'Pres Perf Cont', 'past_perf': 'Past Perf', 'fut_cont': 'Fut Cont', 'fut_perf': 'Fut Perf', 'past_perf_cont': 'Past Perf Cont', 'fut_perf_cont': 'Fut Perf Cont',
-        // DE Labels
-        'de_pres': 'Präsens', 'de_imp': 'Imperativ', 'de_perf': 'Perfekt', 'de_fut1': 'Futur I', 'de_prat': 'Präteritum', 'de_plus': 'Plusquam.', 'de_k2_pres': 'K2 Präsens', 'de_k2_past': 'K2 Verg.', 'de_k2_fut1': 'K2 Futur I', 'de_k2_fut2': 'K2 Futur II', 'de_k1_pres': 'K1 Präsens', 'de_k1_perf': 'K1 Perfekt', 'de_k1_fut1': 'K1 Futur I', 'de_k1_fut2': 'K1 Futur II', 'de_fut2': 'Futur II', 'de_part1': 'Partizip I', 'de_part2': 'Partizip II', 'de_gerund': 'Gerundivum',
-        'conjugate': 'Present', 'past': 'Past', 'future': 'Future', 'imperative': 'Cmd', 'conditional': 'Cond',
-        'pinyin':'Pinyin', 'latin':'Latin', 'ipa':'IPA', 'hiragana':'Hiragana', 'hanja':'Hanja', 'traditional':'Traditional'
-    };
-
-    let toggleState = { 
-        pos: false, gender: false, article: false, plural_noun: false, plural_adj: false,
-        pron_0: false, pron_1: false, pron_2: true, pron_3: false, pron_4: false, pron_5: false,
-        pres_sim: false, pres_cont: false, fut_sim: false, past_sim: false, pres_perf: false, past_cont: false, pres_perf_cont: false, past_perf: false, fut_cont: false, fut_perf: false, past_perf_cont: false, fut_perf_cont: false,
-        de_pres: false, de_imp: false, de_perf: false, de_fut1: false, de_prat: false, de_plus: false, de_k2_pres: false, de_k2_past: false, de_k2_fut1: false, de_k2_fut2: false, de_k1_pres: false, de_k1_perf: false, de_k1_fut1: false, de_k1_fut2: false, de_fut2: false, de_part1: false, de_part2: false, de_gerund: false,
-        conjugate: false, past: false, future: false, imperative: false, conditional: false,
+    // --- UNIVERSAL GRAMMAR STATE ---
+    let state = {
+        // Core Toggles
+        pos: false, article: false, plural_noun: false, plural_adj: false,
         fem: false, neut: false, acc: false, dat: false, gen: false, ins: false, pre: false,
-        pinyin: false, latin: false, ipa: false, hiragana: false, hanja: false, traditional: false
+        ipa: false, pinyin: false,
+        
+        // The Verb Engine (Radio Variables)
+        v_mode: 'conj',   // conj | verbals
+        v_voice: 'act',   // act | pass
+        v_mood: 'ind',    // ind | subj | cond | rep | imp
+        v_time: 'pres',   // past | pres | fut
+        v_aspect: 'sim',  // sim | cont | perf | perfcont
+        v_type: 'v_inf',  // v_inf | v_pres_part | v_past_part | v_ger_noun | v_ger_adv
+        pronoun: 2        // 0 to 5 (Default He/She)
+    };
+
+    // UI Configuration Mapping
+    const verbOptions = {
+        mode: [{id:'conj', lbl:'Conjugation', lvl:4}, {id:'verbals', lbl:'Verbals', lvl:4}],
+        voice: [{id:'act', lbl:'Active', lvl:4}, {id:'pass', lbl:'Passive', lvl:7}],
+        mood: [{id:'ind', lbl:'Indicative', lvl:4}, {id:'subj', lbl:'Subjunctive', lvl:8}, {id:'cond', lbl:'Conditional', lvl:8}, {id:'rep', lbl:'Reported', lvl:9}, {id:'imp', lbl:'Imperative', lvl:9}],
+        time: [{id:'past', lbl:'Past', lvl:5}, {id:'pres', lbl:'Present', lvl:4}, {id:'fut', lbl:'Future', lvl:5}],
+        aspect: [{id:'sim', lbl:'Simple', lvl:4}, {id:'cont', lbl:'Continuous', lvl:4}, {id:'perf', lbl:'Perfect', lvl:6}, {id:'perfcont', lbl:'Perf. Cont.', lvl:7}],
+        verbals: [
+            {id:'v_inf', lbl:'Infinitive', lvl:4}, {id:'v_pres_part', lbl:'Pres Participle', lvl:4}, 
+            {id:'v_past_part', lbl:'Past Participle', lvl:4}, {id:'v_ger_noun', lbl:'Gerund (Noun)', lvl:8}, {id:'v_ger_adv', lbl:'Gerund (Adv)', lvl:8}
+        ]
     };
 
     const colors = { animal: '#7CB342', food: '#FDD835', body: '#42A5F5', act: '#AB47BC' };
 
-    // --- ROBUST FETCH ---
     fetch('data.json')
-        .then(res => {
-            if (!res.ok) throw new Error("HTTP error " + res.status);
-            return res.json();
-        })
-        .then(data => { 
-            deck = data; 
-            updateUI(); 
-        })
+        .then(res => { if (!res.ok) throw new Error(); return res.json(); })
+        .then(data => { deck = data; updateUI(); })
         .catch(err => { 
-            console.error("JSON Load Error:", err);
-            document.getElementById('grid').innerHTML = `
-                <div style="grid-column: 1 / -1; background: #ffebee; color: #c62828; padding: 20px; border-radius: 10px; text-align: center; font-family: 'Fredoka One'; font-size: 1.5rem;">
-                    ⚠️ Error loading data.json!<br>
-                    <span style="font-family: 'Zen Maru Gothic'; font-size: 1rem; font-weight: normal;">Please check if the file exists and has correct JSON formatting.</span>
-                </div>`;
+            document.getElementById('grid').innerHTML = `<div style="padding:20px; background:#ffebee; color:#c62828; text-align:center; border-radius:10px;">⚠️ Error loading data.json</div>`;
         });
-
-    function updateUI() {
-        updateControls('header-toggles');
-        if(document.getElementById('child-mode').style.display === 'flex') updateControls('child-toggles');
-        renderGrid();
-    }
 
     document.getElementById('lang-select').addEventListener('change', (e) => {
         currentLang = e.target.value;
-        Object.keys(toggleState).forEach(k => toggleState[k] = false);
-        toggleState.pron_2 = true; // Always default to He/She
+        // Reset state on lang change to prevent impossible grammar
+        state.v_mode='conj'; state.v_voice='act'; state.v_mood='ind'; state.v_time='pres'; state.v_aspect='sim'; state.pronoun=2;
         updateUI();
     });
 
@@ -294,200 +198,180 @@
         updateUI();
     }
 
-    function getFontClass() {
-        if (currentLang === 'ja') return 'font-ja';
-        if (currentLang === 'ko') return 'font-ko';
-        if (currentLang === 'zh') return toggleState.traditional ? 'font-zh-tw' : 'font-zh-cn';
-        return 'font-en';
-    }
+    function getFontClass() { return {'zh':'font-zh-cn', 'ru':'font-ru'}[currentLang] || 'font-en'; }
 
-    function updateControls(containerId) {
-        const container = document.getElementById(containerId);
-        container.innerHTML = '';
-        const allowed = langConfig[currentLang];
+    // --- UI BUILDER ---
+    function updateUI() {
+        const c = document.getElementById('header-toggles');
+        c.innerHTML = '';
 
-        groups.forEach(grp => {
-            const validKeys = grp.keys.filter(k => allowed.includes(k) && currentLevel >= levelConfig[k]);
-            if (validKeys.length > 0) {
-                const row = document.createElement('div'); row.className = 'control-row';
-                validKeys.forEach(key => {
-                    const isPronoun = key.startsWith('pron_');
-                    const sliderClass = isPronoun ? 'slider radio-slider' : 'slider';
-                    const inputID = `chk-${containerId}-${key}`;
-                    const html = `
-                        <label class="toggle-group" id="lbl-${containerId}-${key}">
-                            <span class="switch"><input type="checkbox" id="${inputID}" data-key="${key}" onchange="toggleFeature('${key}', this.checked)" ${toggleState[key]?'checked':''}>
-                            <span class="${sliderClass}"></span></span>${toggleLabels[key]}
-                        </label>`;
-                    row.insertAdjacentHTML('beforeend', html);
-                });
-                container.appendChild(row);
+        // 1. Meta Row
+        if (currentLevel >= 2) {
+            c.insertAdjacentHTML('beforeend', `
+                <div class="control-row">
+                    <div class="row-label">Meta</div>
+                    ${buildSwitch('pos', 'Part of Speech', currentLevel >= 2)}
+                    ${buildSwitch('ipa', 'IPA', currentLevel >= 1)}
+                    ${buildSwitch('plural_noun', 'Plural Noun', currentLevel >= 2)}
+                </div>
+            `);
+        }
+
+        // 2. The Verb Engine (Level 4+)
+        if (currentLevel >= 4) {
+            let verbHTML = `<div class="verb-box"><div class="control-row" style="border:none;">
+                <div class="row-label">Mode</div>${buildRadios('v_mode', verbOptions.mode)}
+            </div>`;
+
+            if (state.v_mode === 'conj') {
+                verbHTML += `
+                    <div class="control-row" style="border:none;"><div class="row-label">Pronoun</div>
+                    ${pronLabels.map((lbl, i) => `<div class="pill-btn ${state.pronoun===i?'active-pronoun':''}" onclick="setRadio('pronoun', ${i})">${lbl}</div>`).join('')}
+                    </div>
+                    <div class="control-row" style="border:none;"><div class="row-label">Mood</div>${buildRadios('v_mood', verbOptions.mood)}</div>
+                    <div class="control-row" style="border:none;"><div class="row-label">Time</div>${buildRadios('v_time', verbOptions.time)}</div>
+                    <div class="control-row" style="border:none;"><div class="row-label">Aspect</div>${buildRadios('v_aspect', verbOptions.aspect)}</div>
+                `;
+                // Add Voice if unlocked
+                if(currentLevel >= 7) {
+                    verbHTML += `<div class="control-row" style="border:none;"><div class="row-label">Voice</div>${buildRadios('v_voice', verbOptions.voice)}</div>`;
+                }
+            } else {
+                verbHTML += `<div class="control-row" style="border:none;"><div class="row-label">Type</div>${buildRadios('v_type', verbOptions.verbals)}</div>`;
             }
-        });
-        checkDependency();
+            verbHTML += `</div>`;
+            c.insertAdjacentHTML('beforeend', verbHTML);
+        }
+
+        renderGrid();
     }
 
-    window.toggleFeature = function(key, isChecked) {
-        if(key.startsWith('pron_') && isChecked) {
-            for(let i=0; i<=5; i++) toggleState[`pron_${i}`] = false;
-            toggleState[key] = true;
-        } else if (key.startsWith('pron_') && !isChecked) {
-            document.querySelector(`input[data-key="${key}"]`).checked = true;
-            return;
-        } else {
-            toggleState[key] = isChecked;
-        }
+    function buildSwitch(key, label, isUnlocked) {
+        if(!isUnlocked) return '';
+        return `<label class="toggle-group"><span class="switch"><input type="checkbox" onchange="setSwitch('${key}', this.checked)" ${state[key]?'checked':''}><span class="slider"></span></span>${label}</label>`;
+    }
+
+    function buildRadios(stateKey, options) {
+        return options.map(opt => {
+            if(currentLevel < opt.lvl) return '';
+            const isActive = state[stateKey] === opt.id;
+            
+            // SMART DISABLING LOGIC
+            let isDisabled = false;
+            // 1. No "Continuous" in French/German
+            if(stateKey === 'v_aspect' && opt.id === 'cont' && ['fr','de'].includes(currentLang)) isDisabled = true;
+            // 2. Imperative locks Time to Present & Aspect to Simple
+            if(state.v_mood === 'imp') {
+                if(stateKey === 'v_time' && opt.id !== 'pres') isDisabled = true;
+                if(stateKey === 'v_aspect' && opt.id !== 'sim') isDisabled = true;
+            }
+            // 3. Russian Perfective has no Present
+            if(currentLang === 'ru' && stateKey === 'v_time' && opt.id === 'pres' && state.v_aspect === 'perf') isDisabled = true;
+
+            return `<div class="pill-btn ${isActive ? 'active' : ''} ${isDisabled ? 'disabled' : ''}" onclick="setRadio('${stateKey}', '${opt.id}')">${opt.lbl}</div>`;
+        }).join('');
+    }
+
+    window.setSwitch = function(key, val) { state[key] = val; updateUI(); };
+    
+    window.setRadio = function(key, val) { 
+        state[key] = val; 
         
-        if(isChecked && !key.startsWith('pron_')) {
-            const enTenses = ['pres_sim', 'pres_cont', 'fut_sim', 'past_sim', 'pres_perf', 'past_cont', 'pres_perf_cont', 'past_perf', 'fut_cont', 'fut_perf', 'past_perf_cont', 'fut_perf_cont'];
-            if(enTenses.includes(key)) enTenses.forEach(k => { if(k !== key) toggleState[k] = false; });
-            
-            const deTenses = ['de_pres', 'de_imp', 'de_perf', 'de_fut1', 'de_prat', 'de_plus', 'de_k2_pres', 'de_k2_past', 'de_k2_fut1', 'de_k2_fut2', 'de_k1_pres', 'de_k1_perf', 'de_k1_fut1', 'de_k1_fut2', 'de_fut2', 'de_part1', 'de_part2', 'de_gerund'];
-            if(deTenses.includes(key)) deTenses.forEach(k => { if(k !== key) toggleState[k] = false; });
-
-            const adjMut = ['fem', 'neut', 'acc', 'dat', 'gen', 'ins', 'pre'];
-            if(adjMut.includes(key)) adjMut.forEach(k => { if(k !== key) toggleState[k] = false; });
-            
-            const verbMut = ['conjugate', 'past', 'future', 'imperative', 'conditional'];
-            if(verbMut.includes(key)) verbMut.forEach(k => { if(k !== key) toggleState[k] = false; });
-        }
-
-        document.querySelectorAll(`input[data-key]`).forEach(el => {
-            const k = el.getAttribute('data-key');
-            el.checked = toggleState[k];
-        });
-
-        if(key==='plural_noun') checkDependency();
-        renderGrid();
-        if(document.getElementById('child-mode').style.display === 'flex') updateDisplay();
+        // SMART ENFORCEMENT ON CLICK
+        // If clicking Imperative, force Present Simple
+        if(key === 'v_mood' && val === 'imp') { state.v_time = 'pres'; state.v_aspect = 'sim'; }
+        // If Russian & Perfect, force Past if Present was selected
+        if(currentLang === 'ru' && key === 'v_aspect' && val === 'perf' && state.v_time === 'pres') { state.v_time = 'past'; }
+        // If Russian & Present, force Imperfective (Simple or Cont)
+        if(currentLang === 'ru' && key === 'v_time' && val === 'pres' && state.v_aspect === 'perf') { state.v_aspect = 'sim'; }
+        
+        updateUI(); 
     };
 
-    function checkDependency() {
-        const isPlural = toggleState.plural_noun;
-        const artInputs = document.querySelectorAll(`input[data-key="article"]`);
-        if (isPlural) {
-            toggleState.article = false;
-            artInputs.forEach(el => { el.checked = false; el.disabled = true; });
-        } else {
-            artInputs.forEach(el => { el.disabled = false; });
-        }
-    }
-
-    function getActivePronounIdx() {
-        for(let i=0; i<=5; i++) if(toggleState[`pron_${i}`]) return i;
-        return 2;
-    }
-
-    function extractText(data) {
-        if(!data) return null;
-        if(Array.isArray(data)) return data[getActivePronounIdx()];
-        return data; 
-    }
-
-    function getActiveTenseKey() {
-        const keys = [
-            'pres_sim', 'pres_cont', 'fut_sim', 'past_sim', 'pres_perf', 'past_cont', 'pres_perf_cont', 'past_perf', 'fut_cont', 'fut_perf', 'past_perf_cont', 'fut_perf_cont', 
-            'de_pres', 'de_imp', 'de_perf', 'de_fut1', 'de_prat', 'de_plus', 'de_k2_pres', 'de_k2_past', 'de_k2_fut1', 'de_k2_fut2', 'de_k1_pres', 'de_k1_perf', 'de_k1_fut1', 'de_k1_fut2', 'de_fut2', 'de_part1', 'de_part2', 'de_gerund',
-            'conjugate', 'past', 'future', 'imperative', 'conditional'
-        ];
-        for(let k of keys) { if(toggleState[k]) return k; }
-        return null;
+    // --- DATA EXTRACTION ---
+    function getVerbKey() {
+        if(state.v_mode === 'verbals') return state.v_type;
+        return `${state.v_mood}_${state.v_time}_${state.v_aspect}_${state.v_voice}`;
     }
 
     function getTextDisplay(card) {
-        let raw = card.translations[currentLang]; 
-        // SAFETY FALLBACK: If language missing for this specific word, default to English.
-        if (!raw) raw = card.translations['en']; 
-        if (!raw || typeof raw === 'string') return { main: raw || '?', sub: '', gender: '' };
+        let raw = card.translations[currentLang] || card.translations['en']; 
+        let mainText = raw.n || '?';
+        let subText = state.ipa ? (raw.ipa || '') : '';
 
-        let mainText = (currentLang === 'zh' && toggleState.traditional && raw.t) ? raw.t : (raw.n || '?');
-        let genderText = (toggleState.gender && raw.g) ? raw.g : '';
-        let subText = '';
-
-        if (card.pos === 'noun') {
-            if (toggleState.plural_noun && raw.p) mainText = raw.p;
-            if (toggleState.article && !toggleState.plural_noun && raw.art) mainText = `${raw.art} ${mainText}`;
-        }
-
+        if (card.pos === 'noun' && state.plural_noun && raw.p) mainText = raw.p;
+        
+        // VERB LOGIC
         if (card.pos === 'verb') {
-            let activeTense = getActiveTenseKey();
-            // --- FIX FOR ENGLISH TENSE ERROR ---
-            // If we are looking at a verb, and NO tense is toggled (e.g. just changed level or language)
-            // we must establish a background default so the Pronoun switches have something to extract from!
-            if (!activeTense) {
-                if (currentLang === 'en') activeTense = 'pres_sim';
-                else if (currentLang === 'de') activeTense = 'de_pres';
-                else activeTense = 'conjugate'; 
-            }
-            
-            const jsonKey = activeTense === 'conjugate' ? 'pres' : activeTense;
-            if (raw[jsonKey]) {
-                const result = extractText(raw[jsonKey]);
-                if(result) mainText = result;
+            if (currentLevel < 4) {
+                // Levels 1-3: Default to Infinitive
+                if (currentLang === 'ru' && raw.inf_impf) {
+                    mainText = raw.inf_impf;
+                    subText = `(${raw.inf_perf || '-'})`;
+                } else if (raw.v_inf) {
+                    mainText = raw.v_inf;
+                }
+            } else {
+                // Levels 4+: The Engine
+                const key = getVerbKey();
+                const data = raw[key];
+                
+                // Russian Aspect Magic Translation
+                // If Aspect is Sim/Cont -> use Impf root. If Perf -> use Perf root. (Handled in JSON manually, but UI reflects it)
+
+                if (data) {
+                    if (Array.isArray(data)) mainText = data[state.pronoun] || '-';
+                    else mainText = data; // Verbals are strings
+                } else {
+                    mainText = '-'; // Form not available
+                }
             }
         }
 
-        if (card.pos === 'adj') {
-            if (toggleState.acc && raw.acc) mainText = raw.acc;
-            else if (toggleState.dat && raw.dat) mainText = raw.dat;
-            else if (toggleState.gen && raw.gen) mainText = raw.gen;
-            else if (toggleState.ins && raw.ins) mainText = raw.ins;
-            else if (toggleState.pre && raw.pre) mainText = raw.pre;
-            else if (toggleState.plural_adj) {
-                if (toggleState.fem && raw.fp) mainText = raw.fp;
-                else if (raw.mp) mainText = raw.mp;
-                else if (raw.p) mainText = raw.p;
-            } 
-            else if (toggleState.fem && raw.f) mainText = raw.f;
-            else if (toggleState.neut && raw.nt) mainText = raw.nt;
-        }
-
-        if (toggleState.pinyin && raw.py) subText = raw.py;
-        if (toggleState.latin && raw.lt) subText = raw.lt;
-        if (toggleState.ipa && raw.ipa) subText = `[${raw.ipa}]`;
-        if (currentLang === 'ja' && toggleState.hiragana && raw.r) subText = `(${raw.r})`;
-        if (currentLang === 'ko' && toggleState.hanja && raw.hj) { subText = `(${mainText})`; mainText = raw.hj; }
-
-        return { main: mainText, sub: subText, gender: genderText };
+        return { main: mainText, sub: subText };
     }
 
     function buildBackTable(card) {
-        if(card.pos === 'verb' && currentLevel >= 3) {
+        if(card.pos === 'verb' && currentLevel >= 4) {
             const raw = card.translations[currentLang] || card.translations['en'];
             
-            let activeTense = getActiveTenseKey();
-            if (!activeTense) { 
-                if (currentLang === 'en') activeTense = 'pres_sim';
-                else if (currentLang === 'de') activeTense = 'de_pres';
-                else activeTense = 'conjugate'; 
-            }
-            
-            const jsonKey = activeTense === 'conjugate' ? 'pres' : activeTense;
-            const tenseData = raw ? raw[jsonKey] : null;
-            const activeIdx = getActivePronounIdx();
-            const tenseTitle = toggleLabels[activeTense] || 'Infinitive';
-
-            if(Array.isArray(tenseData)) {
-                let cellsHTML = '';
-                for(let i=0; i<6; i++) {
-                    const isActive = i === activeIdx ? 'active-cell' : '';
-                    cellsHTML += `
-                        <div class="verb-cell ${isActive}">
-                            <div class="pron-label">${pronLabels[i]}</div>
-                            <div class="font-${currentLang}">${tenseData[i]}</div>
+            if (state.v_mode === 'verbals') {
+                // Render List of Verbals
+                return `<div class="back-title">Non-Finite Forms</div>
+                        <div class="verbal-list">
+                            ${verbOptions.verbals.map(v => {
+                                const word = raw[v.id] || '-';
+                                return `<div class="verbal-item"><span class="verbal-type">${v.lbl}</span> <span>${word}</span></div>`;
+                            }).join('')}
                         </div>`;
-                }
-                return `<div class="back-title">${tenseTitle} Matrix</div>
-                        <div class="verb-matrix">${cellsHTML}</div>`;
             } else {
-                return `<div class="back-title">Info</div><p style="font-size:0.8rem; color:#666; padding:10px;">Full conjugation matrix not added for this word/tense yet.</p>`;
+                // Render Conjugation Matrix
+                const key = getVerbKey();
+                const tenseData = raw[key];
+                
+                // User Friendly Title (e.g., "ind pres sim act")
+                const t_mood = verbOptions.mood.find(m=>m.id===state.v_mood).lbl;
+                const t_time = verbOptions.time.find(m=>m.id===state.v_time).lbl;
+                const t_asp = verbOptions.aspect.find(m=>m.id===state.v_aspect).lbl;
+                const title = `${t_mood} ${t_time} ${t_asp}`;
+
+                if(Array.isArray(tenseData)) {
+                    let cellsHTML = '';
+                    for(let i=0; i<6; i++) {
+                        const isActive = i === state.pronoun ? 'active-cell' : '';
+                        cellsHTML += `
+                            <div class="verb-cell ${isActive}">
+                                <div class="pron-label">${pronLabels[i]}</div>
+                                <div class="font-${currentLang}">${tenseData[i]}</div>
+                            </div>`;
+                    }
+                    return `<div class="back-title">${title}</div><div class="verb-matrix">${cellsHTML}</div>`;
+                } else {
+                    return `<div class="back-title">${title}</div><p style="font-size:0.8rem; color:#888;">Form not supported or missing in data.</p>`;
+                }
             }
         } else {
-            return `<div class="back-title">Gender Compare</div>
-                    <table class="comp-table">
-                        ${buildCompRow(card, 'fr', '🇫🇷')}${buildCompRow(card, 'de', '🇩🇪')}
-                        ${buildCompRow(card, 'it', '🇮🇹')}${buildCompRow(card, 'ru', '🇷🇺')}
-                    </table>`;
+            return `<div class="back-title">Info</div><p style="font-size:0.8rem; color:#888;">Flip details only available for verbs at Level 4+.</p>`;
         }
     }
 
@@ -496,66 +380,40 @@
         document.getElementById('grid').innerHTML = deck.map(card => {
             const txt = getTextDisplay(card);
             const col = colors[card.cat] || '#ccc';
-            const posClass = `pos-${card.pos || 'noun'}`;
-            const posVisibility = toggleState.pos ? 'show-pos' : '';
+            const posVisibility = state.pos ? 'show-pos' : '';
 
             return `
-            <div class="vocab-card" onclick="startChildAt('${card.id}')">
-                <div class="card-inner" id="card-${card.id}">
+            <div class="vocab-card" onclick="flipCard(event, this)">
+                <div class="card-inner">
                     <div class="card-front">
-                        <div class="flip-btn" onclick="flipCard(event, '${card.id}')">🔄</div>
-                        <div class="card-art"><img src="${card.img}" onerror="this.src='https://via.placeholder.com/300'" loading="lazy"></div>
+                        <div class="flip-btn">🔄</div>
+                        <div class="card-art"><img src="${card.img}" onerror="this.style.display='none'"></div>
                         <div class="card-obi ${posVisibility}">
-                            <div class="word-row">
-                                <div class="word ${fontClass}">${txt.main}</div>
-                            </div>
-                            <div class="pos-badge ${posClass}">${card.pos || ''}</div>
+                            <div class="word-row"><div class="word ${fontClass}">${txt.main}</div></div>
+                            <div class="pos-badge pos-${card.pos || 'noun'}">${card.pos || ''}</div>
                             ${txt.sub ? `<div class="sub-word">${txt.sub}</div>` : ''}
                             <div class="color-stroke" style="background:${col}"></div>
                         </div>
                     </div>
                     <div class="card-back">
                         ${buildBackTable(card)}
-                        <button class="close-flip" onclick="flipCard(event, '${card.id}')">Close</button>
+                        <button class="close-flip" onclick="flipCard(event, this.parentElement.parentElement.parentElement)">Close</button>
                     </div>
                 </div>
             </div>`;
         }).join('');
     }
 
-    function startChildAt(id) { currentIndex = deck.findIndex(c => c.id === id); startChild(); }
-    function startChild() { if(deck.length>0){ document.getElementById('child-mode').style.display = 'flex'; updateUI(); updateDisplay(); } }
-    function exitChild() { document.getElementById('child-mode').style.display = 'none'; window.speechSynthesis.cancel(); }
-    
-    function updateDisplay() {
-        const card = deck[currentIndex];
-        const txt = getTextDisplay(card);
-        const col = colors[card.cat] || '#333';
-        
-        document.getElementById('c-word').className = getFontClass();
-        document.getElementById('c-img').src = card.img;
-        document.getElementById('c-word').innerText = txt.main;
-        document.getElementById('c-sub').innerText = txt.sub;
-        document.getElementById('c-stripe').style.background = col;
-        
-        const posEl = document.getElementById('c-pos');
-        posEl.className = `pos-badge pos-${card.pos || 'noun'}`;
-        posEl.innerText = card.pos || '';
-        posEl.style.display = toggleState.pos ? 'inline-block' : 'none';
-    }
+    window.flipCard = function(e, element) { 
+        e.stopPropagation(); 
+        const inner = element.querySelector('.card-inner') || element.closest('.vocab-card');
+        if(inner.classList.contains('flipped')) inner.classList.remove('flipped'); 
+        else {
+            document.querySelectorAll('.vocab-card').forEach(c=>c.classList.remove('flipped')); 
+            inner.classList.add('flipped');
+        } 
+    };
 
-    function move(dir) { window.speechSynthesis.cancel(); currentIndex = (currentIndex + dir + deck.length) % deck.length; updateDisplay(); }
-    function getGenderClass(g) { if(!g)return''; if(g.includes('masc'))return'g-masc'; if(g.includes('fem'))return'g-fem'; if(g.includes('neut'))return'g-neut'; return ''; }
-    function buildCompRow(c,l,f) { const d=c.translations[l]; if(!d)return''; const g=getGenderClass(d.g||''); return `<tr><td style="width:30px">${f}</td><td class="${g}" style="font-weight:bold">${d.art||''}</td><td class="${g}">${d.n||''}</td></tr>`; }
-    window.flipCard = function(e, id) { e.stopPropagation(); const p=document.getElementById(`card-${id}`).parentElement; if(p.classList.contains('flipped'))p.classList.remove('flipped'); else {document.querySelectorAll('.vocab-card').forEach(c=>c.classList.remove('flipped')); p.classList.add('flipped');} };
-
-    function speakDrill() {
-        const card = deck[currentIndex]; const txt = getTextDisplay(card);
-        const locales = { 'en':'en-GB', 'fr':'fr-FR', 'de':'de-DE', 'it':'it-IT', 'ru':'ru-RU', 'zh':'zh-CN', 'ja':'ja-JP', 'ko':'ko-KR' };
-        const voice = window.speechSynthesis.getVoices().find(v => v.lang.includes(locales[currentLang]||'en-US')) || window.speechSynthesis.getVoices()[0];
-        window.speechSynthesis.cancel();
-        const u = new SpeechSynthesisUtterance(txt.main); u.voice=voice; u.rate=0.9; window.speechSynthesis.speak(u);
-    }
 </script>
 </body>
 </html>
