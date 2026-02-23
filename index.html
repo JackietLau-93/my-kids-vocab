@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>TinyVocab Dual Engine</title>
+<title>TinyVocab Master Engine</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,11 +11,8 @@
 
 <style>
     :root {
-        /* Semantic Colors */
         --c-animal: #7CB342; --c-food: #FDD835; --c-body: #42A5F5; --c-act: #AB47BC;
-        /* Rainbow POS Colors */
         --pos-noun: #2196F3; --pos-verb: #F44336; --pos-adj: #4CAF50;
-        --pos-adv: #F9A825; --pos-pron: #9C27B0; --pos-prep: #E91E63; --pos-conj: #FF9800;
         --bg: #F2F2F2; --card-bg: #FFFFFF;
     }
 
@@ -33,15 +30,15 @@
     .btn { padding: 8px 16px; border: 1px solid #ddd; border-radius: 20px; cursor: pointer; background: white; font-family: 'Fredoka One'; color: #555; font-size: 0.85rem;}
     .btn-primary { background: #333; color: white; border-color: #333; }
 
-    /* MODE SWITCH (Segmented Control) */
+    /* MODE SWITCH */
     .mode-switch-container { display: flex; justify-content: center; width: 100%; }
     .mode-switch { display: inline-flex; background: #e0e0e0; border-radius: 30px; padding: 4px; gap: 4px;}
     .mode-btn { padding: 8px 20px; border-radius: 25px; font-size: 0.85rem; font-weight: bold; color: #666; cursor: pointer; transition: all 0.3s ease; user-select: none; }
     .mode-btn.active { background: white; color: #333; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
 
-    /* TOGGLES ROW */
+    /* TOGGLES ROW (Only for Vocab View now) */
     .controls-container { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; min-height: 30px; align-items: center;}
-    .toggle-group { display: flex; align-items: center; gap: 6px; font-size: 0.75rem; font-weight: bold; color: #555; cursor: pointer; background: #fff; padding: 4px 10px; border-radius: 15px; border: 1px solid #eee; transition: all 0.3s; }
+    .toggle-group { display: flex; align-items: center; gap: 6px; font-size: 0.75rem; font-weight: bold; color: #555; cursor: pointer; background: #fff; padding: 4px 10px; border-radius: 15px; border: 1px solid #eee;}
     .switch { position: relative; display: inline-block; width: 28px; height: 16px; }
     .switch input { opacity: 0; width: 0; height: 0; }
     .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
@@ -49,22 +46,25 @@
     input:checked + .slider { background-color: #333; }
     input:checked + .slider:before { transform: translateX(12px); }
 
-    /* CARD GRID */
+    /* CARD GRID (Fixed Overflow & Sizing) */
     .container { max-width: 1200px; margin: 0 auto; padding: 30px 20px; }
     .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 25px; }
-    .vocab-card { aspect-ratio: 3/4; background-color: transparent; perspective: 1000px; cursor: pointer; }
+    .vocab-card { height: 260px; background-color: transparent; perspective: 1000px; cursor: pointer; }
     .card-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s; transform-style: preserve-3d; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.06); }
     .vocab-card.flipped .card-inner { transform: rotateY(180deg); }
+    
     .card-front, .card-back { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; border-radius: 16px; overflow: hidden; background: var(--card-bg); display: flex; flex-direction: column; }
     .card-back { transform: rotateY(180deg); background: #fdfdfd; padding: 15px; box-sizing: border-box; align-items: center; justify-content: flex-start; overflow-y: auto; }
 
-    .card-art { flex: 1; width: 100%; display: flex; align-items: center; justify-content: center; padding: 15px; box-sizing: border-box; }
+    /* Strict Flexbox to prevent overflow */
+    .card-art { flex: 1; min-height: 0; width: 100%; display: flex; align-items: center; justify-content: center; padding: 15px; box-sizing: border-box; }
     .card-art img { max-width: 100%; max-height: 100%; object-fit: contain; filter: brightness(1.03) contrast(1.03); mix-blend-mode: multiply; }
-    .card-obi { min-height: 80px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding-bottom: 5px; position: relative; }
-    .color-stroke { position: absolute; bottom: 0; left: 0; width: 100%; height: 6px; }
     
-    .word-row { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; margin-bottom: 2px; }
-    .word { font-size: 1.6rem; color: #333; text-align: center; line-height: 1.1; }
+    .card-obi { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px; padding-bottom: 15px; position: relative; background: white;}
+    .color-stroke { position: absolute; bottom: 0; left: 0; width: 100%; height: 8px; }
+    
+    .word-row { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; margin-bottom: 2px; width: 100%;}
+    .word { font-size: 1.6rem; color: #333; text-align: center; line-height: 1.1; word-wrap: break-word; max-width: 100%;}
     .sub-word { font-size: 0.8rem; color: #777; font-family: 'Zen Maru Gothic'; text-align: center; font-weight: 500; }
 
     /* PERMANENT POS BADGE */
@@ -74,7 +74,10 @@
     .flip-btn { position: absolute; top: 10px; right: 10px; width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.9); border: 1px solid #eee; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; cursor: pointer; z-index: 10; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
     
     /* MATRIX BUTTON */
-    .matrix-btn { position: absolute; top: 10px; left: 10px; width: 32px; height: 32px; border-radius: 50%; background: var(--pos-verb); color: white; display: flex; align-items: center; justify-content: center; font-size: 1rem; cursor: pointer; z-index: 10; box-shadow: 0 2px 5px rgba(244, 67, 54, 0.4); }
+    .matrix-btn { position: absolute; top: 10px; left: 10px; width: 32px; height: 32px; border-radius: 50%; background: #333; color: white; display: flex; align-items: center; justify-content: center; font-size: 1rem; cursor: pointer; z-index: 10; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+    .matrix-btn.btn-verb { background: var(--pos-verb); }
+    .matrix-btn.btn-noun { background: var(--pos-noun); }
+    .matrix-btn.btn-adj { background: var(--pos-adj); }
 
     /* --- BACK OF CARD STYLES --- */
     .back-title { font-family: 'Fredoka One'; font-size: 1rem; color: #333; margin-bottom: 10px; margin-top: 5px; line-height:1.2;}
@@ -87,34 +90,20 @@
     .ex-kid { font-style: italic; color: #2196F3; }
     .ex-adv { font-style: italic; color: #9C27B0; font-family: serif; font-size: 0.85rem;}
 
-    /* Grammar Mode Back (Tables) */
-    .comp-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; text-align: left; }
-    .comp-table td { padding: 8px 4px; border-bottom: 1px solid #eee;}
-    .g-masc { color: var(--pos-noun); } .g-fem { color: var(--pos-prep); }
-
     /* --- DEEP DIVE MODAL --- */
     .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.7); z-index: 1000; display: none; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; backdrop-filter: blur(5px);}
     .modal-content { background: white; width: 100%; max-width: 800px; max-height: 90vh; border-radius: 20px; overflow-y: auto; padding: 30px; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.2); box-sizing: border-box;}
     .modal-close { position: absolute; top: 20px; right: 20px; font-size: 1.5rem; cursor: pointer; background: #f5f5f5; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: none;}
     .modal-header { text-align: center; margin-bottom: 30px; }
     .modal-header h2 { font-family: 'Fredoka One'; font-size: 2.5rem; margin: 0; color: #333; line-height: 1;}
-    .modal-header p { margin: 5px 0 0 0; color: #777; font-size: 1rem; }
+    .modal-header p { margin: 5px 0 0 0; color: #777; font-size: 1rem; text-transform: uppercase; font-weight:bold;}
+    
     .matrix-section { margin-bottom: 30px; background: #fff; border: 1px solid #eee; border-radius: 12px; overflow: hidden; }
-    .matrix-section h4 { background: #f9f9f9; margin: 0; padding: 12px 15px; font-family: 'Fredoka One'; color: var(--pos-verb); border-bottom: 1px solid #eee; font-size: 1.1rem;}
+    .matrix-section h4 { background: #f9f9f9; margin: 0; padding: 12px 15px; font-family: 'Fredoka One'; color: #333; border-bottom: 1px solid #eee; font-size: 1.1rem;}
     .matrix-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; text-align: left;}
     .matrix-table th { padding: 10px 15px; border-bottom: 2px solid #eee; color: #888; font-weight: bold; font-size: 0.75rem; text-transform: uppercase;}
     .matrix-table td { padding: 12px 15px; border-bottom: 1px solid #eee; }
     .pron-col { font-weight: bold; color: #555; width: 100px; background: #fafafa;}
-    
-    /* CHILD MODE */
-    #child-mode { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #fff; z-index: 200; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-    .focus-card { width: 85vw; max-width: 400px; aspect-ratio: 3/4; background: white; border-radius: 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.1); display: flex; flex-direction: column; overflow: hidden; }
-    .focus-card img { flex: 1; object-fit: contain; padding: 40px; filter: brightness(1.03) contrast(1.03); mix-blend-mode: multiply; }
-    .focus-card .word-box { height: 160px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 10px; box-sizing: border-box;}
-    .focus-card h1 { font-size: 3.5rem; margin: 0; color: #333; line-height: 1; }
-    .controls { margin-top: 30px; display: flex; gap: 20px; }
-    .nav-btn { width: 70px; height: 70px; border-radius: 50%; border: none; font-size: 2rem; background: #f5f5f5; cursor: pointer; color: #333; }
-    .play-btn { width: 90px; height: 90px; font-size: 3rem; background: #333; color: white; }
 </style>
 </head>
 <body>
@@ -135,13 +124,12 @@
                 <option value="en">🇬🇧 English</option>
                 <option value="fr">🇫🇷 French</option>
                 <option value="de">🇩🇪 German</option>
-                <option value="ru">🇷🇺 Russian</option>
                 <option value="it">🇮🇹 Italian</option>
+                <option value="ru">🇷🇺 Russian</option>
                 <option value="zh">🇨🇳 Chinese</option>
                 <option value="ja">🇯🇵 Japanese</option>
                 <option value="ko">🇰🇷 Korean</option>
             </select>
-            <button class="btn btn-primary" onclick="startChild()">▶ Child</button>
         </div>
     </div>
     
@@ -157,66 +145,24 @@
         <button class="modal-close" onclick="closeMatrix(event)">✕</button>
         <div class="modal-header">
             <h2 id="modal-title" class="font-en">Word</h2>
-            <p id="modal-subtitle">Full Verb Conjugation Matrix</p>
+            <p id="modal-subtitle">Grammar Matrix</p>
         </div>
         <div id="modal-body"></div>
-    </div>
-</div>
-
-<div id="child-mode" style="display:none;">
-    <button onclick="exitChild()" style="position:absolute; top:30px; right:30px; border:none; background:none; font-size:2rem; opacity:0.3; cursor:pointer;">✕</button>
-    <div class="focus-card" id="focus-display">
-        <img id="c-img" src="">
-        <div class="word-box">
-            <h1 id="c-word">Word</h1>
-            <h2 id="c-sub"></h2>
-            <div id="c-pos" class="pos-badge"></div>
-        </div>
-        <div class="focus-stripe" id="c-stripe"></div>
-    </div>
-    <div class="controls">
-        <button class="nav-btn" onclick="move(-1)">👈</button>
-        <button class="nav-btn play-btn" onclick="speakDrill()">🔊</button>
-        <button class="nav-btn" onclick="move(1)">👉</button>
     </div>
 </div>
 
 <script>
     let deck = [];
     let currentLang = 'en';
-    let currentMode = 'vocab'; // 'vocab' or 'grammar'
-    let currentIndex = 0;
+    let currentMode = 'vocab'; 
     const pronLabels = ['I', 'You', 'He/She/It', 'We', 'You (pl)', 'They'];
 
-    let state = {
-        ipa: false, pinyin: false, latin: false, hiragana: false, hanja: false, traditional: false, // Vocab
-        article: false, plural_noun: false, plural_adj: false, fem: false, neut: false, acc: false, dat: false, gen: false, ins: false, pre: false // Grammar
+    let state = { ipa: false, pinyin: false, latin: false, hiragana: false, hanja: false, traditional: false };
+    const toggleLabels = { 'pinyin':'Pinyin', 'latin':'Latin', 'ipa':'IPA', 'hiragana':'Hiragana', 'hanja':'Hanja', 'traditional':'Traditional' };
+    const soundConfig = {
+        'en': ['ipa'], 'de': ['ipa'], 'fr': ['ipa'], 'it': ['ipa'], 'ru': ['latin', 'ipa'],
+        'zh': ['traditional', 'pinyin'], 'ja': ['hiragana'], 'ko': ['hanja']
     };
-
-    const toggleLabels = { 
-        'article':'Article', 'plural_noun':'Plural (N)', 'plural_adj': 'Plural (Adj)', 
-        'fem': 'Feminine', 'neut': 'Neuter', 'acc': 'Acc', 'dat': 'Dat', 'gen': 'Gen', 'ins': 'Ins', 'pre': 'Pre',
-        'pinyin':'Pinyin', 'latin':'Latin', 'ipa':'IPA', 'hiragana':'Hiragana', 'hanja':'Hanja', 'traditional':'Traditional'
-    };
-
-    // Which toggles belong to which mode?
-    const modeConfig = {
-        'vocab': ['ipa', 'latin', 'pinyin', 'hiragana', 'hanja', 'traditional'],
-        'grammar': ['article', 'plural_noun', 'plural_adj', 'fem', 'neut', 'acc', 'dat', 'gen', 'ins', 'pre']
-    };
-
-    // Which toggles does the language actually support?
-    const langConfig = {
-        'en': ['article', 'plural_noun', 'plural_adj', 'ipa'],
-        'de': ['article', 'plural_noun', 'plural_adj', 'ipa', 'fem', 'neut', 'acc', 'dat', 'gen'],
-        'fr': ['article', 'plural_noun', 'plural_adj', 'ipa', 'fem'],
-        'it': ['article', 'plural_noun', 'plural_adj', 'ipa', 'fem'],
-        'ru': ['plural_noun', 'plural_adj', 'latin', 'ipa', 'fem', 'neut', 'acc', 'dat', 'gen', 'ins', 'pre'],
-        'zh': ['traditional', 'pinyin'],
-        'ja': ['hiragana'],
-        'ko': ['hanja']
-    };
-
     const colors = { animal: '#7CB342', food: '#FDD835', body: '#42A5F5', act: '#AB47BC' };
 
     fetch('data.json').then(res => res.json()).then(data => { deck = data; updateUI(); })
@@ -224,7 +170,7 @@
 
     document.getElementById('lang-select').addEventListener('change', (e) => {
         currentLang = e.target.value;
-        Object.keys(state).forEach(k => state[k] = false); // Reset toggles
+        Object.keys(state).forEach(k => state[k] = false); 
         updateUI();
     });
 
@@ -232,28 +178,18 @@
         currentMode = mode;
         document.getElementById('mode-vocab').className = `mode-btn ${mode === 'vocab' ? 'active' : ''}`;
         document.getElementById('mode-grammar').className = `mode-btn ${mode === 'grammar' ? 'active' : ''}`;
-        
-        // Reset grammar toggles when switching back to vocab for cleanliness
-        if(mode === 'vocab') {
-            modeConfig.grammar.forEach(k => state[k] = false);
-        }
         updateUI();
     };
 
     function getFontClass() { return {'zh':'font-zh-cn', 'ru':'font-ru', 'ja': 'font-ja', 'ko': 'font-ko'}[currentLang] || 'font-en'; }
 
-    // --- SMART TOGGLE RENDERER ---
     function updateUI() {
         const c = document.getElementById('header-toggles');
         c.innerHTML = '';
         
-        const langAllowed = langConfig[currentLang] || [];
-        const modeAllowed = modeConfig[currentMode] || [];
-        
-        // Find intersection of Language features + Mode features
-        const validKeys = modeAllowed.filter(k => langAllowed.includes(k));
-
-        if (validKeys.length > 0) {
+        // Only show toggles in Vocab Mode
+        if(currentMode === 'vocab') {
+            const validKeys = soundConfig[currentLang] || [];
             validKeys.forEach(key => {
                 c.insertAdjacentHTML('beforeend', `
                     <label class="toggle-group">
@@ -261,58 +197,24 @@
                         <span class="slider"></span></span>${toggleLabels[key]}
                     </label>`);
             });
+        } else {
+            c.innerHTML = `<span style="font-size:0.8rem; color:#888; font-style:italic;">Click the 📊 button on any card to view its complete grammar matrix.</span>`;
         }
         renderGrid();
     }
 
-    window.setSwitch = function(key, val) { 
-        state[key] = val; 
-        // Exclusivity rules for Grammar
-        if(key === 'fem' && val) state.neut = false;
-        if(key === 'neut' && val) state.fem = false;
-        if(['acc','dat','gen','ins','pre'].includes(key) && val) {
-            ['acc','dat','gen','ins','pre'].forEach(k => { if(k !== key) state[k] = false; });
-        }
-        updateUI(); 
-    };
+    window.setSwitch = function(key, val) { state[key] = val; updateUI(); };
 
-    // --- TEXT GENERATOR ---
     function getTextDisplay(card) {
         let raw = card.translations[currentLang] || card.translations['en']; 
         let mainText = (currentLang === 'zh' && state.traditional && raw.t) ? raw.t : (raw.n || '?');
         let subText = '';
 
-        if (currentMode === 'grammar') {
-            if (card.pos === 'noun') {
-                if (state.plural_noun && raw.p) mainText = raw.p;
-                if (state.article && !state.plural_noun && raw.art) mainText = `${raw.art} ${mainText}`;
-            }
-            if (card.pos === 'adj') {
-                if (state.acc && raw.acc) mainText = raw.acc;
-                else if (state.dat && raw.dat) mainText = raw.dat;
-                else if (state.gen && raw.gen) mainText = raw.gen;
-                else if (state.ins && raw.ins) mainText = raw.ins;
-                else if (state.pre && raw.pre) mainText = raw.pre;
-                else if (state.plural_adj) {
-                    if (state.fem && raw.fp) mainText = raw.fp;
-                    else if (raw.mp) mainText = raw.mp;
-                    else if (raw.p) mainText = raw.p;
-                } 
-                else if (state.fem && raw.f) mainText = raw.f;
-                else if (state.neut && raw.nt) mainText = raw.nt;
-            }
-        }
-
-        // Verbs always show Infinitive on front (Modal handles the rest)
         if (card.pos === 'verb') {
-            if (currentLang === 'ru' && raw.inf_impf) { 
-                mainText = raw.inf_impf; subText = `(${raw.inf_perf || '-'})`; 
-            } else if (raw.v_inf) { 
-                mainText = raw.v_inf; 
-            }
+            if (currentLang === 'ru' && raw.inf_impf) { mainText = raw.inf_impf; subText = `(${raw.inf_perf || '-'})`; } 
+            else if (raw.v_inf) { mainText = raw.v_inf; }
         }
 
-        // Apply Sound Toggles
         if (state.pinyin && raw.py) subText = raw.py;
         if (state.latin && raw.lt) subText = raw.lt;
         if (state.ipa && raw.ipa) subText = `[${raw.ipa}]`;
@@ -322,27 +224,17 @@
         return { main: mainText, sub: subText };
     }
 
-    // --- CARD BACK RENDERERS ---
     function buildVocabBack(card, raw) {
+        // Fallback to English dict if current language doesn't have definitions yet
+        const dictSource = raw.syn || raw.ex_kid ? raw : (card.translations['en'] || {});
+        
         let html = `<div class="back-title">Dictionary</div>`;
-        if(raw.syn) html += `<div class="dict-section"><div class="dict-lbl">Synonyms</div><div class="dict-val">${raw.syn}</div></div>`;
-        if(raw.ant) html += `<div class="dict-section"><div class="dict-lbl">Antonyms</div><div class="dict-val">${raw.ant}</div></div>`;
-        if(raw.ex_kid) html += `<div class="dict-section"><div class="dict-lbl">Simple Example</div><div class="dict-val ex-kid">"${raw.ex_kid}"</div></div>`;
-        if(raw.ex_adv) html += `<div class="dict-section"><div class="dict-lbl">Classic Example</div><div class="dict-val ex-adv">${raw.ex_adv}</div></div>`;
-        if(!raw.syn && !raw.ex_kid) html += `<div class="dict-section" style="color:#888; text-align:center;">More details coming soon.</div>`;
+        if(dictSource.syn) html += `<div class="dict-section"><div class="dict-lbl">Synonyms</div><div class="dict-val">${dictSource.syn}</div></div>`;
+        if(dictSource.ant) html += `<div class="dict-section"><div class="dict-lbl">Antonyms</div><div class="dict-val">${dictSource.ant}</div></div>`;
+        if(dictSource.ex_kid) html += `<div class="dict-section"><div class="dict-lbl">Simple Example</div><div class="dict-val ex-kid">"${dictSource.ex_kid}"</div></div>`;
+        if(dictSource.ex_adv) html += `<div class="dict-section"><div class="dict-lbl">Classic Example</div><div class="dict-val ex-adv">${dictSource.ex_adv}</div></div>`;
+        if(!dictSource.syn && !dictSource.ex_kid) html += `<div class="dict-section" style="color:#888; text-align:center;">More details coming soon.</div>`;
         return html;
-    }
-
-    function buildGrammarBack(card, raw) {
-        if(card.pos === 'verb') {
-            return `<div class="back-title">Verb Matrix</div>
-                    <p style="font-size:0.8rem; color:#666; text-align:center;">Click the 📊 button on the front of the card to view the complete conjugation matrix.</p>`;
-        } else {
-            return `<div class="back-title">Language Compare</div>
-                    <table class="comp-table">
-                        ${buildCompRow(card, 'fr', '🇫🇷')}${buildCompRow(card, 'de', '🇩🇪')}${buildCompRow(card, 'it', '🇮🇹')}${buildCompRow(card, 'ru', '🇷🇺')}
-                    </table>`;
-        }
     }
 
     function renderGrid() {
@@ -352,19 +244,20 @@
             const txt = getTextDisplay(card);
             const col = colors[card.cat] || '#ccc';
             
-            // Show Matrix button only for Verbs in Grammar Mode
-            const matrixBtn = (card.pos === 'verb' && currentMode === 'grammar') 
-                ? `<div class="matrix-btn" onclick="event.stopPropagation(); openMatrix('${card.id}')">📊</div>` : '';
+            // 📊 Button is universally available in Grammar Mode
+            let btnClass = card.pos === 'verb' ? 'btn-verb' : (card.pos === 'adj' ? 'btn-adj' : 'btn-noun');
+            const matrixBtn = (currentMode === 'grammar') 
+                ? `<div class="matrix-btn ${btnClass}" onclick="event.stopPropagation(); openMatrix('${card.id}')">📊</div>` : '';
 
-            // Render proper card back based on Mode
-            const backHTML = currentMode === 'vocab' ? buildVocabBack(card, raw) : buildGrammarBack(card, raw);
+            const backHTML = currentMode === 'vocab' ? buildVocabBack(card, raw) : 
+                `<div class="back-title">Grammar View</div><p style="font-size:0.8rem; color:#666;">Click the 📊 button on the front to open the Master Matrix.</p>`;
 
             return `
             <div class="vocab-card" onclick="flipCard(event, this)">
                 <div class="card-inner">
                     <div class="card-front">
                         ${matrixBtn}
-                        <div class="flip-btn" onclick="event.stopPropagation(); startChildAt('${card.id}')">🔍</div>
+                        <div class="flip-btn">🔄</div>
                         <div class="card-art"><img src="${card.img}" onerror="this.style.display='none'"></div>
                         <div class="card-obi">
                             <div class="word-row"><div class="word ${fontClass}">${txt.main}</div></div>
@@ -382,82 +275,81 @@
         }).join('');
     }
 
-    // --- DEEP DIVE MODAL ENGINE ---
+    // --- UNIVERSAL MATRIX ENGINE ---
     window.openMatrix = function(cardId) {
         const card = deck.find(c => c.id === cardId);
         const raw = card.translations[currentLang];
-        if(!raw) return alert("Matrix not available for this language yet.");
+        
+        if(!raw || ['zh','ja','ko'].includes(currentLang)) {
+            return alert(`Grammar matrices are not utilized or mapped for ${currentLang.toUpperCase()} in this version.`);
+        }
 
         document.getElementById('modal-title').innerText = raw.n;
         document.getElementById('modal-title').className = getFontClass();
+        document.getElementById('modal-subtitle').innerText = `${card.pos} Declension / Conjugation`;
         
         let html = '';
-        const buildColTable = (title, colsArray) => {
-            let hasData = colsArray.some(col => raw[col.key]);
-            if(!hasData) return '';
 
-            let table = `<div class="matrix-section"><h4>${title}</h4><table class="matrix-table font-${currentLang}"><tr><th class="pron-col">Pronoun</th>`;
-            colsArray.forEach(col => table += `<th>${col.name}</th>`);
-            table += `</tr>`;
-            for(let i=0; i<6; i++) {
-                table += `<tr><td class="pron-col">${pronLabels[i]}</td>`;
-                colsArray.forEach(col => {
-                    let val = (raw[col.key] && raw[col.key][i]) ? raw[col.key][i] : '-';
-                    table += `<td>${val}</td>`;
-                });
-                table += `</tr>`;
+        if (card.pos === 'noun') {
+            if(raw.n_cases && raw.n_sg) {
+                html += `<div class="matrix-section"><h4>Noun Declension</h4><table class="matrix-table font-${currentLang}"><tr><th class="pron-col">Case</th><th>Singular</th><th>Plural</th></tr>`;
+                for(let i=0; i<raw.n_cases.length; i++) {
+                    html += `<tr><td class="pron-col">${raw.n_cases[i]}</td><td>${raw.n_sg[i]||'-'}</td><td>${(raw.n_pl&&raw.n_pl[i])||'-'}</td></tr>`;
+                }
+                html += `</table></div>`;
             }
-            return table + `</table></div>`;
-        };
-
-        // Render Tables mapping to the new JSON logic
-        if(currentLang === 'de') {
-            html += buildColTable('Indicative Tenses', [{name: 'Präsens', key: 'de_pres'}, {name: 'Präteritum', key: 'de_prat'}, {name: 'Perfekt', key: 'de_perf'}]);
-        } else {
-            html += buildColTable('Indicative (Simple)', [{name: 'Past', key: 'ind_past_sim_act'}, {name: 'Present', key: 'ind_pres_sim_act'}, {name: 'Future', key: 'ind_fut_sim_act'}]);
+        } 
+        else if (card.pos === 'adj') {
+            if(raw.a_cases && raw.a_masc) {
+                html += `<div class="matrix-section"><h4>Adjective Declension</h4><table class="matrix-table font-${currentLang}"><tr><th class="pron-col">Case/Form</th><th>Masc</th><th>Fem</th><th>Neut</th><th>Plural</th></tr>`;
+                for(let i=0; i<raw.a_cases.length; i++) {
+                    html += `<tr><td class="pron-col">${raw.a_cases[i]}</td>
+                        <td>${raw.a_masc[i]||'-'}</td>
+                        <td>${(raw.a_fem&&raw.a_fem[i])||'-'}</td>
+                        <td>${(raw.a_neut&&raw.a_neut[i])||'-'}</td>
+                        <td>${(raw.a_plur&&raw.a_plur[i])||'-'}</td></tr>`;
+                }
+                html += `</table></div>`;
+            }
         }
-        
-        if(html === '') html = `<p style="text-align:center; color:#888;">No conjugation data mapped for this word yet.</p>`;
+        else if (card.pos === 'verb') {
+            const buildVerbTable = (title, colsArray) => {
+                if(!colsArray.some(col => raw[col.key])) return '';
+                let table = `<div class="matrix-section"><h4>${title}</h4><table class="matrix-table font-${currentLang}"><tr><th class="pron-col">Pronoun</th>`;
+                colsArray.forEach(col => table += `<th>${col.name}</th>`);
+                table += `</tr>`;
+                for(let i=0; i<6; i++) {
+                    table += `<tr><td class="pron-col">${pronLabels[i]}</td>`;
+                    colsArray.forEach(col => table += `<td>${(raw[col.key] && raw[col.key][i]) ? raw[col.key][i] : '-'}</td>`);
+                    table += `</tr>`;
+                }
+                return table + `</table></div>`;
+            };
+
+            if(currentLang === 'de') {
+                html += buildVerbTable('Indicative', [{name:'Präsens', key:'de_pres'}, {name:'Präteritum', key:'de_prat'}, {name:'Perfekt', key:'de_perf'}]);
+            } else if (currentLang === 'fr') {
+                 html += buildVerbTable('Indicative', [{name:'Présent', key:'ind_pres_sim_act'}, {name:'Imparfait', key:'ind_past_cont_act'}, {name:'Passé Comp.', key:'ind_past_sim_act'}]);
+            } else {
+                html += buildVerbTable('Indicative (Simple)', [{name:'Past', key:'ind_past_sim_act'}, {name:'Present', key:'ind_pres_sim_act'}, {name:'Future', key:'ind_fut_sim_act'}]);
+            }
+        }
+
+        if(html === '') html = `<p style="text-align:center; color:#888;">Data structure currently incomplete for this word.</p>`;
         document.getElementById('modal-body').innerHTML = html;
         document.getElementById('matrix-modal').style.display = 'flex';
     };
 
     window.closeMatrix = function(e) {
-        if(e.target.id === 'matrix-modal' || e.target.classList.contains('modal-close')) {
-            document.getElementById('matrix-modal').style.display = 'none';
-        }
+        if(e.target.id === 'matrix-modal' || e.target.classList.contains('modal-close')) document.getElementById('matrix-modal').style.display = 'none';
     };
 
-    // --- BOILERPLATE UTILS ---
     window.flipCard = function(e, element) { 
         e.stopPropagation(); 
         const inner = element.querySelector('.card-inner') || element.closest('.vocab-card');
         if(inner.classList.contains('flipped')) inner.classList.remove('flipped'); 
         else { document.querySelectorAll('.vocab-card').forEach(c=>c.classList.remove('flipped')); inner.classList.add('flipped'); } 
     };
-
-    function startChildAt(id) { currentIndex = deck.findIndex(c => c.id === id); document.getElementById('child-mode').style.display = 'flex'; updateChildDisplay(); }
-    function startChild() { if(deck.length>0) startChildAt(deck[0].id); }
-    function exitChild() { document.getElementById('child-mode').style.display = 'none'; window.speechSynthesis.cancel(); }
-    
-    function updateChildDisplay() {
-        const card = deck[currentIndex]; const txt = getTextDisplay(card);
-        document.getElementById('c-word').className = getFontClass();
-        document.getElementById('c-img').src = card.img; document.getElementById('c-word').innerText = txt.main;
-        document.getElementById('c-sub').innerText = txt.sub; 
-        document.getElementById('c-stripe').style.background = colors[card.cat] || '#333';
-        const posEl = document.getElementById('c-pos'); posEl.className = `pos-badge pos-${card.pos || 'noun'}`; posEl.innerText = card.pos || ''; posEl.style.display = 'inline-block';
-    }
-
-    function move(dir) { window.speechSynthesis.cancel(); currentIndex = (currentIndex + dir + deck.length) % deck.length; updateChildDisplay(); }
-    function getGenderClass(g) { if(!g)return''; if(g.includes('masc'))return'g-masc'; if(g.includes('fem'))return'g-fem'; if(g.includes('neut'))return'g-neut'; return ''; }
-    function buildCompRow(c,l,f) { const d=c.translations[l]; if(!d)return''; const g=getGenderClass(d.g||''); return `<tr><td style="width:30px">${f}</td><td class="${g}" style="font-weight:bold">${d.art||''}</td><td class="${g}">${d.n||''}</td></tr>`; }
-    function speakDrill() {
-        const txt = getTextDisplay(deck[currentIndex]);
-        const voice = window.speechSynthesis.getVoices().find(v => v.lang.includes({'en':'en-GB', 'fr':'fr-FR', 'de':'de-DE', 'it':'it-IT', 'ru':'ru-RU', 'zh':'zh-CN', 'ja':'ja-JP', 'ko':'ko-KR'}[currentLang]||'en-US')) || window.speechSynthesis.getVoices()[0];
-        window.speechSynthesis.cancel();
-        const u = new SpeechSynthesisUtterance(txt.main); u.voice=voice; u.rate=0.9; window.speechSynthesis.speak(u);
-    }
 </script>
 </body>
 </html>
