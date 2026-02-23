@@ -10,7 +10,7 @@
         "syn": "hound, canine", "ant": "cat (contextual)",
         "ex_kid": "The friendly dog chased the ball.",
         "ex_adv": "\"Cry 'Havoc!', and let slip the dogs of war.\" - Shakespeare",
-        "n_cases": ["Base"], "n_sg": ["a dog"], "n_pl": ["dogs"]
+        "n_cases": ["Base Form"], "n_sg": ["a dog"], "n_pl": ["dogs"]
       },
       "fr": { "n": "chien", "g": "masc.", "ipa": "/ʃjɛ̃/", "n_cases": ["Base"], "n_sg": ["le chien"], "n_pl": ["les chiens"] },
       "de": { 
@@ -42,7 +42,7 @@
         "syn": "plantain (related)", "ant": "-",
         "ex_kid": "Monkeys love to eat yellow bananas.",
         "ex_adv": "The global banana trade revolutionized Central American economies.",
-        "n_cases": ["Base"], "n_sg": ["a banana"], "n_pl": ["bananas"]
+        "n_cases": ["Base Form"], "n_sg": ["a banana"], "n_pl": ["bananas"]
       },
       "fr": { "n": "banane", "g": "fem.", "ipa": "/ba.nan/", "n_cases": ["Base"], "n_sg": ["la banane"], "n_pl": ["les bananes"] },
       "de": { 
@@ -74,60 +74,38 @@
         "syn": "consume, devour", "ant": "fast, starve",
         "ex_kid": "We eat dinner at 6 PM.",
         "ex_adv": "\"Let them eat cake.\" - Rousseau",
-        "v_inf": "to eat", "v_pres_part": "eating", "v_past_part": "eaten", "v_ger_noun": "eating", "v_ger_adv": "eating",
+        "v_inf": "to eat", 
         "ind_pres_sim_act": ["eat", "eat", "eats", "eat", "eat", "eat"], 
-        "ind_pres_cont_act": ["am eating", "are eating", "is eating", "are eating", "are eating", "are eating"],
-        "ind_fut_sim_act": ["will eat", "will eat", "will eat", "will eat", "will eat", "will eat"], 
         "ind_past_sim_act": ["ate", "ate", "ate", "ate", "ate", "ate"],
-        "ind_pres_perf_act": ["have eaten", "have eaten", "has eaten", "have eaten", "have eaten", "have eaten"],
-        "ind_past_cont_act": ["was eating", "were eating", "was eating", "were eating", "were eating", "were eating"], 
-        "ind_past_perf_act": ["had eaten", "had eaten", "had eaten", "had eaten", "had eaten", "had eaten"], 
-        "imp_pres_sim_act": ["-", "eat!", "-", "let's eat", "eat!", "-"],
-        "cond_pres_sim_act": ["would eat", "would eat", "would eat", "would eat", "would eat", "would eat"]
+        "ind_fut_sim_act": ["will eat", "will eat", "will eat", "will eat", "will eat", "will eat"]
       },
       "de": { 
         "n": "essen", "ipa": "/ˈɛsn̩/",
-        "v_inf": "essen", "v_pres_part": "essend", "v_past_part": "gegessen", "v_ger_noun": "das Essen",
+        "v_inf": "essen", 
         "de_pres": ["esse", "isst", "isst", "essen", "esst", "essen"],
         "de_prat": ["aß", "aßt", "aß", "aßen", "aßt", "aßen"],
-        "de_perf": ["habe gegessen", "hast gegessen", "hat gegessen", "haben gegessen", "habt gegessen", "haben gegessen"],
-        "de_fut1": ["werde essen", "wirst essen", "wird essen", "werden essen", "werdet essen", "werden essen"],
-        "de_imp": ["-", "iss!", "-", "essen wir!", "esst!", "essen Sie!"],
-        "de_k1_pres": ["esse", "essest", "esse", "essen", "esset", "essen"],
-        "de_k2_pres": ["äße", "äßest", "äße", "äßen", "äßet", "äßen"]
+        "de_perf": ["habe gegessen", "hast gegessen", "hat gegessen", "haben gegessen", "habt gegessen", "haben gegessen"]
       },
       "fr": {
         "n": "manger", "ipa": "/mɑ̃.ʒe/",
-        "v_inf": "manger", "v_pres_part": "mangeant", "v_past_part": "mangé",
+        "v_inf": "manger", 
         "ind_pres_sim_act": ["mange", "manges", "mange", "mangeons", "mangez", "mangent"],
         "ind_past_sim_act": ["ai mangé", "as mangé", "a mangé", "avons mangé", "avez mangé", "ont mangé"],
-        "ind_past_cont_act": ["mangeais", "mangeais", "mangeait", "mangeions", "mangiez", "mangeaient"],
-        "ind_fut_sim_act": ["mangerai", "mangeras", "mangera", "mangerons", "mangerez", "mangeront"],
-        "subj_pres_sim_act": ["mange", "manges", "mange", "mangions", "mangiez", "mangent"],
-        "cond_pres_sim_act": ["mangerais", "mangerais", "mangerait", "mangerions", "mangeriez", "mangeraient"],
-        "imp_pres_sim_act": ["-", "mange!", "-", "mangeons!", "mangez!", "-"]
+        "ind_past_cont_act": ["mangeais", "mangeais", "mangeait", "mangeions", "mangiez", "mangeaient"]
       },
       "it": {
         "n": "mangiare", "ipa": "/manˈdʒa.re/",
-        "v_inf": "mangiare", "v_pres_part": "mangiante", "v_past_part": "mangiato",
+        "v_inf": "mangiare", 
         "ind_pres_sim_act": ["mangio", "mangi", "mangia", "mangiamo", "mangiate", "mangiano"],
         "ind_past_sim_act": ["ho mangiato", "hai mangiato", "ha mangiato", "abbiamo mangiato", "avete mangiato", "hanno mangiato"],
-        "ind_past_cont_act": ["mangiavo", "mangiavi", "mangiava", "mangiavamo", "mangiavate", "mangiavano"],
-        "ind_fut_sim_act": ["mangerò", "mangerai", "mangerà", "mangeremo", "mangerete", "mangeranno"],
-        "subj_pres_sim_act": ["mangi", "mangi", "mangi", "mangiamo", "mangiate", "mangino"],
-        "cond_pres_sim_act": ["mangerei", "mangeresti", "mangerebbe", "mangeremmo", "mangereste", "mangerebbero"],
-        "imp_pres_sim_act": ["-", "mangia!", "-", "mangiamo!", "mangiate!", "-"]
+        "ind_past_cont_act": ["mangiavo", "mangiavi", "mangiava", "mangiavamo", "mangiavate", "mangiavano"]
       },
       "ru": { 
         "n": "есть", "ipa": "/jesʲtʲ/", "lt": "yest'",
         "inf_impf": "есть", "inf_perf": "съесть",
         "ind_pres_sim_act": ["ем", "ешь", "ест", "едим", "едите", "едят"],
         "ind_past_sim_act": ["ел(а)", "ел(а)", "ел(а/о)", "ели", "ели", "ели"],
-        "ind_fut_sim_act": ["буду есть", "будешь есть", "будет есть", "будем есть", "будете есть", "будут есть"],
-        "ind_past_perf_act": ["съел(а)", "съел(а)", "съел(а/о)", "съели", "съели", "съели"],
-        "ind_fut_perf_act": ["съем", "съешь", "съест", "съедим", "съедите", "съедят"],
-        "imp_pres_sim_act": ["-", "ешь!", "-", "давайте есть", "ешьте!", "-"],
-        "cond_pres_sim_act": ["ел(а) бы", "ел(а) бы", "ел(а/о) бы", "ели бы", "ели бы", "ели бы"]
+        "ind_fut_perf_act": ["съем", "съешь", "съест", "съедим", "съедите", "съедят"]
       },
       "zh": { "n": "吃", "t": "吃", "py": "chī" },
       "ja": { "n": "食べる", "r": "たべる" },

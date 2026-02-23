@@ -7,7 +7,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Jua&family=Noto+Sans+SC:wght@500;700&family=Noto+Sans+TC:wght@500;700&family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Jua&family=Noto+Sans+SC:wght@500;700&family=Noto+Sans+TC:wght@500;700&family=Zen+Maru+Gothic:wght@400;500;700&family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
 
 <style>
     :root {
@@ -17,7 +17,8 @@
     }
 
     body { font-family: 'Zen Maru Gothic', sans-serif; background: var(--bg); margin: 0; color: #333; -webkit-font-smoothing: antialiased; }
-    .font-en, .font-fr, .font-de, .font-it, .font-ru { font-family: 'Fredoka One', cursive; }
+    .font-en, .font-fr, .font-de, .font-it { font-family: 'Fredoka One', cursive; }
+    .font-ru { font-family: 'Rubik', sans-serif; font-weight: 500; } /* New Russian Font */
     .font-ja { font-family: 'Zen Maru Gothic', sans-serif; font-weight: 700; }
     .font-ko { font-family: 'Jua', sans-serif; }
     .font-zh-cn { font-family: 'Noto Sans SC', sans-serif; font-weight: 700; letter-spacing: 1px; }
@@ -36,7 +37,7 @@
     .mode-btn { padding: 8px 20px; border-radius: 25px; font-size: 0.85rem; font-weight: bold; color: #666; cursor: pointer; transition: all 0.3s ease; user-select: none; }
     .mode-btn.active { background: white; color: #333; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
 
-    /* TOGGLES ROW (Only for Vocab View now) */
+    /* TOGGLES ROW */
     .controls-container { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; min-height: 30px; align-items: center;}
     .toggle-group { display: flex; align-items: center; gap: 6px; font-size: 0.75rem; font-weight: bold; color: #555; cursor: pointer; background: #fff; padding: 4px 10px; border-radius: 15px; border: 1px solid #eee;}
     .switch { position: relative; display: inline-block; width: 28px; height: 16px; }
@@ -49,7 +50,7 @@
     /* CARD GRID (Fixed Overflow & Sizing) */
     .container { max-width: 1200px; margin: 0 auto; padding: 30px 20px; }
     .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 25px; }
-    .vocab-card { height: 260px; background-color: transparent; perspective: 1000px; cursor: pointer; }
+    .vocab-card { height: 280px; background-color: transparent; perspective: 1000px; cursor: pointer; }
     .card-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s; transform-style: preserve-3d; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.06); }
     .vocab-card.flipped .card-inner { transform: rotateY(180deg); }
     
@@ -58,23 +59,23 @@
 
     /* Strict Flexbox to prevent overflow */
     .card-art { flex: 1; min-height: 0; width: 100%; display: flex; align-items: center; justify-content: center; padding: 15px; box-sizing: border-box; }
-    .card-art img { max-width: 100%; max-height: 100%; object-fit: contain; filter: brightness(1.03) contrast(1.03); mix-blend-mode: multiply; }
+    .card-art img { max-width: 100%; max-height: 100%; object-fit: contain; mix-blend-mode: multiply; }
     
-    .card-obi { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px; padding-bottom: 15px; position: relative; background: white;}
+    .card-obi { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px 10px 15px 10px; position: relative; background: white;}
     .color-stroke { position: absolute; bottom: 0; left: 0; width: 100%; height: 8px; }
     
     .word-row { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; margin-bottom: 2px; width: 100%;}
-    .word { font-size: 1.6rem; color: #333; text-align: center; line-height: 1.1; word-wrap: break-word; max-width: 100%;}
+    .word { font-size: 1.5rem; color: #333; text-align: center; line-height: 1.1; word-wrap: break-word; max-width: 100%;}
     .sub-word { font-size: 0.8rem; color: #777; font-family: 'Zen Maru Gothic'; text-align: center; font-weight: 500; }
 
-    /* PERMANENT POS BADGE */
     .pos-badge { font-size: 0.6rem; color: white; padding: 3px 8px; border-radius: 10px; font-family: 'Zen Maru Gothic'; font-weight: bold; letter-spacing: 0.5px; text-transform: lowercase; margin-top: 4px; display: inline-block; }
     .pos-noun { background: var(--pos-noun); } .pos-verb { background: var(--pos-verb); } .pos-adj { background: var(--pos-adj); } 
     
     .flip-btn { position: absolute; top: 10px; right: 10px; width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.9); border: 1px solid #eee; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; cursor: pointer; z-index: 10; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
     
     /* MATRIX BUTTON */
-    .matrix-btn { position: absolute; top: 10px; left: 10px; width: 32px; height: 32px; border-radius: 50%; background: #333; color: white; display: flex; align-items: center; justify-content: center; font-size: 1rem; cursor: pointer; z-index: 10; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+    .matrix-btn { position: absolute; top: 10px; left: 10px; width: 32px; height: 32px; border-radius: 50%; background: #333; color: white; display: flex; align-items: center; justify-content: center; font-size: 1rem; cursor: pointer; z-index: 10; box-shadow: 0 2px 5px rgba(0,0,0,0.3); transition: transform 0.2s;}
+    .matrix-btn:hover { transform: scale(1.1); }
     .matrix-btn.btn-verb { background: var(--pos-verb); }
     .matrix-btn.btn-noun { background: var(--pos-noun); }
     .matrix-btn.btn-adj { background: var(--pos-adj); }
@@ -83,7 +84,6 @@
     .back-title { font-family: 'Fredoka One'; font-size: 1rem; color: #333; margin-bottom: 10px; margin-top: 5px; line-height:1.2;}
     .close-flip { margin-top: auto; padding: 8px 20px; border-radius: 20px; background: #eee; border: none; font-family: 'Fredoka One'; color: #555; cursor: pointer; }
 
-    /* Vocab Mode Back (Dictionary Style) */
     .dict-section { width: 100%; text-align: left; margin-bottom: 10px; font-size: 0.8rem;}
     .dict-lbl { font-size: 0.65rem; font-weight: bold; color: #999; text-transform: uppercase; margin-bottom: 2px;}
     .dict-val { color: #444; background: #f9f9f9; padding: 6px; border-radius: 6px;}
@@ -95,11 +95,12 @@
     .modal-content { background: white; width: 100%; max-width: 800px; max-height: 90vh; border-radius: 20px; overflow-y: auto; padding: 30px; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.2); box-sizing: border-box;}
     .modal-close { position: absolute; top: 20px; right: 20px; font-size: 1.5rem; cursor: pointer; background: #f5f5f5; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: none;}
     .modal-header { text-align: center; margin-bottom: 30px; }
-    .modal-header h2 { font-family: 'Fredoka One'; font-size: 2.5rem; margin: 0; color: #333; line-height: 1;}
+    .modal-header h2 { font-size: 2.5rem; margin: 0; color: #333; line-height: 1;}
     .modal-header p { margin: 5px 0 0 0; color: #777; font-size: 1rem; text-transform: uppercase; font-weight:bold;}
     
     .matrix-section { margin-bottom: 30px; background: #fff; border: 1px solid #eee; border-radius: 12px; overflow: hidden; }
     .matrix-section h4 { background: #f9f9f9; margin: 0; padding: 12px 15px; font-family: 'Fredoka One'; color: #333; border-bottom: 1px solid #eee; font-size: 1.1rem;}
+    
     .matrix-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; text-align: left;}
     .matrix-table th { padding: 10px 15px; border-bottom: 2px solid #eee; color: #888; font-weight: bold; font-size: 0.75rem; text-transform: uppercase;}
     .matrix-table td { padding: 12px 15px; border-bottom: 1px solid #eee; }
@@ -144,7 +145,7 @@
     <div class="modal-content" onclick="event.stopPropagation()">
         <button class="modal-close" onclick="closeMatrix(event)">✕</button>
         <div class="modal-header">
-            <h2 id="modal-title" class="font-en">Word</h2>
+            <h2 id="modal-title">Word</h2>
             <p id="modal-subtitle">Grammar Matrix</p>
         </div>
         <div id="modal-body"></div>
@@ -159,13 +160,16 @@
 
     let state = { ipa: false, pinyin: false, latin: false, hiragana: false, hanja: false, traditional: false };
     const toggleLabels = { 'pinyin':'Pinyin', 'latin':'Latin', 'ipa':'IPA', 'hiragana':'Hiragana', 'hanja':'Hanja', 'traditional':'Traditional' };
+    
     const soundConfig = {
         'en': ['ipa'], 'de': ['ipa'], 'fr': ['ipa'], 'it': ['ipa'], 'ru': ['latin', 'ipa'],
         'zh': ['traditional', 'pinyin'], 'ja': ['hiragana'], 'ko': ['hanja']
     };
+    
     const colors = { animal: '#7CB342', food: '#FDD835', body: '#42A5F5', act: '#AB47BC' };
 
-    fetch('data.json').then(res => res.json()).then(data => { deck = data; updateUI(); })
+    fetch('data.json')
+        .then(res => res.json()).then(data => { deck = data; updateUI(); })
         .catch(err => { document.getElementById('grid').innerHTML = `<div style="padding:20px; text-align:center;">⚠️ Error loading data.json</div>`; });
 
     document.getElementById('lang-select').addEventListener('change', (e) => {
@@ -187,7 +191,6 @@
         const c = document.getElementById('header-toggles');
         c.innerHTML = '';
         
-        // Only show toggles in Vocab Mode
         if(currentMode === 'vocab') {
             const validKeys = soundConfig[currentLang] || [];
             validKeys.forEach(key => {
@@ -210,9 +213,17 @@
         let mainText = (currentLang === 'zh' && state.traditional && raw.t) ? raw.t : (raw.n || '?');
         let subText = '';
 
+        // RUSSIAN VERB PAIR LOGIC (UI Enhancements)
         if (card.pos === 'verb') {
-            if (currentLang === 'ru' && raw.inf_impf) { mainText = raw.inf_impf; subText = `(${raw.inf_perf || '-'})`; } 
-            else if (raw.v_inf) { mainText = raw.v_inf; }
+            if (currentLang === 'ru' && raw.inf_impf) { 
+                mainText = `<div style="display:flex; flex-direction:column; gap:6px; align-items:center;">
+                              <div style="line-height:1;"><span style="font-size:0.45em; color:#999; text-transform:uppercase; letter-spacing:1px;">Imperfective</span><br>${raw.inf_impf}</div>
+                              <div style="width:40%; border-bottom:1px solid #eee;"></div>
+                              <div style="line-height:1;"><span style="font-size:0.45em; color:#999; text-transform:uppercase; letter-spacing:1px;">Perfective</span><br>${raw.inf_perf}</div>
+                            </div>`;
+            } else if (raw.v_inf) { 
+                mainText = raw.v_inf; 
+            }
         }
 
         if (state.pinyin && raw.py) subText = raw.py;
@@ -225,14 +236,14 @@
     }
 
     function buildVocabBack(card, raw) {
-        // Fallback to English dict if current language doesn't have definitions yet
+        // Smart fallback to English if the current language lacks dictionary notes
         const dictSource = raw.syn || raw.ex_kid ? raw : (card.translations['en'] || {});
         
         let html = `<div class="back-title">Dictionary</div>`;
         if(dictSource.syn) html += `<div class="dict-section"><div class="dict-lbl">Synonyms</div><div class="dict-val">${dictSource.syn}</div></div>`;
         if(dictSource.ant) html += `<div class="dict-section"><div class="dict-lbl">Antonyms</div><div class="dict-val">${dictSource.ant}</div></div>`;
-        if(dictSource.ex_kid) html += `<div class="dict-section"><div class="dict-lbl">Simple Example</div><div class="dict-val ex-kid">"${dictSource.ex_kid}"</div></div>`;
-        if(dictSource.ex_adv) html += `<div class="dict-section"><div class="dict-lbl">Classic Example</div><div class="dict-val ex-adv">${dictSource.ex_adv}</div></div>`;
+        if(dictSource.ex_kid) html += `<div class="dict-section"><div class="dict-lbl">Example (Simple)</div><div class="dict-val ex-kid">"${dictSource.ex_kid}"</div></div>`;
+        if(dictSource.ex_adv) html += `<div class="dict-section"><div class="dict-lbl">Example (Classic)</div><div class="dict-val ex-adv">${dictSource.ex_adv}</div></div>`;
         if(!dictSource.syn && !dictSource.ex_kid) html += `<div class="dict-section" style="color:#888; text-align:center;">More details coming soon.</div>`;
         return html;
     }
@@ -244,13 +255,14 @@
             const txt = getTextDisplay(card);
             const col = colors[card.cat] || '#ccc';
             
-            // 📊 Button is universally available in Grammar Mode
+            // Generate matrix button
             let btnClass = card.pos === 'verb' ? 'btn-verb' : (card.pos === 'adj' ? 'btn-adj' : 'btn-noun');
             const matrixBtn = (currentMode === 'grammar') 
                 ? `<div class="matrix-btn ${btnClass}" onclick="event.stopPropagation(); openMatrix('${card.id}')">📊</div>` : '';
 
+            // Card Back
             const backHTML = currentMode === 'vocab' ? buildVocabBack(card, raw) : 
-                `<div class="back-title">Grammar View</div><p style="font-size:0.8rem; color:#666;">Click the 📊 button on the front to open the Master Matrix.</p>`;
+                `<div class="back-title">Grammar View</div><p style="font-size:0.8rem; color:#666; text-align:center;">Click the 📊 button on the front to open the Master Matrix.</p>`;
 
             return `
             <div class="vocab-card" onclick="flipCard(event, this)">
@@ -284,7 +296,7 @@
             return alert(`Grammar matrices are not utilized or mapped for ${currentLang.toUpperCase()} in this version.`);
         }
 
-        document.getElementById('modal-title').innerText = raw.n;
+        document.getElementById('modal-title').innerText = raw.n || card.id;
         document.getElementById('modal-title').className = getFontClass();
         document.getElementById('modal-subtitle').innerText = `${card.pos} Declension / Conjugation`;
         
@@ -292,22 +304,33 @@
 
         if (card.pos === 'noun') {
             if(raw.n_cases && raw.n_sg) {
-                html += `<div class="matrix-section"><h4>Noun Declension</h4><table class="matrix-table font-${currentLang}"><tr><th class="pron-col">Case</th><th>Singular</th><th>Plural</th></tr>`;
+                html += `<div class="matrix-section"><h4>Noun Declension</h4><table class="matrix-table font-${currentLang}"><tr><th class="pron-col">Case/Form</th><th>Singular</th>`;
+                if(raw.n_pl) html += `<th>Plural</th>`;
+                html += `</tr>`;
+                
                 for(let i=0; i<raw.n_cases.length; i++) {
-                    html += `<tr><td class="pron-col">${raw.n_cases[i]}</td><td>${raw.n_sg[i]||'-'}</td><td>${(raw.n_pl&&raw.n_pl[i])||'-'}</td></tr>`;
+                    html += `<tr><td class="pron-col">${raw.n_cases[i]}</td><td>${raw.n_sg[i]||'-'}</td>`;
+                    if(raw.n_pl) html += `<td>${raw.n_pl[i]||'-'}</td>`;
+                    html += `</tr>`;
                 }
                 html += `</table></div>`;
             }
         } 
         else if (card.pos === 'adj') {
             if(raw.a_cases && raw.a_masc) {
-                html += `<div class="matrix-section"><h4>Adjective Declension</h4><table class="matrix-table font-${currentLang}"><tr><th class="pron-col">Case/Form</th><th>Masc</th><th>Fem</th><th>Neut</th><th>Plural</th></tr>`;
+                let hasFem = !!raw.a_fem;
+                html += `<div class="matrix-section"><h4>Adjective Declension</h4><table class="matrix-table font-${currentLang}"><tr><th class="pron-col">Case/Form</th><th>${hasFem ? 'Masc' : 'Value'}</th>`;
+                if(raw.a_fem) html += `<th>Fem</th>`;
+                if(raw.a_neut) html += `<th>Neut</th>`;
+                if(raw.a_plur) html += `<th>Plural</th>`;
+                html += `</tr>`;
+                
                 for(let i=0; i<raw.a_cases.length; i++) {
-                    html += `<tr><td class="pron-col">${raw.a_cases[i]}</td>
-                        <td>${raw.a_masc[i]||'-'}</td>
-                        <td>${(raw.a_fem&&raw.a_fem[i])||'-'}</td>
-                        <td>${(raw.a_neut&&raw.a_neut[i])||'-'}</td>
-                        <td>${(raw.a_plur&&raw.a_plur[i])||'-'}</td></tr>`;
+                    html += `<tr><td class="pron-col">${raw.a_cases[i]}</td><td>${raw.a_masc[i]||'-'}</td>`;
+                    if(raw.a_fem) html += `<td>${raw.a_fem[i]||'-'}</td>`;
+                    if(raw.a_neut) html += `<td>${raw.a_neut[i]||'-'}</td>`;
+                    if(raw.a_plur) html += `<td>${raw.a_plur[i]||'-'}</td>`;
+                    html += `</tr>`;
                 }
                 html += `</table></div>`;
             }
@@ -329,9 +352,13 @@
             if(currentLang === 'de') {
                 html += buildVerbTable('Indicative', [{name:'Präsens', key:'de_pres'}, {name:'Präteritum', key:'de_prat'}, {name:'Perfekt', key:'de_perf'}]);
             } else if (currentLang === 'fr') {
-                 html += buildVerbTable('Indicative', [{name:'Présent', key:'ind_pres_sim_act'}, {name:'Imparfait', key:'ind_past_cont_act'}, {name:'Passé Comp.', key:'ind_past_sim_act'}]);
+                 html += buildVerbTable('Indicative', [{name:'Présent', key:'ind_pres_sim_act'}, {name:'Imparfait', key:'ind_past_cont_act'}, {name:'Passé Comp.', key:'ind_past_sim_act'}, {name:'Futur', key:'ind_fut_sim_act'}]);
+            } else if (currentLang === 'ru') {
+                 html += buildVerbTable('Indicative (Imperfective)', [{name:'Past', key:'ind_past_sim_act'}, {name:'Present', key:'ind_pres_sim_act'}, {name:'Future', key:'ind_fut_sim_act'}]);
+                 html += buildVerbTable('Indicative (Perfective)', [{name:'Past', key:'ind_past_perf_act'}, {name:'Future', key:'ind_fut_perf_act'}]);
             } else {
                 html += buildVerbTable('Indicative (Simple)', [{name:'Past', key:'ind_past_sim_act'}, {name:'Present', key:'ind_pres_sim_act'}, {name:'Future', key:'ind_fut_sim_act'}]);
+                html += buildVerbTable('Indicative (Continuous)', [{name:'Past', key:'ind_past_cont_act'}, {name:'Present', key:'ind_pres_cont_act'}, {name:'Future', key:'ind_fut_cont_act'}]);
             }
         }
 
