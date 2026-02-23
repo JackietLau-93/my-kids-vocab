@@ -11,10 +11,10 @@
         "ex_kid": "The friendly dog chased the ball.", "ex_adv": "\"Cry 'Havoc!', and let slip the dogs of war.\"",
         "n_cases": ["Base Form"], "n_sg": ["a dog"], "n_pl": ["dogs"]
       },
-      "fr": { "n": "chien", "g": "masc.", "n_opp": "chienne (fem.)", "ipa": "/ʃjɛ̃/", "n_cases": ["Base"], "n_sg": ["le chien"], "n_pl": ["les chiens"] },
-      "de": { "n": "Hund", "g": "masc.", "n_opp": "Hündin (fem.)", "ipa": "/hʊnt/", "n_cases": ["Nom", "Acc", "Dat", "Gen"], "n_sg": ["der Hund", "den Hund", "dem Hund", "des Hundes"], "n_pl": ["die Hunde", "die Hunde", "den Hunden", "der Hunde"] },
-      "it": { "n": "cane", "g": "masc.", "n_opp": "cagna (fem.)", "ipa": "/ˈka.ne/", "n_cases": ["Base"], "n_sg": ["il cane"], "n_pl": ["i cani"] },
-      "ru": { "n": "собака", "g": "fem.", "n_opp": "пёс (masc.)", "lt": "sobaka", "ipa": "/sɐˈbakə/", "n_cases": ["Nom", "Acc", "Dat", "Gen", "Ins", "Pre"], "n_sg": ["собака", "собаку", "собаке", "собаки", "собакой", "собаке"], "n_pl": ["собаки", "собак", "собакам", "собак", "собаками", "собаках"] },
+      "fr": { "n": "chien", "g": "masc.", "n_opp": "chienne", "ipa": "/ʃjɛ̃/", "n_cases": ["Base"], "n_sg": ["le chien"], "n_pl": ["les chiens"] },
+      "de": { "n": "Hund", "g": "masc.", "n_opp": "Hündin", "ipa": "/hʊnt/", "n_cases": ["Nom", "Acc", "Dat", "Gen"], "n_sg": ["der Hund", "den Hund", "dem Hund", "des Hundes"], "n_pl": ["die Hunde", "die Hunde", "den Hunden", "der Hunde"] },
+      "it": { "n": "cane", "g": "masc.", "n_opp": "cagna", "ipa": "/ˈka.ne/", "n_cases": ["Base"], "n_sg": ["il cane"], "n_pl": ["i cani"] },
+      "ru": { "n": "собака", "g": "fem.", "n_opp": "пёс", "lt": "sobaka", "ipa": "/sɐˈbakə/", "n_cases": ["Nom", "Acc", "Dat", "Gen", "Ins", "Pre"], "n_sg": ["собака", "собаку", "собаке", "собаки", "собакой", "собаке"], "n_pl": ["собаки", "собак", "собакам", "собак", "собаками", "собаках"] },
       "zh": { "n": "狗", "t": "狗", "py": "gǒu" },
       "ja": { "n": "犬", "r": "いぬ" },
       "ko": { "n": "개", "hj": "" }
@@ -27,9 +27,7 @@
     "pos": "noun",
     "img": "images/banana.png",
     "translations": {
-      "en": { 
-        "n": "banana", "ipa": "/bəˈnɑːnə/", "syn": "plantain", "ex_kid": "Monkeys love yellow bananas.", "n_cases": ["Base Form"], "n_sg": ["a banana"], "n_pl": ["bananas"]
-      },
+      "en": { "n": "banana", "ipa": "/bəˈnɑːnə/", "syn": "plantain", "ex_kid": "Monkeys love yellow bananas.", "n_cases": ["Base Form"], "n_sg": ["a banana"], "n_pl": ["bananas"] },
       "fr": { "n": "banane", "g": "fem.", "ipa": "/ba.nan/", "n_cases": ["Base"], "n_sg": ["la banane"], "n_pl": ["les bananes"] },
       "de": { "n": "Banane", "g": "fem.", "ipa": "/baˈnaːnə/", "n_cases": ["Nom", "Acc", "Dat", "Gen"], "n_sg": ["die Banane", "die Banane", "der Banane", "der Banane"], "n_pl": ["die Bananen", "die Bananen", "den Bananen", "der Bananen"] },
       "it": { "n": "banana", "g": "fem.", "ipa": "/baˈna.na/", "n_cases": ["Base"], "n_sg": ["la banana"], "n_pl": ["le banane"] },
@@ -120,10 +118,19 @@
         "n": "big", "ipa": "/bɪɡ/", "syn": "large", "ant": "small",
         "a_cases": ["Base", "Comparative", "Superlative"], "a_masc": ["big", "bigger", "biggest"]
       },
-      "fr": { "n": "grand", "ipa": "/ɡʁɑ̃/", "a_sg": ["grand", "grande"], "a_pl": ["grands", "grandes"] },
-      "it": { "n": "grande", "ipa": "/ˈɡran.de/", "a_sg": ["grande", "grande"], "a_pl": ["grandi", "grandi"] },
+      "fr": { 
+        "n": "grand", "ipa": "/ɡʁɑ̃/", 
+        "a_sg": ["grand", "grande"], "a_pl": ["grands", "grandes"],
+        "a_comp": "plus grand(e)", "a_sup": "le/la plus grand(e)"
+      },
+      "it": { 
+        "n": "grande", "ipa": "/ˈɡran.de/", 
+        "a_sg": ["grande", "grande"], "a_pl": ["grandi", "grandi"],
+        "a_comp": "più grande", "a_sup": "il/la più grande, grandissimo"
+      },
       "de": { 
         "n": "groß", "ipa": "/ɡʁoːs/",
+        "a_comp": "größer", "a_sup": "am größten",
         "a_cases": ["Nom", "Acc", "Dat", "Gen"],
         "a_masc": ["großer", "großen", "großem", "großen"],
         "a_fem": ["große", "große", "großer", "großer"],
@@ -132,6 +139,7 @@
       },
       "ru": { 
         "n": "большой", "lt": "bolshoy", "ipa": "/bɐlʲˈʂoj/",
+        "a_comp": "больше", "a_sup": "самый большой / наибольший",
         "a_cases": ["Nom", "Acc", "Dat", "Gen", "Ins", "Pre"],
         "a_masc": ["большой", "большого", "большому", "большого", "большим", "большом"],
         "a_fem": ["большая", "большую", "большой", "большой", "большой", "большой"],
