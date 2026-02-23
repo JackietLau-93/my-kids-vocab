@@ -14,8 +14,6 @@
         --c-animal: #7CB342; --c-food: #FDD835; --c-body: #42A5F5; --c-act: #AB47BC;
         --pos-noun: #2196F3; --pos-verb: #F44336; --pos-adj: #4CAF50;
         --bg: #F2F2F2; --card-bg: #FFFFFF;
-        
-        /* SRS Status Colors */
         --srs-new: #E0E0E0; --srs-learn: #2196F3; --srs-rev: #FF9800; --srs-master: #4CAF50;
     }
 
@@ -37,12 +35,10 @@
     .mode-btn { padding: 8px 20px; border-radius: 25px; font-size: 0.85rem; font-weight: bold; color: #666; cursor: pointer; transition: all 0.3s ease; user-select: none; }
     .mode-btn.active { background: white; color: #333; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
 
-    /* FILTER BAR */
     .filter-bar { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; padding: 10px 0; border-top: 1px solid #eee; background: #fafafa; border-radius: 10px;}
     .filter-select { padding: 6px 10px; border-radius: 8px; border: 1px solid #ddd; font-family: 'Zen Maru Gothic'; font-size: 0.8rem; outline: none; cursor: pointer;}
     .btn-sort { padding: 6px 12px; border-radius: 8px; border: 1px solid #ccc; background: white; cursor: pointer; font-size: 0.8rem; font-weight:bold;}
 
-    /* TOGGLES ROW */
     .controls-container { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; min-height: 25px; align-items: center;}
     .toggle-group { display: flex; align-items: center; gap: 6px; font-size: 0.75rem; font-weight: bold; color: #555; cursor: pointer; background: #fff; padding: 4px 10px; border-radius: 15px; border: 1px solid #eee;}
     .switch { position: relative; display: inline-block; width: 28px; height: 16px; }
@@ -62,7 +58,6 @@
     .card-front, .card-back { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; border-radius: 16px; overflow: hidden; background: var(--card-bg); display: flex; flex-direction: column; }
     .card-back { transform: rotateY(180deg); background: #fdfdfd; padding: 15px; box-sizing: border-box; align-items: center; justify-content: flex-start; overflow-y: auto; }
 
-    /* Strict Flexbox for Images */
     .card-art { flex: 1; min-height: 0; width: 100%; display: flex; align-items: center; justify-content: center; padding: 15px; box-sizing: border-box; }
     .card-art img { max-width: 100%; max-height: 100%; object-fit: contain; mix-blend-mode: multiply; }
     
@@ -73,7 +68,6 @@
     .word { font-size: 1.5rem; color: #333; text-align: center; line-height: 1.1; word-wrap: break-word; max-width: 100%;}
     .sub-word { font-size: 0.8rem; color: #777; font-family: 'Zen Maru Gothic'; text-align: center; font-weight: 500; }
 
-    /* BADGES */
     .pos-badge { font-size: 0.6rem; color: white; padding: 3px 8px; border-radius: 10px; font-family: 'Zen Maru Gothic'; font-weight: bold; letter-spacing: 0.5px; text-transform: lowercase; margin-top: 4px; display: inline-block; }
     .pos-noun { background: var(--pos-noun); } .pos-verb { background: var(--pos-verb); } .pos-adj { background: var(--pos-adj); } 
     
@@ -82,23 +76,12 @@
     .matrix-btn:hover { transform: scale(1.1); }
     .matrix-btn.btn-verb { background: var(--pos-verb); } .matrix-btn.btn-noun { background: var(--pos-noun); } .matrix-btn.btn-adj { background: var(--pos-adj); }
 
-    /* SRS STATUS DOT */
     .srs-dot { position: absolute; bottom: 15px; right: 10px; width: 14px; height: 14px; border-radius: 50%; cursor: pointer; z-index: 10; border: 2px solid white; box-shadow: 0 1px 3px rgba(0,0,0,0.3);}
     .srs-new { background: var(--srs-new); } .srs-learning { background: var(--srs-learn); } .srs-review { background: var(--srs-rev); } .srs-mastered { background: var(--srs-master); }
 
-    /* BACK OF CARD */
-    .back-title { font-family: 'Fredoka One'; font-size: 1rem; color: #333; margin-bottom: 10px; margin-top: 5px; line-height:1.2;}
-    .close-flip { margin-top: auto; padding: 8px 20px; border-radius: 20px; background: #eee; border: none; font-family: 'Fredoka One'; color: #555; cursor: pointer; }
-    
-    .dict-section { width: 100%; text-align: left; margin-bottom: 10px; font-size: 0.8rem;}
-    .dict-lbl { font-size: 0.65rem; font-weight: bold; color: #999; text-transform: uppercase; margin-bottom: 2px;}
-    .dict-val { color: #444; background: #f9f9f9; padding: 6px; border-radius: 6px;}
-    .ex-kid { font-style: italic; color: #2196F3; }
-    .ex-adv { font-style: italic; color: #9C27B0; font-family: serif; font-size: 0.85rem;}
-
     /* MODAL */
     .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.7); z-index: 1000; display: none; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; backdrop-filter: blur(5px);}
-    .modal-content { background: white; width: 100%; max-width: 800px; max-height: 90vh; border-radius: 20px; overflow-y: auto; padding: 30px; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.2); box-sizing: border-box;}
+    .modal-content { background: white; width: 100%; max-width: 900px; max-height: 90vh; border-radius: 20px; overflow-y: auto; padding: 30px; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.2); box-sizing: border-box;}
     .modal-close { position: absolute; top: 20px; right: 20px; font-size: 1.5rem; cursor: pointer; background: #f5f5f5; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: none;}
     .modal-header { text-align: center; margin-bottom: 30px; }
     .modal-header h2 { font-size: 2.5rem; margin: 0; color: #333; line-height: 1;}
@@ -110,7 +93,12 @@
     .matrix-table th { padding: 10px 15px; border-bottom: 2px solid #eee; color: #888; font-weight: bold; font-size: 0.75rem; text-transform: uppercase;}
     .matrix-table td { padding: 12px 15px; border-bottom: 1px solid #eee; }
     .pron-col { font-weight: bold; color: #555; width: 100px; background: #fafafa;}
-    .highlight-badge { display:inline-block; padding:3px 8px; background:#e3f2fd; color:#1976d2; border-radius:12px; font-size:0.75rem; font-weight:bold; margin-right:5px;}
+    
+    .verbals-list { display: flex; flex-direction: column; }
+    .verbal-item { display: flex; padding: 10px 15px; border-bottom: 1px solid #eee; font-size: 0.85rem;}
+    .verbal-item:last-child { border-bottom: none; }
+    .verbal-lbl { font-weight: bold; width: 180px; color: #555; flex-shrink: 0;}
+    .verbal-val { color: #222; font-family: 'Zen Maru Gothic'; }
 </style>
 </head>
 <body>
@@ -118,14 +106,12 @@
 <header>
     <div class="top-row">
         <div style="font-weight:bold; font-size:1.2rem; color:#333; font-family:'Fredoka One'">🦁 TinyVocab</div>
-        
         <div class="mode-switch-container">
             <div class="mode-switch">
                 <div class="mode-btn active" id="mode-vocab" onclick="setMode('vocab')">🧠 Vocab View</div>
                 <div class="mode-btn" id="mode-grammar" onclick="setMode('grammar')">⚙️ Grammar View</div>
             </div>
         </div>
-
         <select id="lang-select">
             <option value="en">🇬🇧 English</option>
             <option value="fr">🇫🇷 French</option>
@@ -185,38 +171,27 @@
     let currentLang = 'en';
     let currentMode = 'vocab'; 
     let sortAZ = true;
-    
-    // SPACAED REPETITION STATE
     let srsData = JSON.parse(localStorage.getItem('tinyVocabSRS')) || {};
 
     const pronLabels = ['I', 'You', 'He/She/It', 'We', 'You (pl)', 'They'];
-    let state = { 
-        ipa: false, pinyin: false, latin: false, hiragana: false, hanja: false, traditional: false,
-        show_gender: false, show_opp: false, article: false, plural_noun: false
-    };
+    let state = { ipa: false, pinyin: false, latin: false, hiragana: false, hanja: false, traditional: false, show_gender: false, show_opp: false, article: false, plural_noun: false };
 
     const toggleLabels = { 
         'pinyin':'Pinyin', 'latin':'Latin', 'ipa':'IPA', 'hiragana':'Hiragana', 'hanja':'Hanja', 'traditional':'Traditional',
-        'show_gender': 'Mark Gender', 'show_opp': 'Opposite Gender',
-        'article':'Article', 'plural_noun':'Plural (N)'
+        'show_gender': 'Mark Gender', 'show_opp': 'Opposite Gender', 'article':'Article', 'plural_noun':'Plural (N)'
     };
 
     const soundToggles = ['ipa', 'latin', 'pinyin', 'hiragana', 'hanja', 'traditional'];
-    const modeConfig = {
-        'vocab': [...soundToggles],
-        'grammar': [...soundToggles, 'show_gender', 'show_opp', 'article', 'plural_noun']
-    };
+    const modeConfig = { 'vocab': [...soundToggles], 'grammar': [...soundToggles, 'show_gender', 'show_opp', 'article', 'plural_noun'] };
 
-    // Refined per exact instructions (Adjective toggles completely removed)
+    // Strict Language Config
     const langConfig = {
         'en': ['plural_noun', 'ipa'],
         'de': ['show_gender', 'show_opp', 'article', 'plural_noun', 'ipa'],
         'fr': ['show_gender', 'show_opp', 'article', 'plural_noun', 'ipa'],
         'it': ['show_gender', 'show_opp', 'article', 'plural_noun', 'ipa'],
         'ru': ['show_gender', 'show_opp', 'plural_noun', 'latin', 'ipa'],
-        'zh': ['traditional', 'pinyin'],
-        'ja': ['hiragana'],
-        'ko': ['hanja']
+        'zh': ['traditional', 'pinyin'], 'ja': ['hiragana'], 'ko': ['hanja']
     };
 
     const colors = { animal: '#7CB342', food: '#FDD835', body: '#42A5F5', act: '#AB47BC' };
@@ -261,8 +236,6 @@
         currentMode = mode;
         document.getElementById('mode-vocab').className = `mode-btn ${mode === 'vocab' ? 'active' : ''}`;
         document.getElementById('mode-grammar').className = `mode-btn ${mode === 'grammar' ? 'active' : ''}`;
-        
-        if(mode === 'vocab') { modeConfig.grammar.forEach(k => { if(!soundToggles.includes(k)) state[k] = false; }); }
         updateUI();
     };
 
@@ -271,19 +244,14 @@
     function updateUI() {
         const c = document.getElementById('header-toggles');
         c.innerHTML = '';
-        
-        const langAllowed = langConfig[currentLang] || [];
-        const modeAllowed = modeConfig[currentMode] || [];
-        const validKeys = modeAllowed.filter(k => langAllowed.includes(k));
+        const validKeys = (modeConfig[currentMode] || []).filter(k => (langConfig[currentLang] || []).includes(k));
 
         if (validKeys.length > 0) {
             validKeys.forEach(key => {
                 c.insertAdjacentHTML('beforeend', `<label class="toggle-group"><span class="switch"><input type="checkbox" onchange="setSwitch('${key}', this.checked)" ${state[key]?'checked':''}><span class="slider"></span></span>${toggleLabels[key]}</label>`);
             });
         }
-        if (currentMode === 'grammar') {
-            c.insertAdjacentHTML('beforeend', `<span style="font-size:0.8rem; color:#888; font-style:italic; margin-left:10px;">Click the 📊 button on any card to view its Grammar Matrix.</span>`);
-        }
+        if (currentMode === 'grammar') c.insertAdjacentHTML('beforeend', `<span style="font-size:0.8rem; color:#888; font-style:italic; margin-left:10px;">Click 📊 for Master Matrix.</span>`);
         renderGrid();
     }
 
@@ -315,17 +283,13 @@
             if (currentMode === 'grammar') {
                 let displayedWord = state.plural_noun && basePlural ? basePlural : baseWord;
                 let displayedArt = state.plural_noun ? baseArtPl : baseArt;
-                
                 mainText = (state.article && displayedArt) ? `${displayedArt} ${displayedWord}` : displayedWord;
                 if (state.show_gender && baseGender) subText = `(${baseGender})`;
             } else {
                 mainText = baseWord;
             }
         }
-        else if (card.pos === 'adj') {
-            // Adjective toggles removed, defaults to raw.n
-            mainText = raw.n;
-        }
+        else if (card.pos === 'adj') { mainText = raw.n; }
         else if (card.pos === 'verb') {
             if (currentLang === 'ru' && raw.inf_impf) { 
                 mainText = `<div style="display:flex; flex-direction:column; gap:6px; align-items:center;">
@@ -336,7 +300,6 @@
             } else if (raw.v_inf) { mainText = raw.v_inf; }
         }
 
-        // Apply Sound Toggles
         if(subText === '') {
             if (state.pinyin && raw.py) subText = raw.py;
             if (state.latin && raw.lt) subText = raw.lt;
@@ -344,7 +307,6 @@
             if (currentLang === 'ja' && state.hiragana && raw.r) subText = `(${raw.r})`;
             if (currentLang === 'ko' && state.hanja && raw.hj) { subText = `(${mainText})`; mainText = raw.hj; }
         }
-
         return { main: mainText, sub: subText };
     }
 
@@ -353,28 +315,8 @@
         document.getElementById('grid').innerHTML = deck.map(card => {
             const raw = card.translations[currentLang] || card.translations['en'];
             const txt = getTextDisplay(card);
-            const col = colors[card.cat] || '#ccc';
             const srsStatus = srsData[card.id] || 'new';
-            
-            let btnClass = card.pos === 'verb' ? 'btn-verb' : (card.pos === 'adj' ? 'btn-adj' : 'btn-noun');
-            const matrixBtn = (currentMode === 'grammar') ? `<div class="matrix-btn ${btnClass}" onclick="event.stopPropagation(); openMatrix('${card.id}')">📊</div>` : '';
-
-            // Card Back Construction
-            let backHTML = `<div class="back-title">Dictionary</div>`;
-            if (currentMode === 'vocab') {
-                const d = raw.syn || raw.ex_kid ? raw : (card.translations['en'] || {});
-                if(d.syn) backHTML += `<div class="dict-section"><div class="dict-lbl">Synonyms</div><div class="dict-val">${d.syn}</div></div>`;
-                if(d.ant) backHTML += `<div class="dict-section"><div class="dict-lbl">Antonyms</div><div class="dict-val">${d.ant}</div></div>`;
-                if(d.ex_kid) backHTML += `<div class="dict-section"><div class="dict-lbl">Example (Simple)</div><div class="dict-val ex-kid">"${d.ex_kid}"</div></div>`;
-                if(d.ex_adv) backHTML += `<div class="dict-section"><div class="dict-lbl">Example (Classic)</div><div class="dict-val ex-adv">${d.ex_adv}</div></div>`;
-            } else {
-                backHTML = `<div class="back-title">Grammar Profile</div>`;
-                if(card.pos === 'noun' && raw.g) {
-                    backHTML += `<div class="dict-section"><div class="dict-lbl">Base Gender</div><div class="dict-val">${raw.g}</div></div>`;
-                    if(raw.n_opp) backHTML += `<div class="dict-section"><div class="dict-lbl">Opposite Gender Form</div><div class="dict-val font-${currentLang}">${raw.n_opp} (${raw.g_opp})</div></div>`;
-                }
-                backHTML += `<p style="font-size:0.8rem; color:#666; text-align:center; margin-top:20px;">Click the 📊 button on the front to open the Master Matrix.</p>`;
-            }
+            const matrixBtn = (currentMode === 'grammar') ? `<div class="matrix-btn" onclick="event.stopPropagation(); openMatrix('${card.id}')">📊</div>` : '';
 
             return `
             <div class="vocab-card" onclick="flipCard(event, this)">
@@ -385,29 +327,25 @@
                         <div class="card-art"><img src="${card.img}" onerror="this.style.display='none'"></div>
                         <div class="card-obi">
                             <div class="word-row"><div class="word ${fontClass}">${txt.main}</div></div>
-                            <div class="pos-badge pos-${card.pos || 'noun'}">${card.pos || ''}</div>
+                            <div class="pos-badge pos-${card.pos}">${card.pos}</div>
                             ${txt.sub ? `<div class="sub-word">${txt.sub}</div>` : ''}
-                            <div title="Click to cycle SRS status" class="srs-dot srs-${srsStatus}" onclick="cycleSRS(event, '${card.id}')"></div>
-                            <div class="color-stroke" style="background:${col}"></div>
+                            <div class="srs-dot srs-${srsStatus}" onclick="cycleSRS(event, '${card.id}')"></div>
+                            <div class="color-stroke" style="background:${colors[card.cat]}"></div>
                         </div>
                     </div>
                     <div class="card-back">
-                        ${backHTML}
-                        <button class="close-flip" onclick="flipCard(event, this)">Close</button>
+                        <p style="font-size:0.8rem; color:#666; text-align:center; padding: 20px;">Detailed card back info available in next update.</p>
+                        <button class="close-flip" onclick="flipCard(event, this.parentElement.parentElement.parentElement)">Close</button>
                     </div>
                 </div>
             </div>`;
         }).join('');
     }
 
-    // --- UNIVERSAL MATRIX ENGINE ---
     window.openMatrix = function(cardId) {
         const card = deck.find(c => c.id === cardId);
         const raw = card.translations[currentLang];
-        
-        if(!raw || ['zh','ja','ko'].includes(currentLang)) {
-            return alert(`Grammar matrices are not mapped for ${currentLang.toUpperCase()} natively.`);
-        }
+        if(!raw || ['zh','ja','ko'].includes(currentLang)) return alert(`Matrices not mapped for ${currentLang.toUpperCase()} natively.`);
 
         document.getElementById('modal-title').innerText = card.pos==='verb' ? (raw.v_inf || raw.n) : raw.n;
         document.getElementById('modal-title').className = getFontClass();
@@ -415,10 +353,13 @@
         
         let html = '';
 
+        // --- NOUN MATRIX ---
         if (card.pos === 'noun') {
-            if(raw.g) html += `<div style="text-align:center; margin-bottom:15px;"><span class="highlight-badge">Base: ${raw.g}</span> ${raw.n_opp ? `<span class="highlight-badge" style="background:#fce4ec; color:#5c6bc0;">Opposite: ${raw.n_opp} (${raw.g_opp})</span>` : ''}</div>`;
+            let caseTitle = ['en','fr','it'].includes(currentLang) ? 'Form' : 'Case';
+            let tableTitle = ['en','fr','it'].includes(currentLang) ? 'Noun Forms' : 'Declension';
+            
             if(raw.n_cases && raw.n_sg) {
-                html += `<div class="matrix-section"><h4>Declension</h4><div style="overflow-x:auto;"><table class="matrix-table font-${currentLang}"><tr><th class="pron-col">Case</th><th>Singular</th>`;
+                html += `<div class="matrix-section"><h4>${tableTitle}</h4><div style="overflow-x:auto;"><table class="matrix-table font-${currentLang}"><tr><th class="pron-col">${caseTitle}</th><th>Singular</th>`;
                 if(raw.n_pl) html += `<th>Plural</th>`;
                 html += `</tr>`;
                 for(let i=0; i<raw.n_cases.length; i++) {
@@ -429,6 +370,7 @@
                 html += `</table></div></div>`;
             }
         } 
+        // --- ADJECTIVE MATRIX ---
         else if (card.pos === 'adj') {
             if(raw.a_comp || raw.a_sup) {
                 html += `<div class="matrix-section"><h4>Degrees of Comparison</h4><div style="overflow-x:auto;"><table class="matrix-table font-${currentLang}"><tr><th class="pron-col">Degree</th><th>Form</th></tr>`;
@@ -461,6 +403,7 @@
                 html += `</table></div></div>`;
             }
         }
+        // --- VERB MATRIX ---
         else if (card.pos === 'verb') {
             const buildVerbTable = (title, colsArray) => {
                 if(!colsArray.some(col => raw[col.key])) return '';
@@ -475,29 +418,47 @@
                 return table + `</table></div></div>`;
             };
 
+            const buildVerbals = (keys) => {
+                let list = '';
+                keys.forEach(k => { if(raw[k.id]) list += `<div class="verbal-item"><div class="verbal-lbl">${k.name}</div><div class="verbal-val font-${currentLang}">${raw[k.id]}</div></div>`; });
+                if(list !== '') return `<div class="matrix-section"><h4>Non-Finite Forms & Verbals</h4><div class="verbals-list">${list}</div></div>`;
+                return '';
+            };
+
             if(currentLang === 'en') {
                 html += buildVerbTable('Indicative (Simple)', [{name:'Past', key:'ind_past_sim'}, {name:'Present', key:'ind_pres_sim'}, {name:'Future', key:'ind_fut_sim'}]);
                 html += buildVerbTable('Indicative (Continuous)', [{name:'Past', key:'ind_past_cont'}, {name:'Present', key:'ind_pres_cont'}, {name:'Future', key:'ind_fut_cont'}]);
                 html += buildVerbTable('Perfect', [{name:'Past Perf', key:'ind_past_perf'}, {name:'Pres Perf', key:'ind_pres_perf'}, {name:'Fut Perf', key:'ind_fut_perf'}]);
                 html += buildVerbTable('Perfect Cont.', [{name:'Past', key:'ind_past_perfcont'}, {name:'Present', key:'ind_pres_perfcont'}, {name:'Future', key:'ind_fut_perfcont'}]);
+                html += buildVerbTable('Subjunctive', [{name:'Present', key:'subj_pres'}, {name:'Past', key:'subj_past'}]);
                 html += buildVerbTable('Conditionals & Imperative', [{name:'Cond (would)', key:'cond_pres'}, {name:'Cond (would have)', key:'cond_past'}, {name:'Imperative', key:'imp'}]);
+                html += buildVerbals([{name:'Infinitive', id:'v_inf'}, {name:'Gerund (Noun)', id:'v_ger_noun'}, {name:'Gerund (Simultaneous)', id:'v_ger_sim'}, {name:'Present Participle', id:'v_part_pres'}, {name:'Past Participle', id:'v_part_past'}]);
             } else if(currentLang === 'de') {
                 html += buildVerbTable('Indikativ (Simple)', [{name:'Präsens', key:'ind_pres'}, {name:'Präteritum', key:'ind_prat'}, {name:'Futur I', key:'ind_fut1'}]);
                 html += buildVerbTable('Indikativ (Compound)', [{name:'Perfekt', key:'ind_perf'}, {name:'Plusquamperfekt', key:'ind_plusq'}, {name:'Futur II', key:'ind_fut2'}]);
-                html += buildVerbTable('Konjunktiv I (Reported)', [{name:'Präsens', key:'k1_pres'}, {name:'Perfekt', key:'k1_perf'}]);
-                html += buildVerbTable('Konjunktiv II (Conditional)', [{name:'Präsens (would)', key:'k2_pres'}, {name:'Vergangenheit', key:'k2_past'}, {name:'Imperativ', key:'imp'}]);
+                html += buildVerbTable('Konjunktiv I (Reported)', [{name:'Präsens', key:'k1_pres'}, {name:'Perfekt', key:'k1_perf'}, {name:'Futur I', key:'k1_fut1'}, {name:'Futur II', key:'k1_fut2'}]);
+                html += buildVerbTable('Konjunktiv II (Conditional)', [{name:'Präsens (would)', key:'k2_pres'}, {name:'Vergangenheit', key:'k2_past'}, {name:'Futur I', key:'k2_fut1'}, {name:'Futur II', key:'k2_fut2'}]);
+                html += buildVerbTable('Imperativ', [{name:'Imperativ', key:'imp'}]);
+                html += buildVerbals([{name:'Infinitive', id:'v_inf'}, {name:'Gerund (Noun)', id:'v_ger_noun'}, {name:'Gerund (Simult.)', id:'v_ger_sim'}, {name:'Present Participle', id:'v_part_pres'}, {name:'Past Participle', id:'v_part_past'}]);
             } else if (currentLang === 'fr') {
                  html += buildVerbTable('Indicatif (Simple)', [{name:'Présent', key:'ind_pres'}, {name:'Imparfait', key:'ind_imp'}, {name:'Passé Simple', key:'ind_p_simp'}, {name:'Futur', key:'ind_fut'}]);
-                 html += buildVerbTable('Indicatif (Composé)', [{name:'Passé Comp.', key:'ind_p_comp'}, {name:'Plus-que-parfait', key:'ind_plusq'}, {name:'Futur Ant.', key:'ind_f_ant'}]);
-                 html += buildVerbTable('Subjonctif & Conditionnel', [{name:'Subj Présent', key:'subj_pres'}, {name:'Cond Présent', key:'cond_pres'}, {name:'Cond Passé', key:'cond_past'}, {name:'Impératif', key:'imp'}]);
+                 html += buildVerbTable('Indicatif (Composé)', [{name:'Passé Comp.', key:'ind_p_comp'}, {name:'Plus-que-parfait', key:'ind_plusq'}, {name:'Passé Ant.', key:'ind_p_ant'}, {name:'Futur Ant.', key:'ind_f_ant'}]);
+                 html += buildVerbTable('Temps Proches', [{name:'Passé Récent', key:'ind_p_recent'}, {name:'Futur Proche', key:'ind_f_proche'}]);
+                 html += buildVerbTable('Subjonctif', [{name:'Présent', key:'subj_pres'}, {name:'Imparfait', key:'subj_imp'}, {name:'Passé', key:'subj_passe'}, {name:'Plus-que-parf.', key:'subj_plusq'}]);
+                 html += buildVerbTable('Conditionnel & Impératif', [{name:'Cond Présent', key:'cond_pres'}, {name:'Cond Passé', key:'cond_past'}, {name:'Impératif', key:'imp'}]);
+                 html += buildVerbals([{name:'Infinitive', id:'v_inf'}, {name:'Gerund (Noun)', id:'v_ger_noun'}, {name:'Gérondif (Simult.)', id:'v_ger_sim'}, {name:'Participe Présent', id:'v_part_pres'}, {name:'Participe Passé', id:'v_part_past'}]);
             } else if (currentLang === 'it') {
                  html += buildVerbTable('Indicativo (Semplice)', [{name:'Presente', key:'ind_pres'}, {name:'Imperfetto', key:'ind_imp'}, {name:'Pass. Remoto', key:'ind_p_rem'}, {name:'Futuro', key:'ind_fut'}]);
-                 html += buildVerbTable('Indicativo (Composto)', [{name:'Passato Pross.', key:'ind_p_pros'}, {name:'Trapassato', key:'ind_trap'}, {name:'Futuro Ant.', key:'ind_f_ant'}]);
-                 html += buildVerbTable('Congiuntivo & Condizionale', [{name:'Cong. Pres.', key:'subj_pres'}, {name:'Cond. Pres.', key:'cond_pres'}, {name:'Cond. Passato', key:'cond_past'}, {name:'Imperativo', key:'imp'}]);
+                 html += buildVerbTable('Indicativo (Composto)', [{name:'Passato Pross.', key:'ind_p_pros'}, {name:'Trapassato Pross.', key:'ind_trap_pros'}, {name:'Trapassato Rem.', key:'ind_trap_rem'}, {name:'Futuro Ant.', key:'ind_f_ant'}]);
+                 html += buildVerbTable('Indicativo (Progressivo)', [{name:'Presente Prog.', key:'ind_pres_prog'}, {name:'Passato Prog.', key:'ind_past_prog'}, {name:'Futuro Prog.', key:'ind_fut_prog'}]);
+                 html += buildVerbTable('Congiuntivo', [{name:'Presente', key:'subj_pres'}, {name:'Imperfetto', key:'subj_imp'}, {name:'Passato', key:'subj_pass'}, {name:'Trapassato', key:'subj_trap'}]);
+                 html += buildVerbTable('Condizionale & Imperativo', [{name:'Cond. Pres.', key:'cond_pres'}, {name:'Cond. Passato', key:'cond_past'}, {name:'Imperativo', key:'imp'}]);
+                 html += buildVerbals([{name:'Infinitive', id:'v_inf'}, {name:'Gerund (Noun)', id:'v_ger_noun'}, {name:'Gerundio (Simult.)', id:'v_ger_sim'}, {name:'Participio Presente', id:'v_part_pres'}, {name:'Participio Passato', id:'v_part_past'}]);
             } else if (currentLang === 'ru') {
                  html += buildVerbTable('Imperfective (НСВ)', [{name:'Past', key:'impf_past'}, {name:'Present', key:'impf_pres'}, {name:'Future', key:'impf_fut'}]);
                  html += buildVerbTable('Perfective (СВ)', [{name:'Past', key:'perf_past'}, {name:'Future', key:'perf_fut'}]);
-                 html += buildVerbTable('Conditional & Imperative', [{name:'Cond (Impf)', key:'cond_impf'}, {name:'Cond (Perf)', key:'cond_perf'}, {name:'Imperative', key:'imp'}]);
+                 html += buildVerbTable('Conditional & Imperative', [{name:'Cond (Impf)', key:'cond_impf'}, {name:'Cond (Perf)', key:'cond_perf'}, {name:'Imp (Impf)', key:'imp_impf'}, {name:'Imp (Perf)', key:'imp_perf'}]);
+                 html += buildVerbals([{name:'Infinitive', id:'v_inf'}, {name:'Gerund (Noun)', id:'v_ger_noun'}, {name:'Gerund (Simult.)', id:'v_ger_sim'}, {name:'Present Participle', id:'v_part_pres'}, {name:'Past Participle', id:'v_part_past'}, {name:'Passive Voice', id:'v_pass_voice'}]);
             }
         }
 
@@ -508,16 +469,17 @@
 
     window.closeMatrix = function(e) { if(e.target.id === 'matrix-modal' || e.target.classList.contains('modal-close')) document.getElementById('matrix-modal').style.display = 'none'; };
 
-    // Buleltproof Card Flip Function
+    // BULLETPROOF FLIP
     window.flipCard = function(e, element) { 
         e.stopPropagation(); 
         const card = element.closest('.vocab-card');
         if (!card) return;
-        if(card.classList.contains('flipped')) {
-            card.classList.remove('flipped'); 
+        const inner = card.querySelector('.card-inner');
+        if(inner.classList.contains('flipped')) {
+            inner.classList.remove('flipped'); 
         } else { 
-            document.querySelectorAll('.vocab-card').forEach(c=>c.classList.remove('flipped')); 
-            card.classList.add('flipped'); 
+            document.querySelectorAll('.card-inner').forEach(c=>c.classList.remove('flipped')); 
+            inner.classList.add('flipped'); 
         } 
     };
 </script>
