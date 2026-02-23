@@ -7,14 +7,30 @@
     "img": "images/dog.png",
     "translations": {
       "en": { 
-        "n": "dog", "ipa": "/dɒɡ/", "syn": "hound, canine", "ant": "cat",
+        "n": "dog", "p": "dogs", "ipa": "/dɒɡ/", "syn": "hound, canine", "ant": "cat",
         "ex_kid": "The friendly dog chased the ball.", "ex_adv": "\"Cry 'Havoc!', and let slip the dogs of war.\"",
         "n_cases": ["Base Form"], "n_sg": ["a dog"], "n_pl": ["dogs"]
       },
-      "fr": { "n": "chien", "g": "masc.", "n_opp": "chienne", "ipa": "/ʃjɛ̃/", "n_cases": ["Base"], "n_sg": ["le chien"], "n_pl": ["les chiens"] },
-      "de": { "n": "Hund", "g": "masc.", "n_opp": "Hündin", "ipa": "/hʊnt/", "n_cases": ["Nom", "Acc", "Dat", "Gen"], "n_sg": ["der Hund", "den Hund", "dem Hund", "des Hundes"], "n_pl": ["die Hunde", "die Hunde", "den Hunden", "der Hunde"] },
-      "it": { "n": "cane", "g": "masc.", "n_opp": "cagna", "ipa": "/ˈka.ne/", "n_cases": ["Base"], "n_sg": ["il cane"], "n_pl": ["i cani"] },
-      "ru": { "n": "собака", "g": "fem.", "n_opp": "пёс", "lt": "sobaka", "ipa": "/sɐˈbakə/", "n_cases": ["Nom", "Acc", "Dat", "Gen", "Ins", "Pre"], "n_sg": ["собака", "собаку", "собаке", "собаки", "собакой", "собаке"], "n_pl": ["собаки", "собак", "собакам", "собак", "собаками", "собаках"] },
+      "fr": { 
+        "n": "chien", "art": "le", "p": "chiens", "art_p": "les", "g": "masc.", 
+        "n_opp": "chienne", "art_opp": "la", "p_opp": "chiennes", "art_p_opp": "les", "g_opp": "fem.",
+        "ipa": "/ʃjɛ̃/", "n_cases": ["Base"], "n_sg": ["le chien"], "n_pl": ["les chiens"] 
+      },
+      "de": { 
+        "n": "Hund", "art": "der", "p": "Hunde", "art_p": "die", "g": "masc.", 
+        "n_opp": "Hündin", "art_opp": "die", "p_opp": "Hündinnen", "art_p_opp": "die", "g_opp": "fem.",
+        "ipa": "/hʊnt/", "n_cases": ["Nom", "Acc", "Dat", "Gen"], "n_sg": ["der Hund", "den Hund", "dem Hund", "des Hundes"], "n_pl": ["die Hunde", "die Hunde", "den Hunden", "der Hunde"] 
+      },
+      "it": { 
+        "n": "cane", "art": "il", "p": "cani", "art_p": "i", "g": "masc.", 
+        "n_opp": "cagna", "art_opp": "la", "p_opp": "cagne", "art_p_opp": "le", "g_opp": "fem.",
+        "ipa": "/ˈka.ne/", "n_cases": ["Base"], "n_sg": ["il cane"], "n_pl": ["i cani"] 
+      },
+      "ru": { 
+        "n": "собака", "p": "собаки", "g": "fem.", 
+        "n_opp": "пёс", "p_opp": "псы", "g_opp": "masc.",
+        "lt": "sobaka", "ipa": "/sɐˈbakə/", "n_cases": ["Nom", "Acc", "Dat", "Gen", "Ins", "Pre"], "n_sg": ["собака", "собаку", "собаке", "собаки", "собакой", "собаке"], "n_pl": ["собаки", "собак", "собакам", "собак", "собаками", "собаках"] 
+      },
       "zh": { "n": "狗", "t": "狗", "py": "gǒu" },
       "ja": { "n": "犬", "r": "いぬ" },
       "ko": { "n": "개", "hj": "" }
@@ -27,11 +43,11 @@
     "pos": "noun",
     "img": "images/banana.png",
     "translations": {
-      "en": { "n": "banana", "ipa": "/bəˈnɑːnə/", "syn": "plantain", "ex_kid": "Monkeys love yellow bananas.", "n_cases": ["Base Form"], "n_sg": ["a banana"], "n_pl": ["bananas"] },
-      "fr": { "n": "banane", "g": "fem.", "ipa": "/ba.nan/", "n_cases": ["Base"], "n_sg": ["la banane"], "n_pl": ["les bananes"] },
-      "de": { "n": "Banane", "g": "fem.", "ipa": "/baˈnaːnə/", "n_cases": ["Nom", "Acc", "Dat", "Gen"], "n_sg": ["die Banane", "die Banane", "der Banane", "der Banane"], "n_pl": ["die Bananen", "die Bananen", "den Bananen", "der Bananen"] },
-      "it": { "n": "banana", "g": "fem.", "ipa": "/baˈna.na/", "n_cases": ["Base"], "n_sg": ["la banana"], "n_pl": ["le banane"] },
-      "ru": { "n": "банан", "g": "masc.", "lt": "banan", "ipa": "/bɐˈnan/", "n_cases": ["Nom", "Acc", "Dat", "Gen", "Ins", "Pre"], "n_sg": ["банан", "банан", "банану", "банана", "бананом", "банане"], "n_pl": ["бананы", "бананы", "бананам", "бананов", "бананами", "бананах"] },
+      "en": { "n": "banana", "art": "a", "p": "bananas", "ipa": "/bəˈnɑːnə/", "syn": "plantain", "ex_kid": "Monkeys love yellow bananas.", "n_cases": ["Base Form"], "n_sg": ["a banana"], "n_pl": ["bananas"] },
+      "fr": { "n": "banane", "art": "la", "p": "bananes", "art_p": "les", "g": "fem.", "ipa": "/ba.nan/", "n_cases": ["Base"], "n_sg": ["la banane"], "n_pl": ["les bananes"] },
+      "de": { "n": "Banane", "art": "die", "p": "Bananen", "art_p": "die", "g": "fem.", "ipa": "/baˈnaːnə/", "n_cases": ["Nom", "Acc", "Dat", "Gen"], "n_sg": ["die Banane", "die Banane", "der Banane", "der Banane"], "n_pl": ["die Bananen", "die Bananen", "den Bananen", "der Bananen"] },
+      "it": { "n": "banana", "art": "la", "p": "banane", "art_p": "le", "g": "fem.", "ipa": "/baˈna.na/", "n_cases": ["Base"], "n_sg": ["la banana"], "n_pl": ["le banane"] },
+      "ru": { "n": "банан", "p": "бананы", "g": "masc.", "lt": "banan", "ipa": "/bɐˈnan/", "n_cases": ["Nom", "Acc", "Dat", "Gen", "Ins", "Pre"], "n_sg": ["банан", "банан", "банану", "банана", "бананом", "банане"], "n_pl": ["бананы", "бананы", "бананам", "бананов", "бананами", "бананах"] },
       "zh": { "n": "香蕉", "t": "香蕉", "py": "xiāngjiāo" },
       "ja": { "n": "バナナ", "r": "ばなな" },
       "ko": { "n": "바나나", "hj": "" }
@@ -45,61 +61,74 @@
     "img": "images/eat.png",
     "translations": {
       "en": { 
-        "n": "eat", "ipa": "/iːt/", "syn": "consume", "ant": "fast", "v_inf": "to eat",
-        "ind_pres_sim": ["eat", "eat", "eats", "eat", "eat", "eat"], 
-        "ind_pres_cont": ["am eating", "are eating", "is eating", "are eating", "are eating", "are eating"],
-        "ind_pres_perf": ["have eaten", "have eaten", "has eaten", "have eaten", "have eaten", "have eaten"],
+        "n": "eat", "ipa": "/iːt/", "syn": "consume", "v_inf": "to eat",
+        "ind_pres_sim": ["eat", "eat", "eats", "eat", "eat", "eat"],
         "ind_past_sim": ["ate", "ate", "ate", "ate", "ate", "ate"],
-        "ind_past_cont": ["was eating", "were eating", "was eating", "were eating", "were eating", "were eating"], 
-        "ind_past_perf": ["had eaten", "had eaten", "had eaten", "had eaten", "had eaten", "had eaten"], 
         "ind_fut_sim": ["will eat", "will eat", "will eat", "will eat", "will eat", "will eat"],
+        "ind_pres_cont": ["am eating", "are eating", "is eating", "are eating", "are eating", "are eating"],
+        "ind_past_cont": ["was eating", "were eating", "was eating", "were eating", "were eating", "were eating"],
         "ind_fut_cont": ["will be eating", "will be eating", "will be eating", "will be eating", "will be eating", "will be eating"],
+        "ind_pres_perf": ["have eaten", "have eaten", "has eaten", "have eaten", "have eaten", "have eaten"],
+        "ind_past_perf": ["had eaten", "had eaten", "had eaten", "had eaten", "had eaten", "had eaten"],
+        "ind_fut_perf": ["will have eaten", "will have eaten", "will have eaten", "will have eaten", "will have eaten", "will have eaten"],
+        "ind_pres_perfcont": ["have been eating", "have been eating", "has been eating", "have been eating", "have been eating", "have been eating"],
+        "ind_past_perfcont": ["had been eating", "had been eating", "had been eating", "had been eating", "had been eating", "had been eating"],
+        "ind_fut_perfcont": ["will have been eating", "will have been eating", "will have been eating", "will have been eating", "will have been eating", "will have been eating"],
         "cond_pres": ["would eat", "would eat", "would eat", "would eat", "would eat", "would eat"],
+        "cond_past": ["would have eaten", "would have eaten", "would have eaten", "would have eaten", "would have eaten", "would have eaten"],
         "imp": ["-", "eat!", "-", "let's eat", "eat!", "-"]
       },
       "fr": {
         "n": "manger", "ipa": "/mɑ̃.ʒe/", "v_inf": "manger", 
         "ind_pres": ["mange", "manges", "mange", "mangeons", "mangez", "mangent"],
         "ind_imp": ["mangeais", "mangeais", "mangeait", "mangeions", "mangiez", "mangeaient"],
-        "ind_p_comp": ["ai mangé", "as mangé", "a mangé", "avons mangé", "avez mangé", "ont mangé"],
         "ind_p_simp": ["mangeai", "mangeas", "mangea", "mangeâmes", "mangeâtes", "mangèrent"],
-        "ind_plusq": ["avais mangé", "avais mangé", "avait mangé", "avions mangé", "aviez mangé", "avaient mangé"],
         "ind_fut": ["mangerai", "mangeras", "mangera", "mangerons", "mangerez", "mangeront"],
+        "ind_p_comp": ["ai mangé", "as mangé", "a mangé", "avons mangé", "avez mangé", "ont mangé"],
+        "ind_plusq": ["avais mangé", "avais mangé", "avait mangé", "avions mangé", "aviez mangé", "avaient mangé"],
+        "ind_f_ant": ["aurai mangé", "auras mangé", "aura mangé", "aurons mangé", "aurez mangé", "auront mangé"],
         "subj_pres": ["mange", "manges", "mange", "mangions", "mangiez", "mangent"],
         "cond_pres": ["mangerais", "mangerais", "mangerait", "mangerions", "mangeriez", "mangeraient"],
+        "cond_past": ["aurais mangé", "aurais mangé", "aurait mangé", "aurions mangé", "auriez mangé", "auraient mangé"],
         "imp": ["-", "mange!", "-", "mangeons!", "mangez!", "-"]
       },
       "it": {
         "n": "mangiare", "ipa": "/manˈdʒa.re/", "v_inf": "mangiare", 
         "ind_pres": ["mangio", "mangi", "mangia", "mangiamo", "mangiate", "mangiano"],
         "ind_imp": ["mangiavo", "mangiavi", "mangiava", "mangiavamo", "mangiavate", "mangiavano"],
-        "ind_p_pros": ["ho mangiato", "hai mangiato", "ha mangiato", "abbiamo mangiato", "avete mangiato", "hanno mangiato"],
         "ind_p_rem": ["mangiai", "mangiasti", "mangiò", "mangiammo", "mangiaste", "mangiarono"],
-        "ind_trap": ["avevo mangiato", "avevi mangiato", "aveva mangiato", "avevamo mangiato", "avevate mangiato", "avevano mangiato"],
         "ind_fut": ["mangerò", "mangerai", "mangerà", "mangeremo", "mangerete", "mangeranno"],
+        "ind_p_pros": ["ho mangiato", "hai mangiato", "ha mangiato", "abbiamo mangiato", "avete mangiato", "hanno mangiato"],
+        "ind_trap": ["avevo mangiato", "avevi mangiato", "aveva mangiato", "avevamo mangiato", "avevate mangiato", "avevano mangiato"],
+        "ind_f_ant": ["avrò mangiato", "avrai mangiato", "avrà mangiato", "avremo mangiato", "avrete mangiato", "avranno mangiato"],
         "subj_pres": ["mangi", "mangi", "mangi", "mangiamo", "mangiate", "mangino"],
         "cond_pres": ["mangerei", "mangeresti", "mangerebbe", "mangeremmo", "mangereste", "mangerebbero"],
-        "imp": ["-", "mangia!", "-", "mangiamo!", "mangiate!", "-"]
+        "cond_past": ["avrei mangiato", "avresti mangiato", "avrebbe mangiato", "avremmo mangiato", "avreste mangiato", "avrebbero mangiato"],
+        "imp": ["-", "mangia!", "mangi!", "mangiamo!", "mangiate!", "mangino!"]
       },
       "de": { 
         "n": "essen", "ipa": "/ˈɛsn̩/", "v_inf": "essen", 
         "ind_pres": ["esse", "isst", "isst", "essen", "esst", "essen"],
         "ind_prat": ["aß", "aßt", "aß", "aßen", "aßt", "aßen"],
+        "ind_fut1": ["werde essen", "wirst essen", "wird essen", "werden essen", "werdet essen", "werden essen"],
         "ind_perf": ["habe gegessen", "hast gegessen", "hat gegessen", "haben gegessen", "habt gegessen", "haben gegessen"],
         "ind_plusq": ["hatte gegessen", "hattest gegessen", "hatte gegessen", "hatten gegessen", "hattet gegessen", "hatten gegessen"],
-        "ind_fut1": ["werde essen", "wirst essen", "wird essen", "werden essen", "werdet essen", "werden essen"],
+        "ind_fut2": ["werde gegessen haben", "wirst gegessen haben", "wird gegessen haben", "werden gegessen haben", "werdet gegessen haben", "werden gegessen haben"],
         "k1_pres": ["esse", "essest", "esse", "essen", "esset", "essen"],
+        "k1_perf": ["habe gegessen", "habest gegessen", "habe gegessen", "haben gegessen", "habet gegessen", "haben gegessen"],
         "k2_pres": ["äße", "äßest", "äße", "äßen", "äßet", "äßen"],
+        "k2_past": ["hätte gegessen", "hättest gegessen", "hätte gegessen", "hätten gegessen", "hättet gegessen", "hätten gegessen"],
         "imp": ["-", "iss!", "-", "essen wir!", "esst!", "essen Sie!"]
       },
       "ru": { 
         "n": "есть", "ipa": "/jesʲtʲ/", "lt": "yest'", "inf_impf": "есть", "inf_perf": "съесть",
-        "impf_pres": ["ем", "ешь", "ест", "едим", "едите", "едят"],
         "impf_past": ["ел(а)", "ел(а)", "ел(а/о)", "ели", "ели", "ели"],
+        "impf_pres": ["ем", "ешь", "ест", "едим", "едите", "едят"],
         "impf_fut": ["буду есть", "будешь есть", "будет есть", "будем есть", "будете есть", "будут есть"],
         "perf_past": ["съел(а)", "съел(а)", "съел(а/о)", "съели", "съели", "съели"],
         "perf_fut": ["съем", "съешь", "съест", "съедим", "съедите", "съедят"],
-        "cond": ["ел(а) бы", "ел(а) бы", "ел(а/о) бы", "ели бы", "ели бы", "ели бы"],
+        "cond_impf": ["ел(а) бы", "ел(а) бы", "ел(а/о) бы", "ели бы", "ели бы", "ели бы"],
+        "cond_perf": ["съел(а) бы", "съел(а) бы", "съел(а/о) бы", "съели бы", "съели бы", "съели бы"],
         "imp": ["-", "ешь!", "-", "давайте есть", "ешьте!", "-"]
       },
       "zh": { "n": "吃", "t": "吃", "py": "chī" },
@@ -116,7 +145,7 @@
     "translations": {
       "en": { 
         "n": "big", "ipa": "/bɪɡ/", "syn": "large", "ant": "small",
-        "a_cases": ["Base", "Comparative", "Superlative"], "a_masc": ["big", "bigger", "biggest"]
+        "a_comp": "bigger", "a_sup": "biggest"
       },
       "fr": { 
         "n": "grand", "ipa": "/ɡʁɑ̃/", 
@@ -126,7 +155,7 @@
       "it": { 
         "n": "grande", "ipa": "/ˈɡran.de/", 
         "a_sg": ["grande", "grande"], "a_pl": ["grandi", "grandi"],
-        "a_comp": "più grande", "a_sup": "il/la più grande, grandissimo"
+        "a_comp": "più grande", "a_sup": "il/la più grande"
       },
       "de": { 
         "n": "groß", "ipa": "/ɡʁoːs/",
