@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>TinyVocab Master Engine</title>
+<title>TinyVocab Master System</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,31 +14,36 @@
         --c-animal: #7CB342; --c-food: #FDD835; --c-body: #42A5F5; --c-act: #AB47BC;
         --pos-noun: #2196F3; --pos-verb: #F44336; --pos-adj: #4CAF50;
         --bg: #F2F2F2; --card-bg: #FFFFFF;
+        
+        /* SRS Status Colors */
+        --srs-new: #E0E0E0; --srs-learn: #2196F3; --srs-rev: #FF9800; --srs-master: #4CAF50;
     }
 
-    body { font-family: 'Zen Maru Gothic', sans-serif; background: var(--bg); margin: 0; color: #333; -webkit-font-smoothing: antialiased; }
+    body { font-family: 'Zen Maru Gothic', sans-serif; background: var(--bg); margin: 0; color: #333; -webkit-font-smoothing: antialiased; padding-bottom: 50px;}
     .font-en, .font-fr, .font-de, .font-it { font-family: 'Fredoka One', cursive; }
-    .font-ru { font-family: 'Rubik', sans-serif; font-weight: 500; } /* New Russian Font */
+    .font-ru { font-family: 'Rubik', sans-serif; font-weight: 500; }
     .font-ja { font-family: 'Zen Maru Gothic', sans-serif; font-weight: 700; }
     .font-ko { font-family: 'Jua', sans-serif; }
     .font-zh-cn { font-family: 'Noto Sans SC', sans-serif; font-weight: 700; letter-spacing: 1px; }
     .font-zh-tw { font-family: 'Noto Sans TC', sans-serif; font-weight: 700; letter-spacing: 1px; }
 
     /* HEADER */
-    header { background: rgba(255,255,255,0.98); padding: 15px 20px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: flex; flex-direction: column; gap: 15px; }
+    header { background: rgba(255,255,255,0.98); padding: 15px 20px 10px 20px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: flex; flex-direction: column; gap: 10px; }
     .top-row { display: flex; justify-content: space-between; align-items: center; width: 100%; flex-wrap: wrap; gap: 10px;}
     #lang-select { padding: 8px 12px; border: 1px solid #ddd; border-radius: 20px; font-family: 'Zen Maru Gothic'; font-weight: bold; outline: none; background: white;}
-    .btn { padding: 8px 16px; border: 1px solid #ddd; border-radius: 20px; cursor: pointer; background: white; font-family: 'Fredoka One'; color: #555; font-size: 0.85rem;}
-    .btn-primary { background: #333; color: white; border-color: #333; }
-
-    /* MODE SWITCH */
+    
     .mode-switch-container { display: flex; justify-content: center; width: 100%; }
     .mode-switch { display: inline-flex; background: #e0e0e0; border-radius: 30px; padding: 4px; gap: 4px;}
     .mode-btn { padding: 8px 20px; border-radius: 25px; font-size: 0.85rem; font-weight: bold; color: #666; cursor: pointer; transition: all 0.3s ease; user-select: none; }
     .mode-btn.active { background: white; color: #333; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
 
+    /* FILTER BAR */
+    .filter-bar { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; padding: 10px 0; border-top: 1px solid #eee; background: #fafafa; border-radius: 10px;}
+    .filter-select { padding: 6px 10px; border-radius: 8px; border: 1px solid #ddd; font-family: 'Zen Maru Gothic'; font-size: 0.8rem; outline: none; cursor: pointer;}
+    .btn-sort { padding: 6px 12px; border-radius: 8px; border: 1px solid #ccc; background: white; cursor: pointer; font-size: 0.8rem; font-weight:bold;}
+
     /* TOGGLES ROW */
-    .controls-container { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; min-height: 30px; align-items: center;}
+    .controls-container { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; min-height: 25px; align-items: center;}
     .toggle-group { display: flex; align-items: center; gap: 6px; font-size: 0.75rem; font-weight: bold; color: #555; cursor: pointer; background: #fff; padding: 4px 10px; border-radius: 15px; border: 1px solid #eee;}
     .switch { position: relative; display: inline-block; width: 28px; height: 16px; }
     .switch input { opacity: 0; width: 0; height: 0; }
@@ -47,8 +52,8 @@
     input:checked + .slider { background-color: #333; }
     input:checked + .slider:before { transform: translateX(12px); }
 
-    /* CARD GRID (Fixed Overflow & Sizing) */
-    .container { max-width: 1200px; margin: 0 auto; padding: 30px 20px; }
+    /* CARD GRID */
+    .container { max-width: 1200px; margin: 0 auto; padding: 25px 20px; }
     .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 25px; }
     .vocab-card { height: 280px; background-color: transparent; perspective: 1000px; cursor: pointer; }
     .card-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s; transform-style: preserve-3d; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.06); }
@@ -57,7 +62,7 @@
     .card-front, .card-back { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; border-radius: 16px; overflow: hidden; background: var(--card-bg); display: flex; flex-direction: column; }
     .card-back { transform: rotateY(180deg); background: #fdfdfd; padding: 15px; box-sizing: border-box; align-items: center; justify-content: flex-start; overflow-y: auto; }
 
-    /* Strict Flexbox to prevent overflow */
+    /* Strict Flexbox for Images */
     .card-art { flex: 1; min-height: 0; width: 100%; display: flex; align-items: center; justify-content: center; padding: 15px; box-sizing: border-box; }
     .card-art img { max-width: 100%; max-height: 100%; object-fit: contain; mix-blend-mode: multiply; }
     
@@ -68,29 +73,30 @@
     .word { font-size: 1.5rem; color: #333; text-align: center; line-height: 1.1; word-wrap: break-word; max-width: 100%;}
     .sub-word { font-size: 0.8rem; color: #777; font-family: 'Zen Maru Gothic'; text-align: center; font-weight: 500; }
 
+    /* BADGES */
     .pos-badge { font-size: 0.6rem; color: white; padding: 3px 8px; border-radius: 10px; font-family: 'Zen Maru Gothic'; font-weight: bold; letter-spacing: 0.5px; text-transform: lowercase; margin-top: 4px; display: inline-block; }
     .pos-noun { background: var(--pos-noun); } .pos-verb { background: var(--pos-verb); } .pos-adj { background: var(--pos-adj); } 
     
     .flip-btn { position: absolute; top: 10px; right: 10px; width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.9); border: 1px solid #eee; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; cursor: pointer; z-index: 10; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-    
-    /* MATRIX BUTTON */
     .matrix-btn { position: absolute; top: 10px; left: 10px; width: 32px; height: 32px; border-radius: 50%; background: #333; color: white; display: flex; align-items: center; justify-content: center; font-size: 1rem; cursor: pointer; z-index: 10; box-shadow: 0 2px 5px rgba(0,0,0,0.3); transition: transform 0.2s;}
     .matrix-btn:hover { transform: scale(1.1); }
-    .matrix-btn.btn-verb { background: var(--pos-verb); }
-    .matrix-btn.btn-noun { background: var(--pos-noun); }
-    .matrix-btn.btn-adj { background: var(--pos-adj); }
+    .matrix-btn.btn-verb { background: var(--pos-verb); } .matrix-btn.btn-noun { background: var(--pos-noun); } .matrix-btn.btn-adj { background: var(--pos-adj); }
 
-    /* --- BACK OF CARD STYLES --- */
+    /* SRS STATUS DOT */
+    .srs-dot { position: absolute; bottom: 15px; right: 10px; width: 14px; height: 14px; border-radius: 50%; cursor: pointer; z-index: 10; border: 2px solid white; box-shadow: 0 1px 3px rgba(0,0,0,0.3);}
+    .srs-new { background: var(--srs-new); } .srs-learning { background: var(--srs-learn); } .srs-review { background: var(--srs-rev); } .srs-mastered { background: var(--srs-master); }
+
+    /* BACK OF CARD */
     .back-title { font-family: 'Fredoka One'; font-size: 1rem; color: #333; margin-bottom: 10px; margin-top: 5px; line-height:1.2;}
     .close-flip { margin-top: auto; padding: 8px 20px; border-radius: 20px; background: #eee; border: none; font-family: 'Fredoka One'; color: #555; cursor: pointer; }
-
+    
     .dict-section { width: 100%; text-align: left; margin-bottom: 10px; font-size: 0.8rem;}
     .dict-lbl { font-size: 0.65rem; font-weight: bold; color: #999; text-transform: uppercase; margin-bottom: 2px;}
     .dict-val { color: #444; background: #f9f9f9; padding: 6px; border-radius: 6px;}
     .ex-kid { font-style: italic; color: #2196F3; }
     .ex-adv { font-style: italic; color: #9C27B0; font-family: serif; font-size: 0.85rem;}
 
-    /* --- DEEP DIVE MODAL --- */
+    /* MODAL */
     .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.7); z-index: 1000; display: none; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; backdrop-filter: blur(5px);}
     .modal-content { background: white; width: 100%; max-width: 800px; max-height: 90vh; border-radius: 20px; overflow-y: auto; padding: 30px; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.2); box-sizing: border-box;}
     .modal-close { position: absolute; top: 20px; right: 20px; font-size: 1.5rem; cursor: pointer; background: #f5f5f5; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: none;}
@@ -98,10 +104,9 @@
     .modal-header h2 { font-size: 2.5rem; margin: 0; color: #333; line-height: 1;}
     .modal-header p { margin: 5px 0 0 0; color: #777; font-size: 1rem; text-transform: uppercase; font-weight:bold;}
     
-    .matrix-section { margin-bottom: 30px; background: #fff; border: 1px solid #eee; border-radius: 12px; overflow: hidden; }
+    .matrix-section { margin-bottom: 30px; background: #fff; border: 1px solid #eee; border-radius: 12px; overflow: hidden; overflow-x: auto;}
     .matrix-section h4 { background: #f9f9f9; margin: 0; padding: 12px 15px; font-family: 'Fredoka One'; color: #333; border-bottom: 1px solid #eee; font-size: 1.1rem;}
-    
-    .matrix-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; text-align: left;}
+    .matrix-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; text-align: left; min-width: 400px;}
     .matrix-table th { padding: 10px 15px; border-bottom: 2px solid #eee; color: #888; font-weight: bold; font-size: 0.75rem; text-transform: uppercase;}
     .matrix-table td { padding: 12px 15px; border-bottom: 1px solid #eee; }
     .pron-col { font-weight: bold; color: #555; width: 100px; background: #fafafa;}
@@ -120,18 +125,40 @@
             </div>
         </div>
 
-        <div style="display:flex; gap:8px;">
-            <select id="lang-select">
-                <option value="en">🇬🇧 English</option>
-                <option value="fr">🇫🇷 French</option>
-                <option value="de">🇩🇪 German</option>
-                <option value="it">🇮🇹 Italian</option>
-                <option value="ru">🇷🇺 Russian</option>
-                <option value="zh">🇨🇳 Chinese</option>
-                <option value="ja">🇯🇵 Japanese</option>
-                <option value="ko">🇰🇷 Korean</option>
-            </select>
-        </div>
+        <select id="lang-select">
+            <option value="en">🇬🇧 English</option>
+            <option value="fr">🇫🇷 French</option>
+            <option value="de">🇩🇪 German</option>
+            <option value="it">🇮🇹 Italian</option>
+            <option value="ru">🇷🇺 Russian</option>
+            <option value="zh">🇨🇳 Chinese</option>
+            <option value="ja">🇯🇵 Japanese</option>
+            <option value="ko">🇰🇷 Korean</option>
+        </select>
+    </div>
+
+    <div class="filter-bar">
+        <select class="filter-select" id="filt-cat" onchange="applyFilters()">
+            <option value="all">🌍 All Themes</option>
+            <option value="animal">🟢 Animal</option>
+            <option value="food">🟡 Food</option>
+            <option value="body">🔵 Body</option>
+            <option value="act">🟣 Action</option>
+        </select>
+        <select class="filter-select" id="filt-pos" onchange="applyFilters()">
+            <option value="all">📝 All POS</option>
+            <option value="noun">Noun</option>
+            <option value="verb">Verb</option>
+            <option value="adj">Adjective</option>
+        </select>
+        <select class="filter-select" id="filt-srs" onchange="applyFilters()">
+            <option value="all">🧠 All Progress</option>
+            <option value="new">⚪ New</option>
+            <option value="learning">🔵 Learning</option>
+            <option value="review">🟠 Review</option>
+            <option value="mastered">🟢 Mastered</option>
+        </select>
+        <button class="btn-sort" onclick="toggleSort()">⬇️ Sort: A-Z</button>
     </div>
     
     <div class="controls-container" id="header-toggles"></div>
@@ -153,29 +180,65 @@
 </div>
 
 <script>
+    let rawDeck = [];
     let deck = [];
     let currentLang = 'en';
     let currentMode = 'vocab'; 
-    const pronLabels = ['I', 'You', 'He/She/It', 'We', 'You (pl)', 'They'];
+    let sortAZ = true;
+    
+    // SPACAED REPETITION STATE (Loaded from Browser)
+    let srsData = JSON.parse(localStorage.getItem('tinyVocabSRS')) || {};
 
+    const pronLabels = ['I', 'You', 'He/She/It', 'We', 'You (pl)', 'They'];
     let state = { ipa: false, pinyin: false, latin: false, hiragana: false, hanja: false, traditional: false };
     const toggleLabels = { 'pinyin':'Pinyin', 'latin':'Latin', 'ipa':'IPA', 'hiragana':'Hiragana', 'hanja':'Hanja', 'traditional':'Traditional' };
-    
-    const soundConfig = {
-        'en': ['ipa'], 'de': ['ipa'], 'fr': ['ipa'], 'it': ['ipa'], 'ru': ['latin', 'ipa'],
-        'zh': ['traditional', 'pinyin'], 'ja': ['hiragana'], 'ko': ['hanja']
-    };
-    
+    const soundConfig = { 'en': ['ipa'], 'de': ['ipa'], 'fr': ['ipa'], 'it': ['ipa'], 'ru': ['latin', 'ipa'], 'zh': ['traditional', 'pinyin'], 'ja': ['hiragana'], 'ko': ['hanja'] };
     const colors = { animal: '#7CB342', food: '#FDD835', body: '#42A5F5', act: '#AB47BC' };
 
+    // --- PRELOADER ---
+    function preloadImages(data) {
+        data.forEach(item => { if(item.img) { const img = new Image(); img.src = item.img; } });
+    }
+
     fetch('data.json')
-        .then(res => res.json()).then(data => { deck = data; updateUI(); })
+        .then(res => res.json())
+        .then(data => { 
+            rawDeck = data; 
+            preloadImages(data);
+            applyFilters(); 
+        })
         .catch(err => { document.getElementById('grid').innerHTML = `<div style="padding:20px; text-align:center;">⚠️ Error loading data.json</div>`; });
+
+    // --- FILTER & SORT ENGINE ---
+    function applyFilters() {
+        const cat = document.getElementById('filt-cat').value;
+        const pos = document.getElementById('filt-pos').value;
+        const srs = document.getElementById('filt-srs').value;
+
+        deck = rawDeck.filter(card => {
+            let matchCat = (cat === 'all') || (card.cat === cat);
+            let matchPos = (pos === 'all') || (card.pos === pos);
+            let cStat = srsData[card.id] || 'new';
+            let matchSrs = (srs === 'all') || (cStat === srs);
+            return matchCat && matchPos && matchSrs;
+        });
+
+        if (sortAZ) {
+            deck.sort((a,b) => {
+                let textA = (a.translations[currentLang] || a.translations['en']).n || 'z';
+                let textB = (b.translations[currentLang] || b.translations['en']).n || 'z';
+                return textA.localeCompare(textB);
+            });
+        }
+        updateUI();
+    }
+
+    window.toggleSort = function() { sortAZ = !sortAZ; applyFilters(); }
 
     document.getElementById('lang-select').addEventListener('change', (e) => {
         currentLang = e.target.value;
         Object.keys(state).forEach(k => state[k] = false); 
-        updateUI();
+        applyFilters();
     });
 
     window.setMode = function(mode) {
@@ -190,40 +253,42 @@
     function updateUI() {
         const c = document.getElementById('header-toggles');
         c.innerHTML = '';
-        
         if(currentMode === 'vocab') {
-            const validKeys = soundConfig[currentLang] || [];
-            validKeys.forEach(key => {
-                c.insertAdjacentHTML('beforeend', `
-                    <label class="toggle-group">
-                        <span class="switch"><input type="checkbox" onchange="setSwitch('${key}', this.checked)" ${state[key]?'checked':''}>
-                        <span class="slider"></span></span>${toggleLabels[key]}
-                    </label>`);
+            (soundConfig[currentLang] || []).forEach(key => {
+                c.insertAdjacentHTML('beforeend', `<label class="toggle-group"><span class="switch"><input type="checkbox" onchange="setSwitch('${key}', this.checked)" ${state[key]?'checked':''}><span class="slider"></span></span>${toggleLabels[key]}</label>`);
             });
         } else {
-            c.innerHTML = `<span style="font-size:0.8rem; color:#888; font-style:italic;">Click the 📊 button on any card to view its complete grammar matrix.</span>`;
+            c.innerHTML = `<span style="font-size:0.8rem; color:#888; font-style:italic;">Click the 📊 button on any card to view its Grammar Matrix.</span>`;
         }
         renderGrid();
     }
 
     window.setSwitch = function(key, val) { state[key] = val; updateUI(); };
 
+    // --- SRS CYCLE FUNCTION ---
+    window.cycleSRS = function(e, id) {
+        e.stopPropagation();
+        const cycle = ['new', 'learning', 'review', 'mastered'];
+        let current = srsData[id] || 'new';
+        let nextIdx = (cycle.indexOf(current) + 1) % cycle.length;
+        srsData[id] = cycle[nextIdx];
+        localStorage.setItem('tinyVocabSRS', JSON.stringify(srsData));
+        applyFilters(); // Re-render logic automatically updates the dot
+    };
+
     function getTextDisplay(card) {
         let raw = card.translations[currentLang] || card.translations['en']; 
         let mainText = (currentLang === 'zh' && state.traditional && raw.t) ? raw.t : (raw.n || '?');
         let subText = '';
 
-        // RUSSIAN VERB PAIR LOGIC (UI Enhancements)
         if (card.pos === 'verb') {
             if (currentLang === 'ru' && raw.inf_impf) { 
                 mainText = `<div style="display:flex; flex-direction:column; gap:6px; align-items:center;">
-                              <div style="line-height:1;"><span style="font-size:0.45em; color:#999; text-transform:uppercase; letter-spacing:1px;">Imperfective</span><br>${raw.inf_impf}</div>
-                              <div style="width:40%; border-bottom:1px solid #eee;"></div>
-                              <div style="line-height:1;"><span style="font-size:0.45em; color:#999; text-transform:uppercase; letter-spacing:1px;">Perfective</span><br>${raw.inf_perf}</div>
+                              <div style="line-height:1;"><span style="font-size:0.45em; color:#999; text-transform:uppercase; letter-spacing:1px;">Impf (НСВ)</span><br>${raw.inf_impf}</div>
+                              <div style="width:40%; border-bottom:1px dashed #ccc;"></div>
+                              <div style="line-height:1;"><span style="font-size:0.45em; color:#999; text-transform:uppercase; letter-spacing:1px;">Perf (СВ)</span><br>${raw.inf_perf}</div>
                             </div>`;
-            } else if (raw.v_inf) { 
-                mainText = raw.v_inf; 
-            }
+            } else if (raw.v_inf) { mainText = raw.v_inf; }
         }
 
         if (state.pinyin && raw.py) subText = raw.py;
@@ -235,34 +300,33 @@
         return { main: mainText, sub: subText };
     }
 
-    function buildVocabBack(card, raw) {
-        // Smart fallback to English if the current language lacks dictionary notes
-        const dictSource = raw.syn || raw.ex_kid ? raw : (card.translations['en'] || {});
-        
-        let html = `<div class="back-title">Dictionary</div>`;
-        if(dictSource.syn) html += `<div class="dict-section"><div class="dict-lbl">Synonyms</div><div class="dict-val">${dictSource.syn}</div></div>`;
-        if(dictSource.ant) html += `<div class="dict-section"><div class="dict-lbl">Antonyms</div><div class="dict-val">${dictSource.ant}</div></div>`;
-        if(dictSource.ex_kid) html += `<div class="dict-section"><div class="dict-lbl">Example (Simple)</div><div class="dict-val ex-kid">"${dictSource.ex_kid}"</div></div>`;
-        if(dictSource.ex_adv) html += `<div class="dict-section"><div class="dict-lbl">Example (Classic)</div><div class="dict-val ex-adv">${dictSource.ex_adv}</div></div>`;
-        if(!dictSource.syn && !dictSource.ex_kid) html += `<div class="dict-section" style="color:#888; text-align:center;">More details coming soon.</div>`;
-        return html;
-    }
-
     function renderGrid() {
         const fontClass = getFontClass();
         document.getElementById('grid').innerHTML = deck.map(card => {
             const raw = card.translations[currentLang] || card.translations['en'];
             const txt = getTextDisplay(card);
             const col = colors[card.cat] || '#ccc';
+            const srsStatus = srsData[card.id] || 'new';
             
-            // Generate matrix button
             let btnClass = card.pos === 'verb' ? 'btn-verb' : (card.pos === 'adj' ? 'btn-adj' : 'btn-noun');
-            const matrixBtn = (currentMode === 'grammar') 
-                ? `<div class="matrix-btn ${btnClass}" onclick="event.stopPropagation(); openMatrix('${card.id}')">📊</div>` : '';
+            const matrixBtn = (currentMode === 'grammar') ? `<div class="matrix-btn ${btnClass}" onclick="event.stopPropagation(); openMatrix('${card.id}')">📊</div>` : '';
 
-            // Card Back
-            const backHTML = currentMode === 'vocab' ? buildVocabBack(card, raw) : 
-                `<div class="back-title">Grammar View</div><p style="font-size:0.8rem; color:#666; text-align:center;">Click the 📊 button on the front to open the Master Matrix.</p>`;
+            // Card Back Construction
+            let backHTML = `<div class="back-title">Dictionary</div>`;
+            if (currentMode === 'vocab') {
+                const d = raw.syn || raw.ex_kid ? raw : (card.translations['en'] || {});
+                if(d.syn) backHTML += `<div class="dict-section"><div class="dict-lbl">Synonyms</div><div class="dict-val">${d.syn}</div></div>`;
+                if(d.ant) backHTML += `<div class="dict-section"><div class="dict-lbl">Antonyms</div><div class="dict-val">${d.ant}</div></div>`;
+                if(d.ex_kid) backHTML += `<div class="dict-section"><div class="dict-lbl">Example (Simple)</div><div class="dict-val ex-kid">"${d.ex_kid}"</div></div>`;
+                if(d.ex_adv) backHTML += `<div class="dict-section"><div class="dict-lbl">Example (Classic)</div><div class="dict-val ex-adv">${d.ex_adv}</div></div>`;
+            } else {
+                backHTML = `<div class="back-title">Grammar Details</div>`;
+                if(card.pos === 'noun' && raw.g) {
+                    backHTML += `<div class="dict-section"><div class="dict-lbl">Gender</div><div class="dict-val">${raw.g}</div></div>`;
+                    if(raw.n_opp) backHTML += `<div class="dict-section"><div class="dict-lbl">Opposite Gender Form</div><div class="dict-val">${raw.n_opp}</div></div>`;
+                }
+                backHTML += `<p style="font-size:0.8rem; color:#666; text-align:center; margin-top:20px;">Click the 📊 button on the front to open the Master Matrix.</p>`;
+            }
 
             return `
             <div class="vocab-card" onclick="flipCard(event, this)">
@@ -270,11 +334,12 @@
                     <div class="card-front">
                         ${matrixBtn}
                         <div class="flip-btn">🔄</div>
-                        <div class="card-art"><img src="${card.img}" onerror="this.style.display='none'"></div>
+                        <div class="card-art"><img src="${card.img}" onerror="this.style.display='none'" loading="lazy"></div>
                         <div class="card-obi">
                             <div class="word-row"><div class="word ${fontClass}">${txt.main}</div></div>
                             <div class="pos-badge pos-${card.pos || 'noun'}">${card.pos || ''}</div>
                             ${txt.sub ? `<div class="sub-word">${txt.sub}</div>` : ''}
+                            <div title="Click to cycle learning status" class="srs-dot srs-${srsStatus}" onclick="cycleSRS(event, '${card.id}')"></div>
                             <div class="color-stroke" style="background:${col}"></div>
                         </div>
                     </div>
@@ -293,52 +358,57 @@
         const raw = card.translations[currentLang];
         
         if(!raw || ['zh','ja','ko'].includes(currentLang)) {
-            return alert(`Grammar matrices are not utilized or mapped for ${currentLang.toUpperCase()} in this version.`);
+            return alert(`Grammar matrices are not mapped for ${currentLang.toUpperCase()} natively.`);
         }
 
-        document.getElementById('modal-title').innerText = raw.n || card.id;
+        document.getElementById('modal-title').innerText = card.pos==='verb' ? (raw.v_inf || raw.n) : raw.n;
         document.getElementById('modal-title').className = getFontClass();
-        document.getElementById('modal-subtitle').innerText = `${card.pos} Declension / Conjugation`;
+        document.getElementById('modal-subtitle').innerText = `${card.pos} Master Matrix`;
         
         let html = '';
 
         if (card.pos === 'noun') {
             if(raw.n_cases && raw.n_sg) {
-                html += `<div class="matrix-section"><h4>Noun Declension</h4><table class="matrix-table font-${currentLang}"><tr><th class="pron-col">Case/Form</th><th>Singular</th>`;
+                html += `<div class="matrix-section"><h4>Declension</h4><div style="overflow-x:auto;"><table class="matrix-table font-${currentLang}"><tr><th class="pron-col">Case</th><th>Singular</th>`;
                 if(raw.n_pl) html += `<th>Plural</th>`;
                 html += `</tr>`;
-                
                 for(let i=0; i<raw.n_cases.length; i++) {
                     html += `<tr><td class="pron-col">${raw.n_cases[i]}</td><td>${raw.n_sg[i]||'-'}</td>`;
                     if(raw.n_pl) html += `<td>${raw.n_pl[i]||'-'}</td>`;
                     html += `</tr>`;
                 }
-                html += `</table></div>`;
+                html += `</table></div></div>`;
             }
         } 
         else if (card.pos === 'adj') {
-            if(raw.a_cases && raw.a_masc) {
+            // FR/IT 2x2 Matrix Fix
+            if (currentLang === 'fr' || currentLang === 'it') {
+                 if(raw.a_sg && raw.a_pl) {
+                    html += `<div class="matrix-section"><h4>Adjective Forms</h4><div style="overflow-x:auto;"><table class="matrix-table font-${currentLang}"><tr><th class="pron-col">Number</th><th>Masc</th><th>Fem</th></tr>`;
+                    html += `<tr><td class="pron-col">Singular</td><td>${raw.a_sg[0]}</td><td>${raw.a_sg[1]}</td></tr>`;
+                    html += `<tr><td class="pron-col">Plural</td><td>${raw.a_pl[0]}</td><td>${raw.a_pl[1]}</td></tr>`;
+                    html += `</table></div></div>`;
+                 }
+            } else if(raw.a_cases && raw.a_masc) {
                 let hasFem = !!raw.a_fem;
-                html += `<div class="matrix-section"><h4>Adjective Declension</h4><table class="matrix-table font-${currentLang}"><tr><th class="pron-col">Case/Form</th><th>${hasFem ? 'Masc' : 'Value'}</th>`;
+                html += `<div class="matrix-section"><h4>Declension</h4><div style="overflow-x:auto;"><table class="matrix-table font-${currentLang}"><tr><th class="pron-col">Case</th><th>${hasFem ? 'Masc' : 'Value'}</th>`;
                 if(raw.a_fem) html += `<th>Fem</th>`;
                 if(raw.a_neut) html += `<th>Neut</th>`;
                 if(raw.a_plur) html += `<th>Plural</th>`;
                 html += `</tr>`;
-                
                 for(let i=0; i<raw.a_cases.length; i++) {
                     html += `<tr><td class="pron-col">${raw.a_cases[i]}</td><td>${raw.a_masc[i]||'-'}</td>`;
                     if(raw.a_fem) html += `<td>${raw.a_fem[i]||'-'}</td>`;
                     if(raw.a_neut) html += `<td>${raw.a_neut[i]||'-'}</td>`;
-                    if(raw.a_plur) html += `<td>${raw.a_plur[i]||'-'}</td>`;
-                    html += `</tr>`;
+                    if(raw.a_plur) html += `<td>${raw.a_plur[i]||'-'}</td></tr>`;
                 }
-                html += `</table></div>`;
+                html += `</table></div></div>`;
             }
         }
         else if (card.pos === 'verb') {
             const buildVerbTable = (title, colsArray) => {
                 if(!colsArray.some(col => raw[col.key])) return '';
-                let table = `<div class="matrix-section"><h4>${title}</h4><table class="matrix-table font-${currentLang}"><tr><th class="pron-col">Pronoun</th>`;
+                let table = `<div class="matrix-section"><h4>${title}</h4><div style="overflow-x:auto;"><table class="matrix-table font-${currentLang}"><tr><th class="pron-col">Pronoun</th>`;
                 colsArray.forEach(col => table += `<th>${col.name}</th>`);
                 table += `</tr>`;
                 for(let i=0; i<6; i++) {
@@ -346,19 +416,29 @@
                     colsArray.forEach(col => table += `<td>${(raw[col.key] && raw[col.key][i]) ? raw[col.key][i] : '-'}</td>`);
                     table += `</tr>`;
                 }
-                return table + `</table></div>`;
+                return table + `</table></div></div>`;
             };
 
-            if(currentLang === 'de') {
-                html += buildVerbTable('Indicative', [{name:'Präsens', key:'de_pres'}, {name:'Präteritum', key:'de_prat'}, {name:'Perfekt', key:'de_perf'}]);
+            if(currentLang === 'en') {
+                html += buildVerbTable('Indicative (Simple)', [{name:'Past', key:'ind_past_sim'}, {name:'Present', key:'ind_pres_sim'}, {name:'Future', key:'ind_fut_sim'}]);
+                html += buildVerbTable('Indicative (Continuous)', [{name:'Past', key:'ind_past_cont'}, {name:'Present', key:'ind_pres_cont'}, {name:'Future', key:'ind_fut_cont'}]);
+                html += buildVerbTable('Other Moods', [{name:'Pres Perfect', key:'ind_pres_perf'}, {name:'Conditional', key:'cond_pres'}, {name:'Imperative', key:'imp'}]);
+            } else if(currentLang === 'de') {
+                html += buildVerbTable('Indicative 1', [{name:'Präsens', key:'ind_pres'}, {name:'Präteritum', key:'ind_prat'}, {name:'Futur I', key:'ind_fut1'}]);
+                html += buildVerbTable('Indicative 2', [{name:'Perfekt', key:'ind_perf'}, {name:'Plusquamperfekt', key:'ind_plusq'}]);
+                html += buildVerbTable('Konjunktiv / Imperativ', [{name:'Konjunktiv I', key:'k1_pres'}, {name:'Konjunktiv II', key:'k2_pres'}, {name:'Imperativ', key:'imp'}]);
             } else if (currentLang === 'fr') {
-                 html += buildVerbTable('Indicative', [{name:'Présent', key:'ind_pres_sim_act'}, {name:'Imparfait', key:'ind_past_cont_act'}, {name:'Passé Comp.', key:'ind_past_sim_act'}, {name:'Futur', key:'ind_fut_sim_act'}]);
+                 html += buildVerbTable('Indicative (Simple)', [{name:'Présent', key:'ind_pres'}, {name:'Imparfait', key:'ind_imp'}, {name:'Passé Simple', key:'ind_p_simp'}, {name:'Futur', key:'ind_fut'}]);
+                 html += buildVerbTable('Indicative (Compound)', [{name:'Passé Comp.', key:'ind_p_comp'}, {name:'Plus-que-parfait', key:'ind_plusq'}]);
+                 html += buildVerbTable('Subjonctif & Conditionnel', [{name:'Subj Présent', key:'subj_pres'}, {name:'Cond Présent', key:'cond_pres'}, {name:'Impératif', key:'imp'}]);
+            } else if (currentLang === 'it') {
+                 html += buildVerbTable('Indicativo (Semplice)', [{name:'Presente', key:'ind_pres'}, {name:'Imperfetto', key:'ind_imp'}, {name:'Pass. Remoto', key:'ind_p_rem'}, {name:'Futuro Sempl.', key:'ind_fut'}]);
+                 html += buildVerbTable('Indicativo (Composto)', [{name:'Passato Pross.', key:'ind_p_pros'}, {name:'Trapass. Pross.', key:'ind_trap'}]);
+                 html += buildVerbTable('Congiuntivo & Condizionale', [{name:'Cong. Presente', key:'subj_pres'}, {name:'Cond. Presente', key:'cond_pres'}, {name:'Imperativo', key:'imp'}]);
             } else if (currentLang === 'ru') {
-                 html += buildVerbTable('Indicative (Imperfective)', [{name:'Past', key:'ind_past_sim_act'}, {name:'Present', key:'ind_pres_sim_act'}, {name:'Future', key:'ind_fut_sim_act'}]);
-                 html += buildVerbTable('Indicative (Perfective)', [{name:'Past', key:'ind_past_perf_act'}, {name:'Future', key:'ind_fut_perf_act'}]);
-            } else {
-                html += buildVerbTable('Indicative (Simple)', [{name:'Past', key:'ind_past_sim_act'}, {name:'Present', key:'ind_pres_sim_act'}, {name:'Future', key:'ind_fut_sim_act'}]);
-                html += buildVerbTable('Indicative (Continuous)', [{name:'Past', key:'ind_past_cont_act'}, {name:'Present', key:'ind_pres_cont_act'}, {name:'Future', key:'ind_fut_cont_act'}]);
+                 html += buildVerbTable('Imperfective (НСВ)', [{name:'Past', key:'impf_past'}, {name:'Present', key:'impf_pres'}, {name:'Future', key:'impf_fut'}]);
+                 html += buildVerbTable('Perfective (СВ)', [{name:'Past', key:'perf_past'}, {name:'Future', key:'perf_fut'}]);
+                 html += buildVerbTable('Other Forms', [{name:'Conditional', key:'cond'}, {name:'Imperative', key:'imp'}]);
             }
         }
 
@@ -367,9 +447,7 @@
         document.getElementById('matrix-modal').style.display = 'flex';
     };
 
-    window.closeMatrix = function(e) {
-        if(e.target.id === 'matrix-modal' || e.target.classList.contains('modal-close')) document.getElementById('matrix-modal').style.display = 'none';
-    };
+    window.closeMatrix = function(e) { if(e.target.id === 'matrix-modal' || e.target.classList.contains('modal-close')) document.getElementById('matrix-modal').style.display = 'none'; };
 
     window.flipCard = function(e, element) { 
         e.stopPropagation(); 
