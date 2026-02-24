@@ -1074,8 +1074,22 @@
         }
     };
 
+    // Populates the Dropdown with verbs from your JSON Deck
+    window.populateBpVerbSelect = function() {
+        let select = document.getElementById('bp-verb-select');
+        if (!select) return; // Fail-safe
+        
+        let verbs = deck.filter(c => c.pos === 'verb');
+        let opts = `<option value="">📖 Show Grammar Rules (Default)</option>`;
+        verbs.forEach(v => {
+            let name = (v.translations['en'] && v.translations['en'].n) ? v.translations['en'].n : v.id;
+            opts += `<option value="${v.id}">🔄 Conjugate: ${name}</option>`;
+        });
+        select.innerHTML = opts;
+    };
+
     window.openBpModal = function() {
-        populateBpVerbSelect(); // Load the verbs!
+        populateBpVerbSelect(); // Load the verbs into the dropdown!
         document.getElementById('bp-modal').style.display = 'flex';
         renderBpTable();
     };
@@ -1101,6 +1115,7 @@
         const selectedVerbId = document.getElementById('bp-verb-select').value;
         const verbData = selectedVerbId ? deck.find(c => c.id === selectedVerbId) : null;
         
+        // Update UI colors based on toggle
         if(isPassive) { ui.classList.add('is-passive'); lbl.innerText = "Passive 🟣"; } 
         else { ui.classList.remove('is-passive'); lbl.innerText = "Active 🟢"; }
 
@@ -1112,7 +1127,7 @@
         data.rows.forEach(row => {
             html += `<tr><td>${row.title}</td>`;
             
-            // Helper function to extract conjugations dynamically
+            // Helper function to extract conjugations dynamically from the JSON
             const getConjHTML = (lang, key) => {
                 let t = verbData.translations[lang];
                 if (!t || !t[key]) return '<span class="muted-cell">-</span>';
@@ -1123,14 +1138,17 @@
 
             const buildCell = (cellData) => {
                 if (!cellData) return `<td class="muted-cell">- N/A -</td>`;
-                // If the user selected a verb AND we have a JSON key for this cell, show conjugations!
+                
+                // If the user selected a verb AND we have a JSON key for this cell, show actual conjugations!
                 if (verbData && cellData.key) {
                     return `<td>${formatLangs(getConjHTML('en', cellData.key), getConjHTML('de', cellData.key), getConjHTML('fr', cellData.key), getConjHTML('it', cellData.key), getConjHTML('ru', cellData.key))}</td>`;
                 }
-                // Otherwise, show the default grammar rules
+                
+                // Otherwise, fall back to showing the default grammar rules
                 return `<td>${cellData.text}</td>`;
             };
 
+            // Render logic based on whether it's a 3-column tense table or 1-column rule table
             if(data.headers.length === 4) { 
                 ['past', 'present', 'future'].forEach(time => {
                     html += buildCell(row[time] ? row[time][isPassive ? 'passive' : 'active'] : null);
