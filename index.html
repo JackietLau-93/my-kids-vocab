@@ -38,9 +38,13 @@
     .filter-bar { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; padding: 10px 0; border-top: 1px solid #eee; background: #fafafa; border-radius: 10px;}
     .filter-select { padding: 6px 10px; border-radius: 8px; border: 1px solid #ddd; font-family: 'Zen Maru Gothic'; font-size: 0.8rem; outline: none; cursor: pointer;}
     .btn-sort { padding: 6px 12px; border-radius: 8px; border: 1px solid #ccc; background: white; cursor: pointer; font-size: 0.8rem; font-weight:bold;}
+    .btn-master-map { padding: 8px 15px; border-radius: 20px; background: #333; color: white; border: none; cursor: pointer; font-family: 'Fredoka One'; font-size: 0.9rem; transition: transform 0.2s;}
+    .btn-master-map:hover { transform: scale(1.05); }
 
     .controls-container { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; min-height: 25px; align-items: center;}
     .toggle-group { display: flex; align-items: center; gap: 6px; font-size: 0.75rem; font-weight: bold; color: #555; cursor: pointer; background: #fff; padding: 4px 10px; border-radius: 15px; border: 1px solid #eee;}
+    
+    /* TOGGLE SWITCH STYLES */
     .switch { position: relative; display: inline-block; width: 28px; height: 16px; }
     .switch input { opacity: 0; width: 0; height: 0; }
     .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
@@ -88,7 +92,7 @@
     .ex-kid { font-style: italic; color: #2196F3; }
     .ex-adv { font-style: italic; color: #9C27B0; font-family: serif; font-size: 0.85rem;}
 
-    /* MODAL */
+    /* MODAL (Single Word) */
     .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.7); z-index: 1000; display: none; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; backdrop-filter: blur(5px);}
     .modal-content { background: white; width: 100%; max-width: 900px; max-height: 90vh; border-radius: 20px; overflow-y: auto; padding: 30px; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.2); box-sizing: border-box;}
     .modal-close { position: absolute; top: 20px; right: 20px; font-size: 1.5rem; cursor: pointer; background: #f5f5f5; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: none;}
@@ -109,6 +113,34 @@
     .verbal-lbl { font-weight: bold; width: 180px; color: #555; flex-shrink: 0;}
     .verbal-val { color: #222; font-family: 'Zen Maru Gothic'; }
     .highlight-badge { display:inline-block; padding:3px 8px; background:#e3f2fd; color:#1976d2; border-radius:12px; font-size:0.75rem; font-weight:bold; margin-right:5px;}
+
+    /* BIG PICTURE MODAL STYLES */
+    .bp-modal { max-width: 1100px; padding: 25px; }
+    .bp-header-container { display: flex; flex-direction: column; align-items: center; margin-bottom: 20px; gap: 15px; }
+    
+    .bp-tabs { display: flex; gap: 10px; background: #eee; padding: 5px; border-radius: 20px; overflow-x: auto; max-width: 100%; }
+    .bp-tab { padding: 8px 16px; border: none; background: transparent; border-radius: 15px; font-family: 'Fredoka One'; color: #777; cursor: pointer; transition: 0.3s; font-size: 0.9rem; white-space: nowrap; }
+    .bp-tab.active { background: white; color: #333; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    
+    .bp-toggle-container { display: flex; align-items: center; gap: 10px; background: #fdfdfd; padding: 8px 15px; border-radius: 20px; border: 2px solid #ddd; font-family: 'Zen Maru Gothic'; font-weight: bold;}
+    .bp-toggle-container.is-passive { border-color: #AB47BC; background: #f3e5f5; }
+    .bp-status-text { width: 80px; text-align: center; color: #4CAF50; }
+    .is-passive .bp-status-text { color: #AB47BC; }
+
+    .bp-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; line-height: 1.4; }
+    .bp-table th { background: #f5f5f5; padding: 12px; text-align: left; font-family: 'Fredoka One'; color: #555; border-bottom: 2px solid #ddd; position: sticky; top: 0; z-index: 2;}
+    .bp-table td { padding: 12px; border-bottom: 1px solid #eee; vertical-align: top; min-width: 250px; }
+    .bp-table td:first-child { font-family: 'Fredoka One'; color: #333; min-width: 120px; background: #fafafa; }
+    
+    .lang-line { margin-bottom: 6px; padding-bottom: 6px; border-bottom: 1px dashed #eee; }
+    .lang-line:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+    .lang-tag { display: inline-block; width: 28px; font-weight: bold; font-family: 'Zen Maru Gothic'; }
+    .lang-en { color: #1976D2; } .lang-de { color: #F57C00; } .lang-fr { color: #388E3C; } .lang-it { color: #D32F2F; } .lang-ru { color: #7B1FA2; }
+    .muted-cell { color: #aaa; font-style: italic; background: #fefefe; text-align: center; vertical-align: middle;}
+    
+    /* Modify primary switch for passive toggle */
+    #bp-passive-switch:checked + .slider { background-color: #AB47BC; }
+
 </style>
 </head>
 <body>
@@ -122,16 +154,19 @@
                 <div class="mode-btn" id="mode-grammar" onclick="setMode('grammar')">⚙️ Grammar View</div>
             </div>
         </div>
-        <select id="lang-select">
-            <option value="en">🇬🇧 English</option>
-            <option value="fr">🇫🇷 French</option>
-            <option value="de">🇩🇪 German</option>
-            <option value="it">🇮🇹 Italian</option>
-            <option value="ru">🇷🇺 Russian</option>
-            <option value="zh">🇨🇳 Chinese</option>
-            <option value="ja">🇯🇵 Japanese</option>
-            <option value="ko">🇰🇷 Korean</option>
-        </select>
+        <div style="display: flex; gap:10px;">
+            <button class="btn-master-map" onclick="openBpModal()">🌍 Master Map</button>
+            <select id="lang-select">
+                <option value="en">🇬🇧 English</option>
+                <option value="fr">🇫🇷 French</option>
+                <option value="de">🇩🇪 German</option>
+                <option value="it">🇮🇹 Italian</option>
+                <option value="ru">🇷🇺 Russian</option>
+                <option value="zh">🇨🇳 Chinese</option>
+                <option value="ja">🇯🇵 Japanese</option>
+                <option value="ko">🇰🇷 Korean</option>
+            </select>
+        </div>
     </div>
 
     <div class="filter-bar">
@@ -172,6 +207,38 @@
             <p id="modal-subtitle">Grammar Matrix</p>
         </div>
         <div id="modal-body"></div>
+    </div>
+</div>
+
+<div id="bp-modal" class="modal-overlay" onclick="closeBpModal(event)">
+    <div class="modal-content bp-modal" onclick="event.stopPropagation()">
+        <button class="modal-close" onclick="closeBpModal(event)">✕</button>
+        
+        <div class="bp-header-container">
+            <h2 style="font-family:'Fredoka One'; margin:0; font-size:2rem; color:#333;">🌍 5-Language Master Map</h2>
+            
+            <div class="bp-tabs" id="bp-tab-container">
+                <button class="bp-tab active" onclick="setBpTab('indicative')">Indicative Tenses</button>
+                <button class="bp-tab" onclick="setBpTab('moods')">Moods & Commands</button>
+                <button class="bp-tab" onclick="setBpTab('nonfinites')">Non-Finite Forms</button>
+            </div>
+
+            <div class="bp-toggle-container" id="bp-toggle-ui">
+                <span class="bp-status-text" id="bp-status-lbl">Active 🟢</span>
+                <label class="switch" style="margin:0;">
+                    <input type="checkbox" id="bp-passive-switch" onchange="renderBpTable()">
+                    <span class="slider"></span>
+                </label>
+                <span style="font-size:0.8rem; color:#666;">Passive 🟣</span>
+            </div>
+        </div>
+
+        <div style="overflow-x: auto; max-height: 60vh; border: 1px solid #ddd; border-radius: 12px; background:white;">
+            <table class="bp-table">
+                <tbody id="bp-table-body">
+                    </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
@@ -382,7 +449,7 @@
         }).join('');
     }
 
-    // --- UNIVERSAL MATRIX ENGINE ---
+    // --- SINGLE WORD MATRIX LOGIC ---
     window.openMatrix = function(cardId) {
         const card = deck.find(c => c.id === cardId);
         const raw = card.translations[currentLang];
@@ -468,44 +535,42 @@
                 return '';
             };
 
+            // Using the new detailed JSON structure logic
             if(currentLang === 'en') {
-                html += buildVerbTable('Indicative (Simple)', [{name:'Past', key:'ind_past_sim'}, {name:'Present', key:'ind_pres_sim'}, {name:'Future', key:'ind_fut_sim'}]);
-                html += buildVerbTable('Indicative (Continuous)', [{name:'Past', key:'ind_past_cont'}, {name:'Present', key:'ind_pres_cont'}, {name:'Future', key:'ind_fut_cont'}]);
-                html += buildVerbTable('Perfect', [{name:'Past Perf', key:'ind_past_perf'}, {name:'Pres Perf', key:'ind_pres_perf'}, {name:'Fut Perf', key:'ind_fut_perf'}]);
-                html += buildVerbTable('Perfect Cont.', [{name:'Past', key:'ind_past_perfcont'}, {name:'Present', key:'ind_pres_perfcont'}, {name:'Future', key:'ind_fut_perfcont'}]);
-                html += buildVerbTable('Subjunctive', [{name:'Present', key:'subj_pres'}, {name:'Past', key:'subj_past'}]);
-                html += buildVerbTable('Conditionals', [{name:'Cond (would)', key:'cond_pres'}, {name:'Cond (would have)', key:'cond_past'}]);
-                html += buildVerbTable('Imperative', [{name:'Imperative', key:'imp'}]);
-                html += buildVerbals([{name:'Infinitive', id:'v_inf'}, {name:'Gerund (Noun)', id:'v_ger_noun'}, {name:'Gerund (Simultaneous)', id:'v_ger_sim'}, {name:'Present Participle', id:'v_part_pres'}, {name:'Past Participle', id:'v_part_past'}]);
+                html += buildVerbTable('Indicative (Simple)', [{name:'Past', key:'ind_past_sim_act'}, {name:'Present', key:'ind_pres_sim_act'}, {name:'Future', key:'ind_fut_sim_act'}]);
+                html += buildVerbTable('Passive (Simple)', [{name:'Past', key:'ind_past_sim_pass'}, {name:'Present', key:'ind_pres_sim_pass'}, {name:'Future', key:'ind_fut_sim_pass'}]);
+                html += buildVerbTable('Subjunctive', [{name:'Past', key:'subj_past_sim_act'}, {name:'Present', key:'subj_pres_sim_act'}]);
+                html += buildVerbTable('Conditionals', [{name:'Cond (would have)', key:'cond_past_sim_act'}, {name:'Cond (would)', key:'cond_pres_sim_act'}]);
+                html += buildVerbTable('Imperative', [{name:'Imperative', key:'imp_pres_sim_act'}]);
+                html += buildVerbals([{name:'Infinitive', id:'v_inf'}, {name:'Present Participle', id:'v_pres_part'}, {name:'Past Participle', id:'v_past_part'}, {name:'Gerund (Noun)', id:'v_ger_noun'}, {name:'Gerund (Adverb)', id:'v_ger_adv'}]);
             } else if(currentLang === 'de') {
-                html += buildVerbTable('Indikativ (Simple)', [{name:'Präsens', key:'ind_pres'}, {name:'Präteritum', key:'ind_prat'}, {name:'Futur I', key:'ind_fut1'}]);
-                html += buildVerbTable('Indikativ (Compound)', [{name:'Perfekt', key:'ind_perf'}, {name:'Plusquamperfekt', key:'ind_plusq'}, {name:'Futur II', key:'ind_fut2'}]);
-                html += buildVerbTable('Konjunktiv I (Reported)', [{name:'Präsens', key:'k1_pres'}, {name:'Perfekt', key:'k1_perf'}, {name:'Futur I', key:'k1_fut1'}, {name:'Futur II', key:'k1_fut2'}]);
-                html += buildVerbTable('Konjunktiv II (Conditional)', [{name:'Präsens (would)', key:'k2_pres'}, {name:'Vergangenheit', key:'k2_past'}, {name:'Futur I', key:'k2_fut1'}, {name:'Futur II', key:'k2_fut2'}]);
-                html += buildVerbTable('Imperativ', [{name:'Imperativ', key:'imp'}]);
-                html += buildVerbals([{name:'Infinitive', id:'v_inf'}, {name:'Gerund (Noun)', id:'v_ger_noun'}, {name:'Gerund (Simult.)', id:'v_ger_sim'}, {name:'Present Participle', id:'v_part_pres'}, {name:'Past Participle', id:'v_part_past'}]);
+                html += buildVerbTable('Indikativ (Simple)', [{name:'Präteritum', key:'ind_past_sim_act'}, {name:'Präsens', key:'ind_pres_sim_act'}, {name:'Futur I', key:'ind_fut_sim_act'}]);
+                html += buildVerbTable('Passiv (Simple)', [{name:'Präteritum', key:'ind_past_sim_pass'}, {name:'Präsens', key:'ind_pres_sim_pass'}, {name:'Futur I', key:'ind_fut_sim_pass'}]);
+                html += buildVerbTable('Konjunktiv I (Reported)', [{name:'Präsens', key:'subj_pres_sim_act'}]);
+                html += buildVerbTable('Konjunktiv II (Conditional)', [{name:'Vergangenheit', key:'cond_past_sim_act'}, {name:'Präsens', key:'cond_pres_sim_act'}]);
+                html += buildVerbTable('Imperativ', [{name:'Imperativ', key:'imp_pres_sim_act'}]);
+                html += buildVerbals([{name:'Infinitive', id:'v_inf'}, {name:'Present Participle', id:'v_pres_part'}, {name:'Past Participle', id:'v_past_part'}, {name:'Gerund (Noun)', id:'v_ger_noun'}, {name:'Gerund (Adverb)', id:'v_ger_adv'}]);
             } else if (currentLang === 'fr') {
-                 html += buildVerbTable('Indicatif (Simple)', [{name:'Présent', key:'ind_pres'}, {name:'Imparfait', key:'ind_imp'}, {name:'Passé Simple', key:'ind_p_simp'}, {name:'Futur', key:'ind_fut'}]);
-                 html += buildVerbTable('Indicatif (Composé)', [{name:'Passé Comp.', key:'ind_p_comp'}, {name:'Plus-que-parfait', key:'ind_plusq'}, {name:'Passé Ant.', key:'ind_p_ant'}, {name:'Futur Ant.', key:'ind_f_ant'}]);
-                 html += buildVerbTable('Temps Proches', [{name:'Passé Récent', key:'ind_p_recent'}, {name:'Futur Proche', key:'ind_f_proche'}]);
-                 html += buildVerbTable('Subjonctif', [{name:'Présent', key:'subj_pres'}, {name:'Imparfait', key:'subj_imp'}, {name:'Passé', key:'subj_passe'}, {name:'Plus-que-parf.', key:'subj_plusq'}]);
-                 html += buildVerbTable('Conditionnel', [{name:'Cond Présent', key:'cond_pres'}, {name:'Cond Passé', key:'cond_past'}]);
-                 html += buildVerbTable('Impératif', [{name:'Impératif', key:'imp'}]);
-                 html += buildVerbals([{name:'Infinitive', id:'v_inf'}, {name:'Gerund (Noun)', id:'v_ger_noun'}, {name:'Gérondif (Simult.)', id:'v_ger_sim'}, {name:'Participe Présent', id:'v_part_pres'}, {name:'Participe Passé', id:'v_part_past'}]);
+                 html += buildVerbTable('Indicatif (Simple)', [{name:'Passé Simple', key:'ind_past_sim_act'}, {name:'Présent', key:'ind_pres_sim_act'}, {name:'Futur', key:'ind_fut_sim_act'}]);
+                 html += buildVerbTable('Passif (Simple)', [{name:'Présent', key:'ind_pres_sim_pass'}]);
+                 html += buildVerbTable('Subjonctif', [{name:'Imparfait', key:'subj_past_sim_act'}, {name:'Présent', key:'subj_pres_sim_act'}]);
+                 html += buildVerbTable('Conditionnel', [{name:'Cond Passé', key:'cond_past_sim_act'}, {name:'Cond Présent', key:'cond_pres_sim_act'}]);
+                 html += buildVerbTable('Impératif', [{name:'Impératif', key:'imp_pres_sim_act'}]);
+                 html += buildVerbals([{name:'Infinitive', id:'v_inf'}, {name:'Participe Présent', id:'v_pres_part'}, {name:'Participe Passé', id:'v_past_part'}, {name:'Gerund (Noun)', id:'v_ger_noun'}, {name:'Gérondif (Adverb)', id:'v_ger_adv'}]);
             } else if (currentLang === 'it') {
-                 html += buildVerbTable('Indicativo (Semplice)', [{name:'Presente', key:'ind_pres'}, {name:'Imperfetto', key:'ind_imp'}, {name:'Pass. Remoto', key:'ind_p_rem'}, {name:'Futuro', key:'ind_fut'}]);
-                 html += buildVerbTable('Indicativo (Progressivo)', [{name:'Pres. Prog.', key:'ind_pres_prog'}, {name:'Pass. Prog.', key:'ind_past_prog'}, {name:'Futuro Prog.', key:'ind_fut_prog'}]);
-                 html += buildVerbTable('Indicativo (Composto)', [{name:'Pass. Pross.', key:'ind_p_pros'}, {name:'Trapass. Pross.', key:'ind_trap_pros'}, {name:'Trapass. Rem.', key:'ind_trap_rem'}, {name:'Futuro Ant.', key:'ind_f_ant'}]);
-                 html += buildVerbTable('Congiuntivo', [{name:'Presente', key:'subj_pres'}, {name:'Imperfetto', key:'subj_imp'}, {name:'Passato', key:'subj_pass'}, {name:'Trapassato', key:'subj_trap'}]);
-                 html += buildVerbTable('Condizionale', [{name:'Cond. Pres.', key:'cond_pres'}, {name:'Cond. Passato', key:'cond_past'}]);
-                 html += buildVerbTable('Imperativo', [{name:'Imperativo', key:'imp'}]);
-                 html += buildVerbals([{name:'Infinitive', id:'v_inf'}, {name:'Gerund (Noun)', id:'v_ger_noun'}, {name:'Gerundio (Simult.)', id:'v_ger_sim'}, {name:'Participio Presente', id:'v_part_pres'}, {name:'Participio Passato', id:'v_part_past'}]);
+                 html += buildVerbTable('Indicativo (Semplice)', [{name:'Pass. Remoto', key:'ind_past_sim_act'}, {name:'Presente', key:'ind_pres_sim_act'}, {name:'Futuro', key:'ind_fut_sim_act'}]);
+                 html += buildVerbTable('Passivo (Semplice)', [{name:'Presente', key:'ind_pres_sim_pass'}]);
+                 html += buildVerbTable('Congiuntivo', [{name:'Imperfetto', key:'subj_past_sim_act'}, {name:'Presente', key:'subj_pres_sim_act'}]);
+                 html += buildVerbTable('Condizionale', [{name:'Cond. Passato', key:'cond_past_sim_act'}, {name:'Cond. Pres.', key:'cond_pres_sim_act'}]);
+                 html += buildVerbTable('Imperativo', [{name:'Imperativo', key:'imp_pres_sim_act'}]);
+                 html += buildVerbals([{name:'Infinitive', id:'v_inf'}, {name:'Participio Presente', id:'v_pres_part'}, {name:'Participio Passato', id:'v_past_part'}, {name:'Gerund (Noun)', id:'v_ger_noun'}, {name:'Gerundio (Adverb)', id:'v_ger_adv'}]);
             } else if (currentLang === 'ru') {
-                 html += buildVerbTable('Imperfective (НСВ)', [{name:'Past', key:'impf_past'}, {name:'Present', key:'impf_pres'}, {name:'Future', key:'impf_fut'}]);
-                 html += buildVerbTable('Perfective (СВ)', [{name:'Past', key:'perf_past'}, {name:'Future', key:'perf_fut'}]);
-                 html += buildVerbTable('Conditional', [{name:'Cond (Impf)', key:'cond_impf'}, {name:'Cond (Perf)', key:'cond_perf'}]);
-                 html += buildVerbTable('Imperative', [{name:'Imp (Impf)', key:'imp_impf'}, {name:'Imp (Perf)', key:'imp_perf'}]);
-                 html += buildVerbals([{name:'Infinitive', id:'v_inf'}, {name:'Gerund (Noun)', id:'v_ger_noun'}, {name:'Gerund (Simult.)', id:'v_ger_sim'}, {name:'Present Participle', id:'v_part_pres'}, {name:'Past Participle', id:'v_part_past'}, {name:'Passive Voice', id:'v_pass_voice'}]);
+                 html += buildVerbTable('Imperfective (НСВ)', [{name:'Past', key:'ind_past_sim_act'}, {name:'Present', key:'ind_pres_sim_act'}, {name:'Future', key:'ind_fut_sim_act'}]);
+                 html += buildVerbTable('Perfective (СВ)', [{name:'Past', key:'ind_past_perf_act'}, {name:'Future', key:'ind_fut_perf_act'}]);
+                 html += buildVerbTable('Passive (Perfective)', [{name:'Past', key:'ind_past_perf_pass'}, {name:'Future', key:'ind_fut_perf_pass'}]);
+                 html += buildVerbTable('Conditional', [{name:'Cond (Impf)', key:'cond_pres_sim_act'}, {name:'Cond (Perf)', key:'cond_past_perf_act'}]);
+                 html += buildVerbTable('Imperative', [{name:'Imp (Impf)', key:'imp_pres_sim_act'}, {name:'Imp (Perf)', key:'imp_pres_perf_act'}]);
+                 html += buildVerbals([{name:'Infinitive', id:'v_inf'}, {name:'Present Participle', id:'v_pres_part'}, {name:'Past Participle', id:'v_past_part'}, {name:'Gerund (Noun)', id:'v_ger_noun'}, {name:'Gerund (Adverb)', id:'v_ger_adv'}]);
             }
         }
 
@@ -514,7 +579,11 @@
         document.getElementById('matrix-modal').style.display = 'flex';
     };
 
-    window.closeMatrix = function(e) { if(e.target.id === 'matrix-modal' || e.target.classList.contains('modal-close')) document.getElementById('matrix-modal').style.display = 'none'; };
+    window.closeMatrix = function(e) { 
+        if(e.target.id === 'matrix-modal' || e.target.classList.contains('modal-close')) {
+            document.getElementById('matrix-modal').style.display = 'none'; 
+        }
+    };
 
     window.flipCard = function(e, element) { 
         if(e.target.classList.contains('matrix-btn') || e.target.classList.contains('srs-dot')) return;
@@ -528,6 +597,224 @@
             document.querySelectorAll('.card-inner').forEach(c=>c.classList.remove('flipped')); 
             inner.classList.add('flipped'); 
         } 
+    };
+
+    // --- BIG PICTURE MASTER MAP LOGIC ---
+    let currentBpTab = 'indicative';
+
+    const formatLangs = (en, de, fr, it, ru) => `
+        <div class="lang-line"><span class="lang-tag lang-en">EN:</span> ${en}</div>
+        <div class="lang-line"><span class="lang-tag lang-de">DE:</span> ${de}</div>
+        <div class="lang-line"><span class="lang-tag lang-fr">FR:</span> ${fr}</div>
+        <div class="lang-line"><span class="lang-tag lang-it">IT:</span> ${it}</div>
+        <div class="lang-line"><span class="lang-tag lang-ru">RU:</span> ${ru}</div>
+    `;
+
+    // Master Grammar Database (Populated with examples for you to expand)
+    // Master Grammar Database
+    const bpData = {
+        indicative: {
+            headers: ["Aspect", "Past", "Present", "Future"],
+            rows: [
+                {
+                    title: "Simple",
+                    past: {
+                        active: formatLangs("Past Simple", "Perfekt (spoken) / Präteritum (lit)", "Passé Composé (spoken) / Passé Simple (lit)", "Passato Prossimo (spoken) / Passato Remoto (lit)", "Past Perfective (completed) / Imperfective (habit)"),
+                        passive: formatLangs("was/were + Past Participle", "wurde + Past Participle", "a été + Participe Passé", "è stato/a + Participio Passato", "был(а/о/и) + Short Participle (Perfective)")
+                    },
+                    present: {
+                        active: formatLangs("Present Simple", "Präsens", "Présent", "Presente", "Present (Imperfective)"),
+                        passive: formatLangs("am/is/are + Past Participle", "werde/wirst/wird + Past Participle", "suis/es/est + Participe Passé", "sono/sei/è + Participio Passato", "Short Participle (Perfective) OR Verb + ся (Imperfective)")
+                    },
+                    future: {
+                        active: formatLangs("Future Simple", "Futur I", "Futur Proche (near) / Futur Simple (distant)", "Futuro Semplice", "Future Perfective"),
+                        passive: formatLangs("will be + Past Participle", "werde/wird + Past Participle + werden", "sera + Participe Passé", "sarà + Participio Passato", "будет + Short Participle (Perfective)")
+                    }
+                },
+                {
+                    title: "Continuous",
+                    past: {
+                        active: formatLangs("was/were + verb-ing", "N/A - Uses Simple Tenses", "N/A - Uses Imparfait", "stavo/stavi + gerundio", "Past Imperfective"),
+                        passive: formatLangs("was/were being + Past Participle", "N/A", "N/A", "N/A", "Past Imperfective + ся")
+                    },
+                    present: {
+                        active: formatLangs("am/is/are + verb-ing", "N/A - Uses Simple Tenses", "N/A - Uses Présent", "sto/stai/sta + gerundio", "Present (Imperfective)"),
+                        passive: formatLangs("am/is/are being + Past Participle", "N/A", "N/A", "N/A", "Present Imperfective + ся")
+                    },
+                    future: {
+                        active: formatLangs("will be + verb-ing", "N/A - Uses Futur I", "N/A - Uses Futur", "starò/starai + gerundio", "Future Imperfective (буду + infinitive)"),
+                        passive: formatLangs("will be being + Past Participle (Rare)", "N/A", "N/A", "N/A", "Future Imperfective + ся")
+                    }
+                },
+                {
+                    title: "Perfect",
+                    past: {
+                        active: formatLangs("had + Past Participle", "Plusquamperfekt", "Plus-que-parfait / Passé Antérieur", "Trapassato Prossimo / Remoto", "Past Perfective"),
+                        passive: formatLangs("had been + Past Participle", "war + Past Participle + worden", "avait été + Participe Passé", "era stato + Participio Passato", "был(а/о/и) + Short Participle (Perfective)")
+                    },
+                    present: {
+                        active: formatLangs("have/has + Past Participle", "Perfekt", "Passé Composé", "Passato Prossimo", "N/A - Uses Past Perfective"),
+                        passive: formatLangs("have/has been + Past Participle", "ist/sind + Past Participle + worden", "a été + Participe Passé", "è stato + Participio Passato", "N/A - Uses Past Perfective Passive")
+                    },
+                    future: {
+                        active: formatLangs("will have + Past Participle", "Futur II", "Futur Antérieur", "Futuro Anteriore", "Future Perfective"),
+                        passive: formatLangs("will have been + Past Participle", "wird + Past Participle + worden sein", "aura été + Participe Passé", "sarà stato + Participio Passato", "будет + Short Participle (Perfective)")
+                    }
+                },
+                {
+                    title: "Perfect Continuous",
+                    past: {
+                        active: formatLangs("had been + verb-ing", "N/A", "N/A", "N/A", "N/A"),
+                        passive: formatLangs("had been being + Past Participle (Rare)", "N/A", "N/A", "N/A", "N/A")
+                    },
+                    present: {
+                        active: formatLangs("have/has been + verb-ing", "N/A - Uses Präsens + duration", "N/A - Uses Présent + duration", "N/A - Uses Presente + duration", "N/A - Uses Present Impf + duration"),
+                        passive: formatLangs("have been being + Past Participle (Rare)", "N/A", "N/A", "N/A", "N/A")
+                    },
+                    future: {
+                        active: formatLangs("will have been + verb-ing", "N/A", "N/A", "N/A", "N/A"),
+                        passive: formatLangs("will have been being + Past Participle (Ext. Rare)", "N/A", "N/A", "N/A", "N/A")
+                    }
+                }
+            ]
+        },
+        moods: {
+            headers: ["Mood", "Past", "Present", "Future"],
+            rows: [
+                {
+                    title: "Subjunctive",
+                    past: {
+                        active: formatLangs("Past Subjunctive (If I were...)", "N/A - Uses Indicative", "Subjonctif Passé / Imparfait", "Congiuntivo Passato / Imperfetto", "Past Tense + бы"),
+                        passive: formatLangs("were + Past Participle", "N/A", "aie été + Participe Passé", "sia stato/a + Participio Passato", "Short Participle + был бы")
+                    },
+                    present: {
+                        active: formatLangs("Present Subjunctive (I insist he go)", "N/A - Uses Indicative", "Subjonctif Présent", "Congiuntivo Presente", "Past Tense + бы (Same as past)"),
+                        passive: formatLangs("be + Past Participle", "N/A", "soit + Participe Passé", "sia + Participio Passato", "Short Participle + был бы")
+                    }
+                },
+                {
+                    title: "Conditional",
+                    past: {
+                        active: formatLangs("would have + Past Participle", "Konjunktiv II (Perfekt)", "Conditionnel Passé", "Condizionale Passato", "Past Tense + бы"),
+                        passive: formatLangs("would have been + Past Participle", "wäre + Past Participle + worden", "aurait été + Participe Passé", "sarebbe stato + Participio Passato", "был(а/о/и) бы + Short Participle")
+                    },
+                    present: {
+                        active: formatLangs("would + verb", "Konjunktiv II (Präsens)", "Conditionnel Présent", "Condizionale Presente", "Past Tense + бы (Same as past)"),
+                        passive: formatLangs("would be + Past Participle", "würde + Past Participle + werden", "serait + Participe Passé", "sarebbe + Participio Passato", "был(а/о/и) бы + Short Participle")
+                    }
+                },
+                {
+                    title: "Reported Speech",
+                    past: {
+                        active: formatLangs("Shifts standard tenses back", "Konjunktiv I (Perfekt)", "Shifts back (Concordance des temps)", "Shifts back (Concordanza dei tempi)", "No shift. Uses exact tense originally spoken."),
+                        passive: formatLangs("Shifts back (e.g., had been done)", "sei + Past Participle + worden", "Shifts passive tenses back", "Shifts passive tenses back", "No shift. Uses exact passive originally spoken.")
+                    },
+                    present: {
+                        active: formatLangs("Shifts standard tenses back", "Konjunktiv I (Präsens)", "Shifts back", "Shifts back", "No shift. Uses exact tense originally spoken."),
+                        passive: formatLangs("Shifts back (e.g., was done)", "werde + Past Participle + werden", "Shifts passive tenses back", "Shifts passive tenses back", "No shift. Uses exact passive originally spoken.")
+                    }
+                },
+                {
+                    title: "Imperative",
+                    past: null,
+                    present: {
+                        active: formatLangs("One form. Frozen.", "Changes by Number/Politeness.", "Changes by Number/Person.", "Changes by Number/Politeness.", "Changes by Number/Politeness & Aspect."),
+                        passive: formatLangs("be + Past Participle (e.g., Be warned!)", "sei/seien + Past Participle", "sois/soyez + Participe Passé", "sii/siate + Participio Passato", "будь/будьте + Short Participle")
+                    },
+                    future: null
+                }
+            ]
+        },
+        nonfinites: {
+            headers: ["Form", "Grammar Rules & Agreement"],
+            rows: [
+                {
+                    title: "Infinitive",
+                    rules: {
+                        active: formatLangs("to + verb", "Ends in -en", "Ends in -er, -ir, -re", "Ends in -are, -ere, -ire", "Ends in -ть, -ти, -чь"),
+                        passive: formatLangs("to be + Past Participle", "Past Participle + werden", "être + Participe Passé", "essere + Participio Passato", "быть + Short Participle")
+                    }
+                },
+                {
+                    title: "Gerund (Noun)",
+                    rules: {
+                        active: formatLangs("verb + -ing. Frozen.", "Capitalized Infinitive + das. Declines by Case.", "Standard Infinitive. Frozen.", "Standard Infinitive. Frozen.", "Verbal Noun (ending in -ние). Declines by Case/Num."),
+                        passive: formatLangs("being + Past Participle", "N/A", "N/A", "N/A", "N/A - Russian uses active verbal nouns.")
+                    }
+                },
+                {
+                    title: "Gerund (Simultaneous)",
+                    rules: {
+                        active: formatLangs("N/A - Uses clauses or participles.", "N/A - Uses 'während' + clause.", "en + Participe Présent. Frozen.", "Verb stem + ando/endo. Frozen.", "Adverbial Participle (Деепричастие). Frozen."),
+                        passive: formatLangs("N/A", "N/A", "en étant + Participe Passé", "essendo + Participio Passato", "будучи + Short Participle")
+                    }
+                },
+                {
+                    title: "Present Participle",
+                    rules: {
+                        active: formatLangs("verb + -ing. Frozen.", "Infinitive + d (-end). Declines like adj.", "Verb stem + ant. Declines by Gender/Num.", "Verb stem + ante/ente. Declines by Num.", "-ущий/-ящий. Declines by Case/Num/Gender."),
+                        passive: formatLangs("being + Past Participle", "N/A", "étant + Participe Passé", "essendo + Participio Passato", "Present Passive Participle (-емый/-имый). Declines by Case/Num/Gender.")
+                    }
+                },
+                {
+                    title: "Past Participle",
+                    rules: {
+                        active: formatLangs("Frozen.", "Frozen if building past tense. Declines like adjective if placed next to noun.", "Frozen with 'avoir'. Agrees with 'être'. Agrees like adjective if placed next to noun.", "Frozen with 'avere'. Agrees with 'essere'. Agrees like adjective if placed next to noun.", "Long Form: Declines by Gender, Number & Case for active/passive."),
+                        passive: formatLangs("Frozen.", "Frozen.", "Agrees strictly with subject in Gender & Number.", "Agrees strictly with subject in Gender & Number.", "Short Form: Changes by Gender & Number ONLY. Case drops.")
+                    }
+                }
+            ]
+        }
+    };
+
+    window.openBpModal = function() {
+        document.getElementById('bp-modal').style.display = 'flex';
+        renderBpTable();
+    };
+
+    window.closeBpModal = function(e) {
+        if(e.target.id === 'bp-modal' || e.target.classList.contains('modal-close')) {
+            document.getElementById('bp-modal').style.display = 'none';
+        }
+    };
+
+    window.setBpTab = function(tabName) {
+        currentBpTab = tabName;
+        document.querySelectorAll('.bp-tab').forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+        renderBpTable();
+    };
+
+    window.renderBpTable = function() {
+        const isPassive = document.getElementById('bp-passive-switch').checked;
+        const ui = document.getElementById('bp-toggle-ui');
+        const lbl = document.getElementById('bp-status-lbl');
+        
+        if(isPassive) { ui.classList.add('is-passive'); lbl.innerText = "Passive 🟣"; } 
+        else { ui.classList.remove('is-passive'); lbl.innerText = "Active 🟢"; }
+
+        const data = bpData[currentBpTab];
+        let html = `<tr>`;
+        data.headers.forEach(h => html += `<th>${h}</th>`);
+        html += `</tr>`;
+
+        data.rows.forEach(row => {
+            html += `<tr><td>${row.title}</td>`;
+            if(data.headers.length === 4) { 
+                ['past', 'present', 'future'].forEach(time => {
+                    let content = row[time] ? row[time][isPassive ? 'passive' : 'active'] : null;
+                    if(content) html += `<td>${content}</td>`;
+                    else html += `<td class="muted-cell">- N/A -</td>`;
+                });
+            } else { 
+                let content = row.rules ? row.rules[isPassive ? 'passive' : 'active'] : null;
+                if(content) html += `<td>${content}</td>`;
+                else html += `<td class="muted-cell">- N/A -</td>`;
+            }
+            html += `</tr>`;
+        });
+
+        document.getElementById('bp-table-body').innerHTML = html;
     };
 </script>
 </body>
