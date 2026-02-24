@@ -554,42 +554,74 @@
                 return '';
             };
 
-            // Using the new detailed JSON structure logic
             if(currentLang === 'en') {
                 html += buildVerbTable('Indicative (Simple)', [{name:'Past', key:'ind_past_sim_act'}, {name:'Present', key:'ind_pres_sim_act'}, {name:'Future', key:'ind_fut_sim_act'}]);
+                html += buildVerbTable('Indicative (Continuous)', [{name:'Past', key:'ind_past_cont_act'}, {name:'Present', key:'ind_pres_cont_act'}, {name:'Future', key:'ind_fut_cont_act'}]);
+                html += buildVerbTable('Indicative (Perfect)', [{name:'Past', key:'ind_past_perf_act'}, {name:'Present', key:'ind_pres_perf_act'}, {name:'Future', key:'ind_fut_perf_act'}]);
+                html += buildVerbTable('Indicative (Perfect Cont.)', [{name:'Past', key:'ind_past_perfcont_act'}, {name:'Present', key:'ind_pres_perfcont_act'}, {name:'Future', key:'ind_fut_perfcont_act'}]);
+                
                 html += buildVerbTable('Passive (Simple)', [{name:'Past', key:'ind_past_sim_pass'}, {name:'Present', key:'ind_pres_sim_pass'}, {name:'Future', key:'ind_fut_sim_pass'}]);
+                html += buildVerbTable('Passive (Continuous)', [{name:'Past', key:'ind_past_cont_pass'}, {name:'Present', key:'ind_pres_cont_pass'}, {name:'Future', key:'ind_fut_cont_pass'}]);
+                html += buildVerbTable('Passive (Perfect)', [{name:'Past', key:'ind_past_perf_pass'}, {name:'Present', key:'ind_pres_perf_pass'}, {name:'Future', key:'ind_fut_perf_pass'}]);
+                
                 html += buildVerbTable('Subjunctive', [{name:'Past', key:'subj_past_sim_act'}, {name:'Present', key:'subj_pres_sim_act'}]);
                 html += buildVerbTable('Conditionals', [{name:'Cond (would have)', key:'cond_past_sim_act'}, {name:'Cond (would)', key:'cond_pres_sim_act'}]);
-                html += buildVerbTable('Imperative', [{name:'Imperative', key:'imp_pres_sim_act'}]);
+                html += buildVerbTable('Imperative', [{name:'Active', key:'imp_pres_sim_act'}, {name:'Passive', key:'imp_pres_sim_pass'}]);
+                
                 html += buildVerbals([{name:'Infinitive', id:'v_inf'}, {name:'Present Participle', id:'v_pres_part'}, {name:'Past Participle', id:'v_past_part'}, {name:'Gerund (Noun)', id:'v_ger_noun'}, {name:'Gerund (Adverb)', id:'v_ger_adv'}]);
+            
             } else if(currentLang === 'de') {
                 html += buildVerbTable('Indikativ (Simple)', [{name:'Präteritum', key:'ind_past_sim_act'}, {name:'Präsens', key:'ind_pres_sim_act'}, {name:'Futur I', key:'ind_fut_sim_act'}]);
+                html += buildVerbTable('Indikativ (Perfekt)', [{name:'Plusquamperfekt', key:'ind_past_perf_act'}, {name:'Perfekt', key:'ind_pres_perf_act'}, {name:'Futur II', key:'ind_fut_perf_act'}]);
+                
                 html += buildVerbTable('Passiv (Simple)', [{name:'Präteritum', key:'ind_past_sim_pass'}, {name:'Präsens', key:'ind_pres_sim_pass'}, {name:'Futur I', key:'ind_fut_sim_pass'}]);
-                html += buildVerbTable('Konjunktiv I (Reported)', [{name:'Präsens', key:'subj_pres_sim_act'}]);
+                html += buildVerbTable('Passiv (Perfekt)', [{name:'Plusquamperfekt', key:'ind_past_perf_pass'}, {name:'Perfekt', key:'ind_pres_perf_pass'}, {name:'Futur II', key:'ind_fut_perf_pass'}]);
+                
+                html += buildVerbTable('Konjunktiv I (Reported)', [{name:'Vergangenheit', key:'rep_past_sim_act'}, {name:'Präsens', key:'subj_pres_sim_act'}]);
                 html += buildVerbTable('Konjunktiv II (Conditional)', [{name:'Vergangenheit', key:'cond_past_sim_act'}, {name:'Präsens', key:'cond_pres_sim_act'}]);
-                html += buildVerbTable('Imperativ', [{name:'Imperativ', key:'imp_pres_sim_act'}]);
-                html += buildVerbals([{name:'Infinitive', id:'v_inf'}, {name:'Present Participle', id:'v_pres_part'}, {name:'Past Participle', id:'v_past_part'}, {name:'Gerund (Noun)', id:'v_ger_noun'}, {name:'Gerund (Adverb)', id:'v_ger_adv'}]);
+                html += buildVerbTable('Imperativ', [{name:'Aktiv', key:'imp_pres_sim_act'}, {name:'Passiv', key:'imp_pres_sim_pass'}]);
+                
+                html += buildVerbals([{name:'Infinitive', id:'v_inf'}, {name:'Partizip I (Pres)', id:'v_pres_part'}, {name:'Partizip II (Past)', id:'v_past_part'}, {name:'Gerund (Noun)', id:'v_ger_noun'}, {name:'Gerund (Adverb)', id:'v_ger_adv'}]);
+            
             } else if (currentLang === 'fr') {
-                 html += buildVerbTable('Indicatif (Simple)', [{name:'Passé Simple', key:'ind_past_sim_act'}, {name:'Présent', key:'ind_pres_sim_act'}, {name:'Futur', key:'ind_fut_sim_act'}]);
-                 html += buildVerbTable('Passif (Simple)', [{name:'Présent', key:'ind_pres_sim_pass'}]);
+                 html += buildVerbTable('Indicatif (Simple)', [{name:'Passé Simple', key:'ind_past_sim_act'}, {name:'Présent', key:'ind_pres_sim_act'}, {name:'Futur Simple', key:'ind_fut_sim_act'}]);
+                 html += buildVerbTable('Indicatif (Composé)', [{name:'Plus-que-parfait', key:'ind_past_perf_act'}, {name:'Passé Composé', key:'ind_pres_perf_act'}, {name:'Futur Antérieur', key:'ind_fut_perf_act'}]);
+                 html += buildVerbTable('Indicatif (Continu)', [{name:'Imparfait', key:'ind_past_cont_act'}]);
+                 
+                 html += buildVerbTable('Passif (Simple)', [{name:'Passé Simple', key:'ind_past_sim_pass'}, {name:'Présent', key:'ind_pres_sim_pass'}, {name:'Futur Simple', key:'ind_fut_sim_pass'}]);
+                 html += buildVerbTable('Passif (Composé)', [{name:'Plus-que-parfait', key:'ind_past_perf_pass'}, {name:'Passé Composé', key:'ind_pres_perf_pass'}, {name:'Futur Antérieur', key:'ind_fut_perf_pass'}]);
+                 
                  html += buildVerbTable('Subjonctif', [{name:'Imparfait', key:'subj_past_sim_act'}, {name:'Présent', key:'subj_pres_sim_act'}]);
                  html += buildVerbTable('Conditionnel', [{name:'Cond Passé', key:'cond_past_sim_act'}, {name:'Cond Présent', key:'cond_pres_sim_act'}]);
-                 html += buildVerbTable('Impératif', [{name:'Impératif', key:'imp_pres_sim_act'}]);
-                 html += buildVerbals([{name:'Infinitive', id:'v_inf'}, {name:'Participe Présent', id:'v_pres_part'}, {name:'Participe Passé', id:'v_past_part'}, {name:'Gerund (Noun)', id:'v_ger_noun'}, {name:'Gérondif (Adverb)', id:'v_ger_adv'}]);
+                 html += buildVerbTable('Impératif', [{name:'Actif', key:'imp_pres_sim_act'}, {name:'Passif', key:'imp_pres_sim_pass'}]);
+                 
+                 html += buildVerbals([{name:'Infinitif', id:'v_inf'}, {name:'Participe Présent', id:'v_pres_part'}, {name:'Participe Passé', id:'v_past_part'}, {name:'Gerund (Noun)', id:'v_ger_noun'}, {name:'Gérondif (Adverb)', id:'v_ger_adv'}]);
+            
             } else if (currentLang === 'it') {
-                 html += buildVerbTable('Indicativo (Semplice)', [{name:'Pass. Remoto', key:'ind_past_sim_act'}, {name:'Presente', key:'ind_pres_sim_act'}, {name:'Futuro', key:'ind_fut_sim_act'}]);
-                 html += buildVerbTable('Passivo (Semplice)', [{name:'Presente', key:'ind_pres_sim_pass'}]);
+                 html += buildVerbTable('Indicativo (Semplice)', [{name:'Pass. Remoto', key:'ind_past_sim_act'}, {name:'Presente', key:'ind_pres_sim_act'}, {name:'Futuro Semplice', key:'ind_fut_sim_act'}]);
+                 html += buildVerbTable('Indicativo (Composto)', [{name:'Trapassato', key:'ind_past_perf_act'}, {name:'Pass. Prossimo', key:'ind_pres_perf_act'}, {name:'Fut. Anteriore', key:'ind_fut_perf_act'}]);
+                 html += buildVerbTable('Indicativo (Imperfetto / Continuo)', [{name:'Imperfetto', key:'ind_past_cont_act'}, {name:'Progressivo', key:'ind_pres_cont_act'}]);
+                 
+                 html += buildVerbTable('Passivo (Semplice)', [{name:'Pass. Remoto', key:'ind_past_sim_pass'}, {name:'Presente', key:'ind_pres_sim_pass'}, {name:'Futuro', key:'ind_fut_sim_pass'}]);
+                 html += buildVerbTable('Passivo (Composto)', [{name:'Trapassato', key:'ind_past_perf_pass'}, {name:'Pass. Prossimo', key:'ind_pres_perf_pass'}, {name:'Fut. Anteriore', key:'ind_fut_perf_pass'}]);
+                 
                  html += buildVerbTable('Congiuntivo', [{name:'Imperfetto', key:'subj_past_sim_act'}, {name:'Presente', key:'subj_pres_sim_act'}]);
-                 html += buildVerbTable('Condizionale', [{name:'Cond. Passato', key:'cond_past_sim_act'}, {name:'Cond. Pres.', key:'cond_pres_sim_act'}]);
-                 html += buildVerbTable('Imperativo', [{name:'Imperativo', key:'imp_pres_sim_act'}]);
-                 html += buildVerbals([{name:'Infinitive', id:'v_inf'}, {name:'Participio Presente', id:'v_pres_part'}, {name:'Participio Passato', id:'v_past_part'}, {name:'Gerund (Noun)', id:'v_ger_noun'}, {name:'Gerundio (Adverb)', id:'v_ger_adv'}]);
+                 html += buildVerbTable('Condizionale', [{name:'Cond. Passato', key:'cond_past_sim_act'}, {name:'Cond. Presente', key:'cond_pres_sim_act'}]);
+                 html += buildVerbTable('Imperativo', [{name:'Attivo', key:'imp_pres_sim_act'}, {name:'Passivo', key:'imp_pres_sim_pass'}]);
+                 
+                 html += buildVerbals([{name:'Infinito', id:'v_inf'}, {name:'Participio Presente', id:'v_pres_part'}, {name:'Participio Passato', id:'v_past_part'}, {name:'Gerund (Noun)', id:'v_ger_noun'}, {name:'Gerundio (Adverb)', id:'v_ger_adv'}]);
+            
             } else if (currentLang === 'ru') {
                  html += buildVerbTable('Imperfective (НСВ)', [{name:'Past', key:'ind_past_sim_act'}, {name:'Present', key:'ind_pres_sim_act'}, {name:'Future', key:'ind_fut_sim_act'}]);
                  html += buildVerbTable('Perfective (СВ)', [{name:'Past', key:'ind_past_perf_act'}, {name:'Future', key:'ind_fut_perf_act'}]);
+                 
+                 html += buildVerbTable('Passive (Imperfective)', [{name:'Past', key:'ind_past_cont_pass'}, {name:'Present', key:'ind_pres_cont_pass'}, {name:'Future', key:'ind_fut_cont_pass'}]);
                  html += buildVerbTable('Passive (Perfective)', [{name:'Past', key:'ind_past_perf_pass'}, {name:'Future', key:'ind_fut_perf_pass'}]);
+                 
                  html += buildVerbTable('Conditional', [{name:'Cond (Impf)', key:'cond_pres_sim_act'}, {name:'Cond (Perf)', key:'cond_past_perf_act'}]);
                  html += buildVerbTable('Imperative', [{name:'Imp (Impf)', key:'imp_pres_sim_act'}, {name:'Imp (Perf)', key:'imp_pres_perf_act'}]);
-                 html += buildVerbals([{name:'Infinitive', id:'v_inf'}, {name:'Present Participle', id:'v_pres_part'}, {name:'Past Participle', id:'v_past_part'}, {name:'Gerund (Noun)', id:'v_ger_noun'}, {name:'Gerund (Adverb)', id:'v_ger_adv'}]);
+                 
+                 html += buildVerbals([{name:'Infinitive', id:'v_inf'}, {name:'Present Participle', id:'v_pres_part'}, {name:'Past Participle', id:'v_past_part'}, {name:'Verbal Noun', id:'v_ger_noun'}, {name:'Adverbial Part.', id:'v_ger_adv'}]);
             }
         }
 
