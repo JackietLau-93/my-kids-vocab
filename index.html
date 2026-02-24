@@ -627,7 +627,7 @@
         <div class="lang-line"><span class="lang-tag lang-ru">RU:</span> ${ru}</div>
     `;
 
-    // Master Grammar Database (Now armed with JSON keys for dynamic lookups!)
+    // Master Grammar Database (Fully cross-checked with 5-Language CSV)
     const bpData = {
         indicative: {
             headers: ["Aspect", "Past", "Present", "Future"],
@@ -635,46 +635,61 @@
                 {
                     title: "Simple",
                     past: {
-                        active: { text: formatLangs("Past Simple", "Perfekt / Präteritum", "Passé Composé / Simple", "Passato Prossimo / Remoto", "Past Perfective"), key: 'ind_past_sim_act' },
-                        passive: { text: formatLangs("was/were + Past Participle", "wurde + Past Participle", "a été + Participe Passé", "è stato + Participio Passato", "был + Short Participle"), key: 'ind_past_sim_pass' }
+                        active: { text: formatLangs("Past Simple", "Perfekt (spoken) / Präteritum (lit)", "Passé Composé (spoken) / Passé Simple (lit)", "Passato Prossimo (spoken) / Passato Remoto (lit)", "Past Perfective (completed) / Imperfective (habit)"), key: 'ind_past_sim_act' },
+                        passive: { text: formatLangs("was/were + Past Participle", "wurde + Past Participle", "a été + Participe Passé", "è stato/a + Participio Passato", "был(а/о/и) + Short Participle (Perfective)"), key: 'ind_past_sim_pass' }
                     },
                     present: {
                         active: { text: formatLangs("Present Simple", "Präsens", "Présent", "Presente", "Present (Imperfective)"), key: 'ind_pres_sim_act' },
-                        passive: { text: formatLangs("am/is/are + Past Participle", "werde/wird + Past Participle", "suis/est + Participe Passé", "sono/è + Participio Passato", "Short Participle OR Verb + ся"), key: 'ind_pres_sim_pass' }
+                        passive: { text: formatLangs("am/is/are + Past Participle", "werde/wirst/wird + Past Participle", "suis/es/est + Participe Passé", "sono/sei/è + Participio Passato", "Short Participle (Perfective) OR Verb + ся (Imperfective)"), key: 'ind_pres_sim_pass' }
                     },
                     future: {
-                        active: { text: formatLangs("Future Simple", "Futur I", "Futur Simple / Proche", "Futuro Semplice", "Future Perfective"), key: 'ind_fut_sim_act' },
-                        passive: { text: formatLangs("will be + Past Participle", "wird + Past Participle + werden", "sera + Participe Passé", "sarà + Participio Passato", "будет + Short Participle"), key: 'ind_fut_sim_pass' }
+                        active: { text: formatLangs("Future Simple", "Futur I", "Futur Proche (near) / Futur Simple (distant)", "Futuro Semplice", "Future Perfective"), key: 'ind_fut_sim_act' },
+                        passive: { text: formatLangs("will be + Past Participle", "werde/wird + Past Participle + werden", "sera + Participe Passé", "sarà + Participio Passato", "будет + Short Participle (Perfective)"), key: 'ind_fut_sim_pass' }
                     }
                 },
                 {
                     title: "Continuous",
                     past: {
-                        active: { text: formatLangs("was/were + verb-ing", "N/A - Uses Simple", "N/A - Uses Imparfait", "stavo + gerundio", "Past Imperfective"), key: 'ind_past_cont_act' },
-                        passive: { text: formatLangs("was/were being + Past Part.", "N/A", "N/A", "N/A", "Past Imperfective + ся"), key: null }
+                        active: { text: formatLangs("was/were + verb-ing", "N/A - Uses Simple Tenses", "N/A - Uses Imparfait", "stavo/stavi + gerundio", "Past Imperfective"), key: 'ind_past_cont_act' },
+                        passive: { text: formatLangs("was/were being + Past Participle", "N/A", "N/A", "N/A", "Past Imperfective + ся"), key: 'ind_past_cont_pass' }
                     },
                     present: {
-                        active: { text: formatLangs("am/is/are + verb-ing", "N/A - Uses Präsens", "N/A - Uses Présent", "sto + gerundio", "Present (Imperfective)"), key: 'ind_pres_cont_act' },
-                        passive: { text: formatLangs("am/is/are being + Past Part.", "N/A", "N/A", "N/A", "Present Imperfective + ся"), key: null }
+                        active: { text: formatLangs("am/is/are + verb-ing", "N/A - Uses Simple Tenses", "N/A - Uses Présent", "sto/stai/sta + gerundio", "Present (Imperfective)"), key: 'ind_pres_cont_act' },
+                        passive: { text: formatLangs("am/is/are being + Past Participle", "N/A", "N/A", "N/A", "Present Imperfective + ся"), key: 'ind_pres_cont_pass' }
                     },
                     future: {
-                        active: { text: formatLangs("will be + verb-ing", "N/A - Uses Futur", "N/A - Uses Futur", "starò + gerundio", "Future Imperfective"), key: 'ind_fut_cont_act' },
-                        passive: { text: formatLangs("will be being + Past Part.", "N/A", "N/A", "N/A", "Future Imperfective + ся"), key: null }
+                        active: { text: formatLangs("will be + verb-ing", "N/A - Uses Futur I", "N/A - Uses Futur", "starò/starai + gerundio", "Future Imperfective (буду + infinitive)"), key: 'ind_fut_cont_act' },
+                        passive: { text: formatLangs("will be being + Past Participle", "N/A", "N/A", "N/A", "Future Imperfective + ся"), key: 'ind_fut_cont_pass' }
                     }
                 },
                 {
                     title: "Perfect",
                     past: {
-                        active: { text: formatLangs("had + Past Participle", "Plusquamperfekt", "Plus-que-parfait", "Trapassato Prossimo", "Past Perfective"), key: 'ind_past_perf_act' },
-                        passive: { text: formatLangs("had been + Past Participle", "war + Past Participle + worden", "avait été + Participe Passé", "era stato + Participio Passato", "был + Short Participle"), key: 'ind_past_perf_pass' }
+                        active: { text: formatLangs("had + Past Participle", "Plusquamperfekt", "Plus-que-parfait / Passé Antérieur", "Trapassato Prossimo / Remoto", "Past Perfective"), key: 'ind_past_perf_act' },
+                        passive: { text: formatLangs("had been + Past Participle", "war + Past Participle + worden", "avait été + Participe Passé", "era stato + Participio Passato", "был(а/о/и) + Short Participle (Perfective)"), key: 'ind_past_perf_pass' }
                     },
                     present: {
                         active: { text: formatLangs("have/has + Past Participle", "Perfekt", "Passé Composé", "Passato Prossimo", "N/A - Uses Past Perfective"), key: 'ind_pres_perf_act' },
-                        passive: { text: formatLangs("have been + Past Participle", "ist + Past Participle + worden", "a été + Participe Passé", "è stato + Participio Passato", "N/A - Uses Past Perf Passive"), key: null }
+                        passive: { text: formatLangs("have/has been + Past Participle", "ist/sind + Past Participle + worden", "a été + Participe Passé", "è stato + Participio Passato", "N/A - Uses Past Perfective Passive"), key: 'ind_pres_perf_pass' }
                     },
                     future: {
                         active: { text: formatLangs("will have + Past Participle", "Futur II", "Futur Antérieur", "Futuro Anteriore", "Future Perfective"), key: 'ind_fut_perf_act' },
-                        passive: { text: formatLangs("will have been + Past Part.", "wird + Past Part. + worden sein", "aura été + Participe Passé", "sarà stato + Participio Passato", "будет + Short Participle"), key: 'ind_fut_perf_pass' }
+                        passive: { text: formatLangs("will have been + Past Participle", "wird + Past Participle + worden sein", "aura été + Participe Passé", "sarà stato + Participio Passato", "будет + Short Participle (Perfective)"), key: 'ind_fut_perf_pass' }
+                    }
+                },
+                {
+                    title: "Perfect Continuous",
+                    past: {
+                        active: { text: formatLangs("had been + verb-ing", "N/A", "N/A", "N/A", "N/A"), key: 'ind_past_perfcont_act' },
+                        passive: { text: formatLangs("had been being + Past Participle", "N/A", "N/A", "N/A", "N/A"), key: 'ind_past_perfcont_pass' }
+                    },
+                    present: {
+                        active: { text: formatLangs("have/has been + verb-ing", "N/A - Uses Präsens + duration", "N/A - Uses Présent + duration", "N/A - Uses Presente + duration", "N/A - Uses Present Impf + duration"), key: 'ind_pres_perfcont_act' },
+                        passive: { text: formatLangs("have been being + Past Participle", "N/A", "N/A", "N/A", "N/A"), key: 'ind_pres_perfcont_pass' }
+                    },
+                    future: {
+                        active: { text: formatLangs("will have been + verb-ing", "N/A", "N/A", "N/A", "N/A"), key: 'ind_fut_perfcont_act' },
+                        passive: { text: formatLangs("will have been being + Past Participle", "N/A", "N/A", "N/A", "N/A"), key: 'ind_fut_perfcont_pass' }
                     }
                 }
             ]
@@ -683,44 +698,53 @@
             headers: ["Mood", "Past", "Present", "Future"],
             rows: [
                 {
-                    title: "Subjunctive",
+                    title: "Subjunctive<br><span style='font-size:0.7rem; color:#888;'>(Doubt, emotion, necessity)</span>",
                     past: {
-                        active: { text: formatLangs("Past Subj (If I were...)", "N/A - Uses Indicative", "Subjonctif Passé / Imparfait", "Congiuntivo Passato", "Past Tense + бы"), key: 'subj_past_sim_act' },
-                        passive: { text: formatLangs("were + Past Participle", "N/A", "aie été + Participe Passé", "sia stato + Participio Passato", "Short Participle + был бы"), key: null }
+                        active: { text: formatLangs("Past Subjunctive (If I were...)", "N/A - Uses Indicative", "Subjonctif Passé / Imparfait / Plus-que-parfait", "Congiuntivo Passato / Imperfetto / Trapassato", "Past Tense + бы"), key: 'subj_past_sim_act' },
+                        passive: { text: formatLangs("were + Past Participle", "N/A", "aie été + Participe Passé", "sia stato/a + Participio Passato", "Short Participle + был бы"), key: 'subj_past_sim_pass' }
                     },
                     present: {
-                        active: { text: formatLangs("Present Subj (I insist he go)", "N/A - Uses Indicative", "Subjonctif Présent", "Congiuntivo Presente", "Past Tense + бы"), key: 'subj_pres_sim_act' },
-                        passive: { text: formatLangs("be + Past Participle", "N/A", "soit + Participe Passé", "sia + Participio Passato", "Short Participle + был бы"), key: null }
-                    }
+                        active: { text: formatLangs("Present Subjunctive (I insist he go)", "N/A - Uses Indicative", "Subjonctif Présent", "Congiuntivo Presente", "Past Tense + бы (Same as past)"), key: 'subj_pres_sim_act' },
+                        passive: { text: formatLangs("be + Past Participle", "N/A", "soit + Participe Passé", "sia + Participio Passato", "Short Participle + был бы"), key: 'subj_pres_sim_pass' }
+                    },
+                    future: null
                 },
                 {
-                    title: "Conditional",
+                    title: "Conditional<br><span style='font-size:0.7rem; color:#888;'>(Hypotheticals, politeness)</span>",
                     past: {
                         active: { text: formatLangs("would have + Past Participle", "Konjunktiv II (Perfekt)", "Conditionnel Passé", "Condizionale Passato", "Past Tense + бы"), key: 'cond_past_sim_act' },
-                        passive: { text: formatLangs("would have been + Past Part.", "wäre + Past Participle + worden", "aurait été + Participe Passé", "sarebbe stato + Participio Passato", "был бы + Short Participle"), key: null }
+                        passive: { text: formatLangs("would have been + Past Participle", "wäre + Past Participle + worden", "aurait été + Participe Passé", "sarebbe stato + Participio Passato", "был(а/о/и) бы + Short Participle"), key: 'cond_past_sim_pass' }
                     },
                     present: {
-                        active: { text: formatLangs("would + verb", "Konjunktiv II (Präsens)", "Conditionnel Présent", "Condizionale Presente", "Past Tense + бы"), key: 'cond_pres_sim_act' },
-                        passive: { text: formatLangs("would be + Past Participle", "würde + Past Participle + werden", "serait + Participe Passé", "sarebbe + Participio Passato", "был бы + Short Participle"), key: null }
+                        active: { text: formatLangs("would + verb", "Konjunktiv II (Präsens)", "Conditionnel Présent", "Condizionale Presente", "Past Tense + бы (Same as past)"), key: 'cond_pres_sim_act' },
+                        passive: { text: formatLangs("would be + Past Participle", "würde + Past Participle + werden", "serait + Participe Passé", "sarebbe + Participio Passato", "был(а/о/и) бы + Short Participle"), key: 'cond_pres_sim_pass' }
+                    },
+                    future: {
+                        active: { text: formatLangs("N/A - Uses Present Cond.", "Konjunktiv II (Futur I / Futur II)", "N/A - Uses Present Cond.", "N/A - Uses Present Cond.", "N/A"), key: 'cond_fut_sim_act' },
+                        passive: { text: formatLangs("N/A", "würde + Past Participle + worden sein", "N/A", "N/A", "N/A"), key: 'cond_fut_sim_pass' }
                     }
                 },
                 {
-                    title: "Reported Speech",
+                    title: "Reported Speech<br><span style='font-size:0.7rem; color:#888;'>(Grammatical distancing)</span>",
                     past: {
-                        active: { text: formatLangs("Shifts tenses back", "Konjunktiv I (Perfekt)", "Shifts tenses back", "Shifts tenses back", "No shift. Uses exact tense."), key: null },
-                        passive: { text: formatLangs("Shifts passive tenses back", "sei + Past Participle + worden", "Shifts passive tenses back", "Shifts passive tenses back", "No shift."), key: null }
+                        active: { text: formatLangs("Shifts standard tenses back", "Konjunktiv I (Perfekt)", "Shifts back (Concordance des temps)", "Shifts back (Concordanza dei tempi)", "No shift. Uses exact tense originally spoken."), key: 'rep_past_sim_act' },
+                        passive: { text: formatLangs("Shifts passive back (had been done)", "sei + Past Participle + worden", "Shifts passive tenses back", "Shifts passive tenses back", "No shift. Uses exact passive originally spoken."), key: 'rep_past_sim_pass' }
                     },
                     present: {
-                        active: { text: formatLangs("Shifts tenses back", "Konjunktiv I (Präsens)", "Shifts tenses back", "Shifts tenses back", "No shift. Uses exact tense."), key: null },
-                        passive: { text: formatLangs("Shifts passive tenses back", "werde + Past Participle + werden", "Shifts passive tenses back", "Shifts passive tenses back", "No shift."), key: null }
+                        active: { text: formatLangs("Shifts standard tenses back", "Konjunktiv I (Präsens)", "Shifts back", "Shifts back", "No shift. Uses exact tense originally spoken."), key: 'rep_pres_sim_act' },
+                        passive: { text: formatLangs("Shifts passive back (was done)", "werde + Past Participle + werden", "Shifts passive tenses back", "Shifts passive tenses back", "No shift."), key: 'rep_pres_sim_pass' }
+                    },
+                    future: {
+                        active: { text: formatLangs("Shifts will to would", "Konjunktiv I (Futur I / Futur II)", "Shifts future to conditional", "Shifts future to conditional", "No shift. Uses exact future originally spoken."), key: 'rep_fut_sim_act' },
+                        passive: { text: formatLangs("Shifts will be to would be", "werde + Past Participle + werden", "Shifts to conditional passive", "Shifts to conditional passive", "No shift."), key: 'rep_fut_sim_pass' }
                     }
                 },
                 {
-                    title: "Imperative",
+                    title: "Imperative<br><span style='font-size:0.7rem; color:#888;'>(Commands)</span>",
                     past: null,
                     present: {
-                        active: { text: formatLangs("One form. Frozen.", "Changes by Number/Politeness.", "Changes by Number/Person.", "Changes by Number/Politeness.", "Changes by Politeness & Aspect."), key: 'imp_pres_sim_act' },
-                        passive: { text: formatLangs("be + Past Participle", "sei/seien + Past Participle", "sois/soyez + Participe Passé", "sii/siate + Participio Passato", "будь/будьте + Short Participle"), key: null }
+                        active: { text: formatLangs("One command form for everyone.", "Changes by Number/Politeness.", "Changes by Number/Person.", "Changes by Number/Politeness.", "Changes by Politeness & Aspect (Impf vs Perf)."), key: 'imp_pres_sim_act' },
+                        passive: { text: formatLangs("be + Past Participle (e.g., Be warned!)", "sei/seien + Past Participle", "sois/soyez + Participe Passé", "sii/siate + Participio Passato", "будь/будьте + Short Participle"), key: 'imp_pres_sim_pass' }
                     },
                     future: null
                 }
@@ -733,35 +757,35 @@
                     title: "Infinitive",
                     rules: {
                         active: { text: formatLangs("to + verb", "Ends in -en", "Ends in -er, -ir, -re", "Ends in -are, -ere, -ire", "Ends in -ть, -ти, -чь"), key: 'v_inf' },
-                        passive: { text: formatLangs("to be + Past Participle", "Past Participle + werden", "être + Participe Passé", "essere + Participio Passato", "быть + Short Participle"), key: null }
+                        passive: { text: formatLangs("to be + Past Participle", "Past Participle + werden", "être + Participe Passé", "essere + Participio Passato", "быть + Short Participle"), key: 'v_inf_pass' }
                     }
                 },
                 {
                     title: "Gerund (Noun)",
                     rules: {
-                        active: { text: formatLangs("verb + -ing.", "Capitalized Infinitive + das.", "Standard Infinitive.", "Standard Infinitive.", "Verbal Noun (ending in -ние)."), key: 'v_ger_noun' },
-                        passive: null
+                        active: { text: formatLangs("verb + -ing. Frozen.", "Capitalized Infinitive + das. Declines by Case.", "Standard Infinitive. Frozen.", "Standard Infinitive. Frozen.", "Verbal Noun (ending in -ние). Declines by Case/Num."), key: 'v_ger_noun' },
+                        passive: { text: formatLangs("being + Past Participle", "N/A", "N/A", "N/A", "N/A - Russian uses active verbal nouns."), key: 'v_ger_noun_pass' }
                     }
                 },
                 {
-                    title: "Gerund (Simult.)",
+                    title: "Gerund (Simultaneous)<br><span style='font-size:0.7rem; color:#888;'>(while doing...)</span>",
                     rules: {
-                        active: { text: formatLangs("N/A - Uses clauses.", "N/A - Uses 'während'.", "en + Participe Présent.", "Verb stem + ando/endo.", "Adverbial Participle (Деепричастие)."), key: 'v_ger_adv' },
-                        passive: { text: formatLangs("N/A", "N/A", "en étant + Participe Passé", "essendo + Participio Passato", "будучи + Short Participle"), key: null }
+                        active: { text: formatLangs("N/A - Uses clauses or participles.", "N/A - Uses 'während' + clause.", "en + Participe Présent. Frozen.", "Verb stem + ando/endo. Frozen.", "Adverbial Participle (Деепричастие). Frozen."), key: 'v_ger_adv' },
+                        passive: { text: formatLangs("N/A", "N/A", "en étant + Participe Passé", "essendo + Participio Passato", "будучи + Short Participle"), key: 'v_ger_adv_pass' }
                     }
                 },
                 {
                     title: "Present Participle",
                     rules: {
-                        active: { text: formatLangs("verb + -ing.", "Infinitive + d (-end).", "Verb stem + ant.", "Verb stem + ante/ente.", "-ущий/-ящий."), key: 'v_pres_part' },
-                        passive: { text: formatLangs("being + Past Participle", "N/A", "étant + Participe Passé", "essendo + Participio Passato", "Present Passive Participle (-емый/-имый)."), key: null }
+                        active: { text: formatLangs("verb + -ing. Frozen.", "Infinitive + d (-end). Declines like adj.", "Verb stem + ant. Declines by Gender/Num.", "Verb stem + ante/ente. Declines by Num.", "-ущий/-ящий. Declines by Case/Num/Gender."), key: 'v_pres_part' },
+                        passive: { text: formatLangs("being + Past Participle", "N/A", "étant + Participe Passé", "essendo + Participio Passato", "Present Passive Participle (-емый/-имый). Declines by Case/Num/Gender."), key: 'v_pres_part_pass' }
                     }
                 },
                 {
                     title: "Past Participle",
                     rules: {
-                        active: { text: formatLangs("Frozen.", "Frozen if building past tense.", "Frozen with 'avoir'.", "Frozen with 'avere'.", "Long Form: Declines by Case/Num/Gender."), key: 'v_past_part' },
-                        passive: { text: formatLangs("Frozen.", "Frozen.", "Agrees strictly with subject.", "Agrees strictly with subject.", "Short Form: Changes by Gender & Number ONLY."), key: null }
+                        active: { text: formatLangs("Frozen.", "Frozen if building past tense. Declines like adjective if placed next to noun.", "Frozen with 'avoir'. Agrees with 'être'. Agrees like adjective if placed next to noun.", "Frozen with 'avere'. Agrees with 'essere'. Agrees like adjective if placed next to noun.", "Long Form: Declines by Gender, Number & Case for active/passive."), key: 'v_past_part' },
+                        passive: { text: formatLangs("Frozen.", "Frozen.", "Agrees strictly with subject in Gender & Number.", "Agrees strictly with subject in Gender & Number.", "Short Form: Changes by Gender & Number ONLY. Case drops."), key: 'v_past_part_pass' }
                     }
                 }
             ]
