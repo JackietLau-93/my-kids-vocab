@@ -631,7 +631,7 @@
     const t = (name, rule) => `<div style="line-height:1.2;">${name}<br><span style="font-size:0.75rem; color:#777; font-weight:normal;">${rule}</span></div>`;
     const na = (rule) => `<div style="line-height:1.2; color:#bbb;">N/A<br><span style="font-size:0.75rem; font-style:italic;">${rule}</span></div>`;
 
-    // Master Grammar Database (Standardized Layout: Name + Rule)
+    // Master Grammar Database (Fully Refined with ALL Tenses & Multi-Tense Passives)
     const bpData = {
         indicative: {
             headers: ["Aspect", "Past", "Present", "Future"],
@@ -642,16 +642,16 @@
                         active: { text: formatLangs(
                             t("Past Simple", "verb-ed / irregular"), 
                             t("Perfekt (spoken) / Präteritum (lit)", "haben/sein + Part. II / stem + -te"), 
-                            t("Passé Composé (spoken) / Simple (lit)", "avoir/être + Part. Passé / stem + endings"), 
-                            t("Passato Prossimo (spoken) / Remoto (lit)", "avere/essere + Part. Passato / stem + endings"), 
+                            t("Passé Récent / Passé Composé / Passé Simple", "venir de + inf. / avoir/être + Part. Passé / stem + endings"), 
+                            t("Passato Prossimo / Passato Remoto", "avere/essere + Part. Passato / stem + endings"), 
                             t("Past Perfective / Imperfective", "verb stem + -л(а/о/и)")
                         ), key: 'ind_past_sim_act' },
                         passive: { text: formatLangs(
                             t("Past Simple Passive", "was/were + Past Part."), 
-                            t("Präteritum Passiv", "wurde + Part. II"), 
-                            t("Passif Passé Composé", "a été + Part. Passé"), 
-                            t("Passivo Passato Prossimo", "è stato/a + Part. Passato"), 
-                            t("Past Perfective Passive", "был(а/о/и) + Short Participle")
+                            t("Perfekt Passiv / Präteritum Passiv", "ist...worden / wurde + Part. II"), 
+                            t("Passif: P. Récent / P. Composé / P. Simple", "vient d'être + Part. / a été + Part. / fut + Part."), 
+                            t("Passivo: P. Prossimo / P. Remoto", "è stato + Part. / fu + Part."), 
+                            t("Passive: Perfective / Imperfective", "был(а) + Short Part. / verb + ся")
                         ), key: 'ind_past_sim_pass' }
                     },
                     present: {
@@ -676,12 +676,12 @@
                             t("Futur I", "werden + Infinitive"), 
                             t("Futur Proche / Futur Simple", "aller + inf. / stem + endings"), 
                             t("Futuro Semplice", "stem + endings"), 
-                            t("Future Perf. / Imperfective", "conjugated perf. / буду + inf.")
+                            t("Future Perfective", "conjugated perf. verb")
                         ), key: 'ind_fut_sim_act' },
                         passive: { text: formatLangs(
                             t("Future Simple Passive", "will be + Past Part."), 
                             t("Futur I Passiv", "wird + Part. II + werden"), 
-                            t("Passif Futur", "sera + Part. Passé"), 
+                            t("Passif: Futur Proche / Futur Simple", "va être + Part. Passé / sera + Part. Passé"), 
                             t("Passivo Futuro", "sarà + Part. Passato"), 
                             t("Future Perf. Passive", "будет + Short Participle")
                         ), key: 'ind_fut_sim_pass' }
@@ -699,7 +699,8 @@
                         ), key: 'ind_past_cont_act' },
                         passive: { text: formatLangs(
                             t("Past Cont. Passive", "was/were being + Past Part."), 
-                            na("N/A"), na("N/A"), na("N/A"), 
+                            na("N/A"), na("N/A"), 
+                            t("Passivo: Imperfetto", "veniva + Part. Passato"), 
                             t("Past Impf. Passive", "Past Impf verb + ся")
                         ), key: 'ind_past_cont_pass' }
                     },
@@ -713,7 +714,8 @@
                         ), key: 'ind_pres_cont_act' },
                         passive: { text: formatLangs(
                             t("Present Cont. Passive", "am/is/are being + Past Part."), 
-                            na("N/A"), na("N/A"), na("N/A"), 
+                            na("N/A"), na("N/A"), 
+                            t("Passivo: Progressivo", "sta venendo + Part. Passato"), 
                             t("Present Impf. Passive", "Present Impf verb + ся")
                         ), key: 'ind_pres_cont_pass' }
                     },
@@ -727,7 +729,8 @@
                         ), key: 'ind_fut_cont_act' },
                         passive: { text: formatLangs(
                             t("Future Cont. Passive", "will be being + Past Part."), 
-                            na("N/A"), na("N/A"), na("N/A"), 
+                            na("N/A"), na("N/A"), 
+                            t("Passivo: Futuro Progressivo", "starà venendo + Part. Passato"), 
                             t("Future Impf. Passive", "Future Impf verb + ся")
                         ), key: 'ind_fut_cont_pass' }
                     }
@@ -738,15 +741,15 @@
                         active: { text: formatLangs(
                             t("Past Perfect", "had + Past Part."), 
                             t("Plusquamperfekt", "hatte/war + Part. II"), 
-                            t("Plus-que-parfait", "avais/étais + Part. Passé"), 
-                            t("Trapassato Prossimo", "avevo/ero + Part. Passato"), 
+                            t("Plus-que-parfait / Passé Antérieur", "avais/étais + Part. / eus/fus + Part."), 
+                            t("Trapassato Prossimo / Remoto", "avevo/ero + Part. / ebbi/fui + Part."), 
                             t("Past Perfective", "Completed past result")
                         ), key: 'ind_past_perf_act' },
                         passive: { text: formatLangs(
                             t("Past Perfect Passive", "had been + Past Part."), 
                             t("Plusquamperfekt Passiv", "war + Part. II + worden"), 
-                            t("Passif Plus-que-parfait", "avait été + Part. Passé"), 
-                            t("Passivo Trapassato", "era stato + Part. Passato"), 
+                            t("Passif: Plus-que-parfait / Passé Antérieur", "avait été + Part. / eut été + Part."), 
+                            t("Passivo: Trapassato Prossimo / Remoto", "era stato + Part. / fu stato + Part."), 
                             t("Past Perf. Passive", "был(а/о/и) + Short Participle")
                         ), key: 'ind_past_perf_pass' }
                     },
@@ -789,8 +792,8 @@
                         active: { text: formatLangs(
                             t("Past Perfect Cont.", "had been + verb-ing"), 
                             na("Uses Plusquamperfekt"), 
-                            na("Uses Plus-que-parfait"), 
-                            na("Uses Trapassato"), 
+                            na("Uses Plus-que-parfait / Passé Antérieur"), 
+                            na("Uses Trapassati"), 
                             na("Uses Past Imperfective")
                         ), key: 'ind_past_perfcont_act' },
                         passive: { text: formatLangs(t("Past Perf. Cont. Passive", "had been being + Past Part."), na("N/A"), na("N/A"), na("N/A"), na("N/A")), key: 'ind_past_perfcont_pass' }
@@ -825,15 +828,15 @@
                         active: { text: formatLangs(
                             t("Past Subjunctive", "were (If I were...)"), 
                             na("Uses Indicative"), 
-                            t("Subjonctif Passé / Imparfait", "aie/eusse + Part. Passé"), 
-                            t("Congiuntivo Passato", "abbia/sia + Part. Passato"), 
+                            t("Subjonctif Passé / Imparfait / Plus-que-parfait", "aie/eusse + Part. / eusse eu + Part."), 
+                            t("Congiuntivo Passato / Imperfetto / Trapassato", "abbia/avessi + Part. / avessi avuto + Part."), 
                             t("Conditional", "Past Tense + бы")
                         ), key: 'subj_past_sim_act' },
                         passive: { text: formatLangs(
                             t("Past Subj. Passive", "were + Past Part."), 
                             na("N/A"), 
-                            t("Subjonctif Passé Passif", "aie été + Part. Passé"), 
-                            t("Congiuntivo Passato Passivo", "sia stato/a + Part. Passato"), 
+                            t("Passif Subjonctif: Passé / Imparfait / Plus-que-parfait", "ait été / fût / eût été + Part. Passé"), 
+                            t("Passivo Congiuntivo: Passato / Imperfetto / Trapassato", "sia stato / fosse / fosse stato + Part. Passato"), 
                             t("Conditional Passive", "Short Participle + был бы")
                         ), key: 'subj_past_sim_pass' }
                     },
@@ -1059,14 +1062,14 @@
                             t("Partizip II", "Declines like adjective if placed next to noun."), 
                             t("Participe Passé", "Agrees with 'être'. Agrees like adj if with noun."), 
                             t("Participio Passato", "Agrees with 'essere'. Agrees like adj if with noun."), 
-                            t("Past Participle Active", "Long Form: Declines by Gen/Num/Case.")
+                            t("Impf Active / Perf Active / Perf Passive (Long)", "was doing / completed / completely acted upon. ALL decline by Gender/Num/Case.")
                         ), key: 'v_past_part' },
                         passive: { text: formatLangs(
                             t("Past Participle Passive", "Frozen."), 
                             t("Partizip II Passiv", "Frozen."), 
                             t("Participe Passé Passif", "Agrees strictly with subject in Gen/Num."), 
                             t("Participio Passato Passivo", "Agrees strictly with subject in Gen/Num."), 
-                            t("Past Participle Passive", "Short Form: Changes by Gen/Num ONLY. Case drops.")
+                            t("Perfective Passive (Short Form)", "Changes by Gender & Number ONLY. Case drops.")
                         ), key: 'v_past_part_pass' }
                     }
                 }
