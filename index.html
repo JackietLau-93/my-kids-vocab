@@ -631,7 +631,7 @@
     const t = (name, rule) => `<div style="line-height:1.2;">${name}<br><span style="font-size:0.75rem; color:#777; font-weight:normal;">${rule}</span></div>`;
     const na = (rule) => `<div style="line-height:1.2; color:#bbb;">N/A<br><span style="font-size:0.75rem; font-style:italic;">${rule}</span></div>`;
 
-    // Master Grammar Database (Fully Refined with ALL Tenses & Multi-Tense Passives)
+    // Master Grammar Database (Standardized Layout & Complete Russian Passives)
     const bpData = {
         indicative: {
             headers: ["Aspect", "Past", "Present", "Future"],
@@ -651,7 +651,7 @@
                             t("Perfekt Passiv / Präteritum Passiv", "ist...worden / wurde + Part. II"), 
                             t("Passif: P. Récent / P. Composé / P. Simple", "vient d'être + Part. / a été + Part. / fut + Part."), 
                             t("Passivo: P. Prossimo / P. Remoto", "è stato + Part. / fu + Part."), 
-                            t("Passive: Perfective / Imperfective", "был(а) + Short Part. / verb + ся")
+                            t("Perf (Result) vs Impf (Process)", "<b>Perf:</b> был(а/о/и) + Short Part.<br><b>Impf:</b> Past verb + ся (changes by Gen/Num)")
                         ), key: 'ind_past_sim_pass' }
                     },
                     present: {
@@ -667,7 +667,7 @@
                             t("Präsens Passiv", "werde/wird + Part. II"), 
                             t("Passif Présent", "suis/est + Part. Passé"), 
                             t("Passivo Presente", "sono/è + Part. Passato"), 
-                            t("Present Impf. Passive", "verb + ся / Short Participle (Result)")
+                            t("Perf (Result) vs Impf (Process)", "<b>Perf:</b> Short Part. (zero 'to be').<br><b>Impf:</b> Present verb + ся (changes by Per/Num)")
                         ), key: 'ind_pres_sim_pass' }
                     },
                     future: {
@@ -683,7 +683,7 @@
                             t("Futur I Passiv", "wird + Part. II + werden"), 
                             t("Passif: Futur Proche / Futur Simple", "va être + Part. Passé / sera + Part. Passé"), 
                             t("Passivo Futuro", "sarà + Part. Passato"), 
-                            t("Future Perf. Passive", "будет + Short Participle")
+                            t("Perf (Result) vs Impf (Process)", "<b>Perf:</b> будет + Short Part.<br><b>Impf:</b> будет + inf + ся")
                         ), key: 'ind_fut_sim_pass' }
                     }
                 },
@@ -750,7 +750,7 @@
                             t("Plusquamperfekt Passiv", "war + Part. II + worden"), 
                             t("Passif: Plus-que-parfait / Passé Antérieur", "avait été + Part. / eut été + Part."), 
                             t("Passivo: Trapassato Prossimo / Remoto", "era stato + Part. / fu stato + Part."), 
-                            t("Past Perf. Passive", "был(а/о/и) + Short Participle")
+                            t("Past Perf. Passive (Result)", "был(а/о/и) + Short Participle")
                         ), key: 'ind_past_perf_pass' }
                     },
                     present: {
@@ -782,7 +782,7 @@
                             t("Futur II Passiv", "wird + Part. II + worden sein"), 
                             t("Passif Futur Antérieur", "aura été + Part. Passé"), 
                             t("Passivo Futuro Anteriore", "sarà stato + Part. Passato"), 
-                            t("Future Perf. Passive", "будет + Short Participle")
+                            t("Future Perf. Passive (Result)", "будет + Short Participle")
                         ), key: 'ind_fut_perf_pass' }
                     }
                 },
@@ -1069,7 +1069,7 @@
                             t("Partizip II Passiv", "Frozen."), 
                             t("Participe Passé Passif", "Agrees strictly with subject in Gen/Num."), 
                             t("Participio Passato Passivo", "Agrees strictly with subject in Gen/Num."), 
-                            t("Perfective Passive (Short Form)", "Changes by Gender & Number ONLY. Case drops.")
+                            t("Passive Core Mechanics", "<b>Impf (Process):</b> verb + -ся (changes by Tense/Per/Num).<br><b>Perf (Result):</b> быть + Short Participle (changes by Gen/Num).")
                         ), key: 'v_past_part_pass' }
                     }
                 }
