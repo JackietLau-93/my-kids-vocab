@@ -201,37 +201,29 @@
 </div>
 
 <div id="uni-matrix-modal" class="modal-overlay" onclick="closeUniMatrix(event)">
-    <div class="modal-content" style="max-width: 1200px;" onclick="event.stopPropagation()">
+    <div class="modal-content" style="max-width: 1100px;" onclick="event.stopPropagation()">
         <button class="modal-close" onclick="closeUniMatrix(event)">✕</button>
+        
         <div class="modal-header">
-            <h2 style="font-family:'Fredoka One';">Universal Grammar Matrix</h2>
-            <p>Cross-Language Conjugation Comparison</p>
+            <h2>Universal Grammar Matrix</h2>
+            <p style="margin: 5px 0 0 0; color: #777; font-size: 1rem; text-transform: uppercase; font-weight:bold;">Cross-Language Conjugation Rules</p>
+            
+            <div class="mode-switch-container" style="margin-top:20px;">
+                <div class="mode-switch" style="font-size:0.8rem; padding: 3px;">
+                    <div class="mode-btn active" id="m-voice-act" onclick="setMatrixVoice('active')" style="padding: 6px 15px;">Active Voice</div>
+                    <div class="mode-btn" id="m-voice-pass" onclick="setMatrixVoice('passive')" style="padding: 6px 15px;">Passive Voice</div>
+                    <div class="mode-btn" id="m-voice-comp" onclick="setMatrixVoice('compare')" style="padding: 6px 15px;">Active vs Passive</div>
+                </div>
+            </div>
         </div>
-        <style>
-            .uni-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; text-align: left; }
-            .uni-table th { padding: 12px; background: #f0f4f8; border: 1px solid #d9e2ec; color: #334e68; position: sticky; top: 0; z-index: 2;}
-            .uni-table td { padding: 12px; border: 1px solid #d9e2ec; vertical-align: top; line-height: 1.4; color: #486581;}
-            .uni-table b { color: #1976d2; display: inline-block; width: 30px;}
-            .uni-table tr:nth-child(even) { background: #f8fbfd; }
-        </style>
-        <div style="overflow-x: auto; max-height: 65vh;">
-            <table class="uni-table" id="uni-table-body">
-                </table>
-        </div>
+
+        <div id="uni-table-body" style="overflow-x:auto; margin-top: 15px;"></div>
     </div>
 </div>
 
 <div class="modal-header">
     <h2 id="modal-title">Word</h2>
     <p id="modal-subtitle">Grammar Matrix</p>
-        
-    <div class="mode-switch-container" style="margin-top:15px;">
-         <div class="mode-switch" style="font-size:0.8rem; padding: 3px;">
-            <div class="mode-btn active" id="m-voice-act" onclick="setMatrixVoice('active')" style="padding: 6px 15px;">Active Voice</div>
-            <div class="mode-btn" id="m-voice-pass" onclick="setMatrixVoice('passive')" style="padding: 6px 15px;">Passive Voice</div>
-            <div class="mode-btn" id="m-voice-comp" onclick="setMatrixVoice('compare')" style="padding: 6px 15px;">Active vs Passive</div>
-         </div>
-     </div>
 </div>
 
 <div id="child-mode" style="display:none;">
