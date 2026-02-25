@@ -129,7 +129,16 @@
 
     /* --- UNIVERSAL MATRIX V2 STYLES --- */
 .uni-matrix-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; background: white;}
-.uni-matrix-table th { background: #e3f2fd; color: #1976d2; padding: 12px; border: 1px solid #c8e1f5; text-align: left; font-family: 'Fredoka One'; text-transform: uppercase; font-size: 0.8rem;}
+.uni-matrix-table th { 
+        background-color: #111 !important; 
+        color: #ffffff !important; 
+        padding: 12px 15px; 
+        border: 1px solid #333; 
+        text-align: left; 
+        font-family: 'Fredoka One', cursive; 
+        text-transform: uppercase; 
+        font-size: 0.85rem;
+    }
 .uni-matrix-table td { border: 1px solid #eee; padding: 12px; vertical-align: top; }
 .aspect-cell { font-weight: bold; background: #f8fbfd; color: #334e68; text-transform: uppercase; font-size: 0.95rem; text-align: center; vertical-align: middle !important; writing-mode: vertical-rl; transform: rotate(180deg); width: 40px;}
 .lang-cell { font-weight: bold; background: #fafafa; text-align: center; color: #555; vertical-align: middle !important; width: 40px; font-size: 1rem;}
@@ -885,41 +894,43 @@
     };
 
     function buildUniCell(dataArray) {
+        // Standardize N/A cells
         if (!dataArray || dataArray.length === 0) return { html: '<div style="color:#999; text-align:center; font-weight:bold;">N/A</div>', isNA: true };
         let isNA = dataArray.every(t => t.n === "N/A" || t.n === "-");
         
-        let html = dataArray.length === 1 ? '' : '<ol class="tense-list">';
+        let html = dataArray.length === 1 ? '' : '<ol class="tense-list" style="margin:0; padding-left:1.2rem; display:flex; flex-direction:column; gap:12px;">';
+        
         dataArray.forEach(t => {
             let titleColor = isNA ? '#777' : '#d32f2f';
             
-            // Generate Active HTML
-            let activeHtml = `<span class="tense-title" style="color:${titleColor};">${t.n}</span>
-                              ${t.r ? `<span class="tense-rule" style="color:${isNA?'#666':'#333'};">: ${t.r}</span>` : ''}
-                              ${t.u && matrixVoice === 'active' ? `<div class="tense-usage">(${t.u})</div>` : ''}`;
+            // Active Voice HTML (Multi-line layout)
+            let activeHtml = `<div class="tense-title" style="color:${titleColor}; font-size:0.95rem; font-weight:bold;">${t.n}</div>
+                              ${t.r ? `<div class="tense-rule" style="color:${isNA?'#666':'#333'}; font-size:0.8rem; margin-top:3px;">${t.r}</div>` : ''}
+                              ${t.u && matrixVoice === 'active' ? `<div class="tense-usage" style="font-size:0.75rem; color:#555; font-style:italic; margin-top:4px; padding-left:6px; border-left:2px solid rgba(0,0,0,0.1);">Note: ${t.u}</div>` : ''}`;
             
-            // Generate Passive HTML
+            // Passive Voice HTML (Multi-line layout)
             let passiveHtml = '';
             if (t.pn || t.pr) {
-                passiveHtml = `<span class="tense-title" style="color:#1976d2;">${t.pn || t.n + ' (Passive)'}</span>
-                               ${t.pr ? `<span class="tense-rule" style="color:#333;">: ${t.pr}</span>` : ''}`;
+                passiveHtml = `<div class="tense-title" style="color:#1976d2; font-size:0.95rem; font-weight:bold;">${t.pn || t.n + ' (Passive)'}</div>
+                               ${t.pr ? `<div class="tense-rule" style="color:#333; font-size:0.8rem; margin-top:3px;">${t.pr}</div>` : ''}`;
             } else if (!isNA) {
-                passiveHtml = `<span class="tense-title" style="color:#777;">Passive N/A</span>`;
+                passiveHtml = `<div class="tense-title" style="color:#777; font-size:0.9rem; font-style:italic;">Passive N/A</div>`;
             }
 
-            // Assemble based on Toggle Mode
+            // Assemble based on the Toggle Mode selected
             let itemHtml = '';
             if (matrixVoice === 'active') {
                 itemHtml = activeHtml;
             } else if (matrixVoice === 'passive') {
-                itemHtml = isNA ? activeHtml : (passiveHtml || `<span style="color:#777">N/A</span>`);
+                itemHtml = isNA ? activeHtml : (passiveHtml || `<div style="color:#777">N/A</div>`);
             } else if (matrixVoice === 'compare') {
                 if (isNA) itemHtml = activeHtml;
-                else itemHtml = `<div style="margin-bottom:6px;"><b style="color:#d32f2f">Act:</b> ${activeHtml}</div>
-                                 <div><b style="color:#1976d2">Pass:</b> ${passiveHtml}</div>`;
+                else itemHtml = `<div style="margin-bottom:8px;"><div style="font-size:0.65rem; font-weight:bold; color:#d32f2f; text-transform:uppercase; margin-bottom:2px;">Active:</div> ${activeHtml}</div>
+                                 <div><div style="font-size:0.65rem; font-weight:bold; color:#1976d2; text-transform:uppercase; margin-bottom:2px;">Passive:</div> ${passiveHtml}</div>`;
             }
 
             if (dataArray.length === 1) html += `<div class="tense-single">${itemHtml}</div>`;
-            else html += `<li style="${matrixVoice==='compare'?'margin-bottom:12px; border-bottom:1px dashed #ddd; padding-bottom:5px;':''}">${itemHtml}</li>`;
+            else html += `<li style="${matrixVoice==='compare'?'margin-bottom:12px; border-bottom:1px dashed #ddd; padding-bottom:8px;':''}">${itemHtml}</li>`;
         });
         if (dataArray.length > 1) html += '</ol>';
         
@@ -936,18 +947,29 @@
                             <th style="width:30%">Future</th>
                         </tr>`;
         
-        const hueMap = { "Simple": 210, "Continuous": 120, "Perfect": 280, "Perfect Continuous": 180, "Subjunctive": 30, "Conditional": 330, "Reported Speech": 45, "Imperative": 0 };
+        // Advanced Rainbow Palette (Hue, Saturation, Lightness mappings)
+        const paletteMap = { 
+            "Simple":             {h: 0, s: 75, l: 45},   // Red
+            "Continuous":         {h: 30, s: 90, l: 45},  // Orange
+            "Perfect":            {h: 45, s: 90, l: 38},  // Yellow/Gold
+            "Perfect Continuous": {h: 120, s: 65, l: 38}, // Green
+            "Subjunctive":        {h: 210, s: 80, l: 45}, // Blue
+            "Conditional":        {h: 275, s: 70, l: 45}, // Purple
+            "Reported Speech":    {h: 330, s: 80, l: 50}, // Pink
+            "Imperative":         {h: 25, s: 50, l: 40}   // Brown
+        };
 
         universalDataV2.forEach(row => {
             let activeLangs = uniLangs.filter(l => row[l.id]);
             if (activeLangs.length === 0) return;
 
-            let hue = hueMap[row.aspect] || 200;
-            let cAspect = `hsl(${hue}, 70%, 35%)`;
-            let cPast = `hsl(${hue}, 50%, 85%)`; 
-            let cPres = `hsl(${hue}, 50%, 92%)`; 
-            let cFut = `hsl(${hue}, 50%, 96%)`;  
-            let cNA = `#eeeeee`;                 
+            // Extract exact colors for the gradient shading
+            let color = paletteMap[row.aspect] || {h: 200, s: 50, l: 50};
+            let cAspect = `hsl(${color.h}, ${color.s}%, ${color.l}%)`; // Dark header
+            let cPast   = `hsl(${color.h}, ${color.s}%, 88%)`;         // Medium Light
+            let cPres   = `hsl(${color.h}, ${color.s}%, 93%)`;         // Lighter
+            let cFut    = `hsl(${color.h}, ${color.s}%, 97%)`;         // Lightest
+            let cNA     = `#eeeeee`;                                   // Greyed out N/A
 
             let firstLang = activeLangs[0].id;
             let p1 = buildUniCell(row[firstLang].past);
@@ -955,11 +977,11 @@
             let f1 = buildUniCell(row[firstLang].future);
 
             html += `<tr>
-                <td rowspan="${activeLangs.length}" class="aspect-cell" style="background:${cAspect}; color:white; text-shadow: 1px 1px 2px rgba(0,0,0,0.4);">${row.aspect}</td>
-                <td class="lang-cell">${uniLangs.find(l=>l.id===firstLang).name}</td>
-                <td style="background:${p1.isNA ? cNA : cPast}">${p1.html}</td>
-                <td style="background:${pr1.isNA ? cNA : cPres}">${pr1.html}</td>
-                <td style="background:${f1.isNA ? cNA : cFut}">${f1.html}</td>
+                <td rowspan="${activeLangs.length}" class="aspect-cell" style="background:${cAspect}; color:white; text-shadow: 1px 1px 2px rgba(0,0,0,0.4); text-align:center; font-weight:bold; writing-mode:vertical-rl; transform:rotate(180deg); width:40px;">${row.aspect}</td>
+                <td class="lang-cell" style="background:#fafafa; font-weight:bold; text-align:center; width:40px; border-bottom: 1px solid #ddd;">${uniLangs.find(l=>l.id===firstLang).name}</td>
+                <td style="background:${p1.isNA ? cNA : cPast}; border:1px solid rgba(0,0,0,0.05);">${p1.html}</td>
+                <td style="background:${pr1.isNA ? cNA : cPres}; border:1px solid rgba(0,0,0,0.05);">${pr1.html}</td>
+                <td style="background:${f1.isNA ? cNA : cFut}; border:1px solid rgba(0,0,0,0.05);">${f1.html}</td>
             </tr>`;
 
             for (let i = 1; i < activeLangs.length; i++) {
@@ -969,10 +991,10 @@
                 let fX = buildUniCell(row[lang].future);
 
                 html += `<tr>
-                    <td class="lang-cell">${uniLangs.find(l=>l.id===lang).name}</td>
-                    <td style="background:${pX.isNA ? cNA : cPast}">${pX.html}</td>
-                    <td style="background:${prX.isNA ? cNA : cPres}">${prX.html}</td>
-                    <td style="background:${fX.isNA ? cNA : cFut}">${fX.html}</td>
+                    <td class="lang-cell" style="background:#fafafa; font-weight:bold; text-align:center; border-bottom: 1px solid #ddd;">${uniLangs.find(l=>l.id===lang).name}</td>
+                    <td style="background:${pX.isNA ? cNA : cPast}; border:1px solid rgba(0,0,0,0.05);">${pX.html}</td>
+                    <td style="background:${prX.isNA ? cNA : cPres}; border:1px solid rgba(0,0,0,0.05);">${prX.html}</td>
+                    <td style="background:${fX.isNA ? cNA : cFut}; border:1px solid rgba(0,0,0,0.05);">${fX.html}</td>
                 </tr>`;
             }
         });
