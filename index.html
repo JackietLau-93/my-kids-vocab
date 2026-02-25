@@ -687,9 +687,10 @@
     };
 
 // --- UNIVERSAL MATRIX V2 DATA ENGINE ---
+    // --- UNIVERSAL MATRIX V2 DATA ENGINE ---
     const uniLangs = [
-        { id: 'en', flag: '🇬🇧' }, { id: 'fr', flag: '🇫🇷' }, 
-        { id: 'de', flag: '🇩🇪' }, { id: 'it', flag: '🇮🇹' }, { id: 'ru', flag: '🇷🇺' }
+        { id: 'en', name: 'EN' }, { id: 'fr', name: 'FR' }, 
+        { id: 'de', name: 'DE' }, { id: 'it', name: 'IT' }, { id: 'ru', name: 'RU' }
     ];
 
     const universalDataV2 = [
@@ -800,6 +801,18 @@
                 present: [{n: "N/A", r: "No Present Perfect", u: "Perfective verbs have no present tense"}],
                 future: [{n: "Future Perfective", r: "stem + future endings (СВ)", u: "Will have completed"}]
             }
+        },
+	{
+            aspect: "Perfect Continuous",
+            en: {
+                past: [{n: "Past Perfect Continuous", r: "had been + verb-ing", u: "duration before past point"}],
+                present: [{n: "Present Perfect Continuous", r: "have/has been + verb-ing", u: "duration up to now"}],
+                future: [{n: "Future Perfect Continuous", r: "will have been + verb-ing", u: "duration up to future point"}]
+            },
+            fr: { past: [], present: [], future: [] },
+            de: { past: [], present: [], future: [] },
+            it: { past: [], present: [], future: [] },
+            ru: { past: [], present: [], future: [] }
         },
         {
             aspect: "Subjunctive",
@@ -929,58 +942,95 @@
         }
     ];
 
-    // Helper to format cells gracefully
+    // Helper to format cells gracefully & detect N/A
     function buildUniCell(dataArray) {
-        if (!dataArray || dataArray.length === 0) return '<div style="color:#aaa; text-align:center;">-</div>';
-        if (dataArray.length === 1) {
-            return `<div class="tense-single">
-                        <span class="tense-title">${dataArray[0].n}</span>
-                        <span class="tense-rule">${dataArray[0].r}</span>
-                        ${dataArray[0].u ? `<span class="tense-usage">(${dataArray[0].u})</span>` : ''}
-                    </div>`;
+        // Standardize completely empty cells to N/A
+        if (!dataArray || dataArray.length === 0) {
+            return { html: '<div style="color:#999; text-align:center; font-weight:bold;">N/A</div>', isNA: true };
         }
-        let html = '<ol class="tense-list">';
+        
+        // Check if the cell explicitly declares itself as N/A but has an explanation
+        let isNA = dataArray.every(t => t.n === "N/A" || t.n === "-");
+        
+        let html = dataArray.length === 1 ? '' : '<ol class="tense-list">';
         dataArray.forEach(t => {
-            html += `<li>
-                <span class="tense-title">${t.n}</span>: <span class="tense-rule">${t.r}</span>
-                ${t.u ? `<div class="tense-usage">(${t.u})</div>` : ''}
-            </li>`;
+            let titleColor = isNA ? '#777' : '#d32f2f'; // Mute title if N/A
+            let itemHtml = `<span class="tense-title" style="color:${titleColor};">${t.n}</span>
+                            ${t.r ? `<span class="tense-rule" style="color:${isNA?'#666':'#333'};">: ${t.r}</span>` : ''}
+                            ${t.u ? `<div class="tense-usage">(${t.u})</div>` : ''}`;
+            
+            if (dataArray.length === 1) {
+                html += `<div class="tense-single">${itemHtml}</div>`;
+            } else {
+                html += `<li>${itemHtml}</li>`;
+            }
         });
-        html += '</ol>';
-        return html;
+        if (dataArray.length > 1) html += '</ol>';
+        
+        return { html: html, isNA: isNA };
     }
 
-    // Opens and constructs the dynamic Subrow Matrix
+    // Opens and constructs the dynamic, color-coded Subrow Matrix
     window.openUniMatrix = function() {
         let html = `<table class="uni-matrix-table">
                         <tr>
-                            <th>Mode</th>
+                            <th>Aspect / Mood</th>
                             <th>Lang</th>
                             <th style="width:30%">Past</th>
                             <th style="width:30%">Present</th>
                             <th style="width:30%">Future</th>
                         </tr>`;
         
+        // Map each Aspect to a Base Hue (0-360)
+        const hueMap = {
+            "Simple": 210,              // Blue
+            "Continuous": 120,          // Green
+            "Perfect": 280,             // Purple
+            "Perfect Continuous": 180,  // Teal
+            "Subjunctive": 30,          // Orange
+            "Conditional": 330,         // Pink
+            "Reported Speech": 45,      // Gold/Brown
+            "Imperative": 0             // Red
+        };
+
         universalDataV2.forEach(row => {
             let activeLangs = uniLangs.filter(l => row[l.id]);
             if (activeLangs.length === 0) return;
 
+            // Generate the Shaded Color Palette for this row
+            let hue = hueMap[row.aspect] || 200;
+            let cAspect = `hsl(${hue}, 70%, 35%)`;    // Darkest (Header)
+            let cPast = `hsl(${hue}, 50%, 85%)`;      // Medium Light
+            let cPres = `hsl(${hue}, 50%, 92%)`;      // Lighter
+            let cFut = `hsl(${hue}, 50%, 96%)`;       // Lightest
+            let cNA = `#eeeeee`;                      // Grey out for N/A
+
             let firstLang = activeLangs[0].id;
+            let p1 = buildUniCell(row[firstLang].past);
+            let pr1 = buildUniCell(row[firstLang].present);
+            let f1 = buildUniCell(row[firstLang].future);
+
+            // First Language Row (includes the Aspect Header spanning multiple rows)
             html += `<tr>
-                <td rowspan="${activeLangs.length}" class="aspect-cell">${row.aspect}</td>
-                <td class="lang-cell">${uniLangs.find(l=>l.id===firstLang).flag}</td>
-                <td>${buildUniCell(row[firstLang].past)}</td>
-                <td>${buildUniCell(row[firstLang].present)}</td>
-                <td>${buildUniCell(row[firstLang].future)}</td>
+                <td rowspan="${activeLangs.length}" class="aspect-cell" style="background:${cAspect}; color:white; text-shadow: 1px 1px 2px rgba(0,0,0,0.4);">${row.aspect}</td>
+                <td class="lang-cell">${uniLangs.find(l=>l.id===firstLang).name}</td>
+                <td style="background:${p1.isNA ? cNA : cPast}">${p1.html}</td>
+                <td style="background:${pr1.isNA ? cNA : cPres}">${pr1.html}</td>
+                <td style="background:${f1.isNA ? cNA : cFut}">${f1.html}</td>
             </tr>`;
 
+            // Subsequent Language Rows
             for (let i = 1; i < activeLangs.length; i++) {
                 let lang = activeLangs[i].id;
+                let pX = buildUniCell(row[lang].past);
+                let prX = buildUniCell(row[lang].present);
+                let fX = buildUniCell(row[lang].future);
+
                 html += `<tr>
-                    <td class="lang-cell">${uniLangs.find(l=>l.id===lang).flag}</td>
-                    <td>${buildUniCell(row[lang].past)}</td>
-                    <td>${buildUniCell(row[lang].present)}</td>
-                    <td>${buildUniCell(row[lang].future)}</td>
+                    <td class="lang-cell">${uniLangs.find(l=>l.id===lang).name}</td>
+                    <td style="background:${pX.isNA ? cNA : cPast}">${pX.html}</td>
+                    <td style="background:${prX.isNA ? cNA : cPres}">${prX.html}</td>
+                    <td style="background:${fX.isNA ? cNA : cFut}">${fX.html}</td>
                 </tr>`;
             }
         });
