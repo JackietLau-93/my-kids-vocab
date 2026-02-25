@@ -151,6 +151,7 @@
                 <option value="ko">🇰🇷 Korean</option>
             </select>
             <button class="btn-primary" onclick="startChild()">▶ Start Deck</button>
+	    <button class="btn-primary" style="background:#673AB7; border-color:#673AB7;" onclick="openUniMatrix()">🌍 Universal Matrix</button>
         </div>
     </div>
 
@@ -182,6 +183,27 @@
 
 <div class="container">
     <div class="card-grid" id="grid"></div>
+</div>
+
+<div id="uni-matrix-modal" class="modal-overlay" onclick="closeUniMatrix(event)">
+    <div class="modal-content" style="max-width: 1200px;" onclick="event.stopPropagation()">
+        <button class="modal-close" onclick="closeUniMatrix(event)">✕</button>
+        <div class="modal-header">
+            <h2 style="font-family:'Fredoka One';">Universal Grammar Matrix</h2>
+            <p>Cross-Language Conjugation Comparison</p>
+        </div>
+        <style>
+            .uni-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; text-align: left; }
+            .uni-table th { padding: 12px; background: #f0f4f8; border: 1px solid #d9e2ec; color: #334e68; position: sticky; top: 0; z-index: 2;}
+            .uni-table td { padding: 12px; border: 1px solid #d9e2ec; vertical-align: top; line-height: 1.4; color: #486581;}
+            .uni-table b { color: #1976d2; display: inline-block; width: 30px;}
+            .uni-table tr:nth-child(even) { background: #f8fbfd; }
+        </style>
+        <div style="overflow-x: auto; max-height: 65vh;">
+            <table class="uni-table" id="uni-table-body">
+                </table>
+        </div>
+    </div>
 </div>
 
 <div id="matrix-modal" class="modal-overlay" onclick="closeMatrix(event)">
@@ -648,6 +670,73 @@
         window.speechSynthesis.cancel();
         const u = new SpeechSynthesisUtterance(txt.main); u.voice=voice; u.rate=0.9; window.speechSynthesis.speak(u);
     };
+
+// --- 5-LANGUAGE UNIVERSAL MATRIX ENGINE (From CSV) ---
+    const universalData = [
+        {
+            aspect: "Simple",
+            past: "<b>EN:</b> Past Simple<br><b>DE:</b> Perfekt (spoken); Präteritum (lit)<br><b>FR:</b> Passé Récent (spoken, immediate past); Passé Composé (spoken, completed); Imparfait (habits, continuous); Passé Simple (lit)<br><b>IT:</b> Passato Prossimo (spoken/completed); Imperfetto (habits/descriptions); Passato Remoto (lit/distant past)<br><b>RU:</b> Past Perfective (completed) or Past Imperfective (habit)",
+            present: "<b>EN:</b> Present Simple<br><b>DE:</b> Präsens<br><b>FR:</b> Présent<br><b>IT:</b> Presente<br><b>RU:</b> Present (Imperfective)",
+            future: "<b>EN:</b> Future Simple<br><b>DE:</b> Futur I<br><b>FR:</b> Futur Proche (near); Futur Simple (distant, formal)<br><b>IT:</b> Futuro Semplice<br><b>RU:</b> Future Perfective (simple conjugation)"
+        },
+        {
+            aspect: "Continuous",
+            past: "<b>EN:</b> Past Continuous<br><b>FR:</b> -<br><b>DE:</b> -<br><b>IT:</b> Passato Progressivo<br><b>RU:</b> Past Imperfective",
+            present: "<b>EN:</b> Present Continuous<br><b>FR:</b> -<br><b>DE:</b> -<br><b>IT:</b> Presente Progressivo<br><b>RU:</b> -",
+            future: "<b>EN:</b> Future Continuous<br><b>FR:</b> -<br><b>DE:</b> -<br><b>IT:</b> Futuro Progressivo<br><b>RU:</b> Future Imperfective (Compound: 'will be' + infinitive)"
+        },
+        {
+            aspect: "Perfect",
+            past: "<b>EN:</b> Past Perfect<br><b>DE:</b> Plusquamperfekt<br><b>FR:</b> Plus-que-parfait (spoken); Passé Antérieur (lit)<br><b>IT:</b> Trapassato Prossimo (spoken); Trapassato Remoto (lit)<br><b>RU:</b> Past Perfective",
+            present: "<b>EN:</b> Present Perfect<br><b>DE:</b> Perfekt<br><b>FR:</b> Passé Composé<br><b>IT:</b> Passato Prossimo<br><b>RU:</b> -",
+            future: "<b>EN:</b> Future Perfect<br><b>DE:</b> Futur II<br><b>FR:</b> Futur Antérieur<br><b>IT:</b> Futuro Anteriore<br><b>RU:</b> Future Perfective"
+        },
+        {
+            aspect: "Perfect Continuous",
+            past: "<b>EN:</b> Past Perfect Continuous<br><b>FR/DE/IT/RU:</b> -",
+            present: "<b>EN:</b> Present Perfect Continuous<br><b>FR/DE/IT/RU:</b> -",
+            future: "<b>EN:</b> Future Perfect Continuous<br><b>FR/DE/IT/RU:</b> -"
+        },
+        {
+            aspect: "Subjunctive<br><span style='font-size:0.75rem;font-weight:normal'>(Doubt, emotion, necessity)</span>",
+            past: "<b>EN:</b> Past Subjunctive (If I were...)<br><b>DE:</b> (Uses Indicative/Modals)<br><b>FR:</b> Subjonctif Passé; Subjonctif Imparfait (lit); Subjonctif Plus-que-parfait (lit)<br><b>IT:</b> Congiuntivo Passato; Congiuntivo Imperfetto; Congiuntivo Trapassato<br><b>RU:</b> Past Tense + бы",
+            present: "<b>EN:</b> Present Subjunctive (I insist he go)<br><b>DE:</b> (Uses Indicative/Modals)<br><b>FR:</b> Subjonctif Présent<br><b>IT:</b> Congiuntivo Presente<br><b>RU:</b> Past Tense + бы",
+            future: "-"
+        },
+        {
+            aspect: "Conditional<br><span style='font-size:0.75rem;font-weight:normal'>(Hypotheticals, politeness)</span>",
+            past: "<b>EN:</b> Past Conditional (would have)<br><b>DE:</b> Konjunktiv II (Perfekt)<br><b>FR:</b> Conditionnel Passé<br><b>IT:</b> Condizionale Passato<br><b>RU:</b> Past Tense + бы",
+            present: "<b>EN:</b> Present Conditional (would)<br><b>DE:</b> Konjunktiv II (Präsens)<br><b>FR:</b> Conditionnel Présent<br><b>IT:</b> Condizionale Presente<br><b>RU:</b> Past Tense + бы",
+            future: "<b>DE:</b> Konjunktiv II (Futur I / Futur II)"
+        },
+        {
+            aspect: "Reported speech",
+            past: "<b>EN:</b> Shifts back (Past Simple -> Past Perfect)<br><b>DE:</b> Konjunktiv I (Perfekt)<br><b>FR:</b> Shifts back (Past -> Pluperfect)<br><b>IT:</b> Shifts back (Present -> Pluperfect)<br><b>RU:</b> No shift. Uses exact tense originally spoken.",
+            present: "<b>EN:</b> Shifts back (Present -> Past simple; Pres Cont -> Past Cont)<br><b>DE:</b> Konjunktiv I (Präsens)<br><b>FR:</b> Shifts back (Present -> Imperfect)<br><b>IT:</b> Shifts back (Present -> Imperfect)<br><b>RU:</b> No shift. Uses exact tense originally spoken.",
+            future: "<b>EN:</b> Shifts back (Future -> Conditional)<br><b>DE:</b> Konjunktiv I (Futur I / Futur II)<br><b>FR:</b> Shifts back (Future -> Conditional)<br><b>IT:</b> Shifts back (Future -> Conditional)<br><b>RU:</b> No shift. Uses exact tense originally spoken."
+        }
+    ];
+
+    window.openUniMatrix = function() {
+        let html = `<tr><th style="width:15%">Aspect / Mood</th><th style="width:28%">Past</th><th style="width:28%">Present</th><th style="width:28%">Future</th></tr>`;
+        universalData.forEach(row => {
+            html += `<tr>
+                <td style="font-weight:bold; color:#334e68; background:#f8fbfd;">${row.aspect}</td>
+                <td>${row.past}</td>
+                <td>${row.present}</td>
+                <td>${row.future}</td>
+            </tr>`;
+        });
+        document.getElementById('uni-table-body').innerHTML = html;
+        document.getElementById('uni-matrix-modal').style.display = 'flex';
+    };
+
+    window.closeUniMatrix = function(e) { 
+        if(e.target.id === 'uni-matrix-modal' || e.target.classList.contains('modal-close')) {
+            document.getElementById('uni-matrix-modal').style.display = 'none'; 
+        }
+    };
+
 </script>
 </body>
 </html>
