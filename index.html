@@ -157,13 +157,16 @@
 <header>
     <div class="top-row">
         <div style="font-weight:bold; font-size:1.2rem; color:#333; font-family:'Fredoka One'">🦁 TinyVocab</div>
+        
         <div class="mode-switch-container">
             <div class="mode-switch">
-                <div class="mode-btn active" id="mode-vocab" onclick="setMode('vocab')">🧠 Vocab View</div>
-                <div class="mode-btn" id="mode-grammar" onclick="setMode('grammar')">⚙️ Grammar View</div>
+                <div class="mode-btn active" id="mode-flashcard" onclick="setMode('flashcard')">📇 Flashcards</div>
+                <div class="mode-btn" id="mode-vocab" onclick="setMode('vocab')">📖 Vocab</div>
+                <div class="mode-btn" id="mode-grammar" onclick="setMode('grammar')">⚙️ Grammar</div>
             </div>
         </div>
-        <div style="display:flex; gap:10px; align-items:center;">
+
+        <div style="display:flex; gap:8px;">
             <select id="lang-select">
                 <option value="en">🇬🇧 English</option>
                 <option value="fr">🇫🇷 French</option>
@@ -174,8 +177,7 @@
                 <option value="ja">🇯🇵 Japanese</option>
                 <option value="ko">🇰🇷 Korean</option>
             </select>
-            <button class="btn-primary" onclick="startChild()">▶ Start Deck</button>
-	    <button class="btn-primary" style="background:#673AB7; border-color:#673AB7;" onclick="openUniMatrix()">🌍 Universal Matrix</button>
+            <button class="btn btn-primary" onclick="startChild()">▶ Start Reviewing</button>
         </div>
     </div>
 
@@ -214,7 +216,7 @@
         <button class="modal-close" onclick="closeUniMatrix(event)">✕</button>
         
         <div class="modal-header">
-            <h2>Universal Grammar Matrix</h2>
+            <h2 id="modal-title">Universal Grammar Matrix</h2>
             <p style="margin: 5px 0 0 0; color: #777; font-size: 1rem; text-transform: uppercase; font-weight:bold;">Cross-Language Conjugation Rules</p>
             
             <div class="mode-switch-container" style="margin-top:20px;">
@@ -257,24 +259,12 @@
     let rawDeck = [];
     let deck = [];
     let currentLang = 'en';
-    let currentMode = 'vocab'; 
+    let currentMode = 'flashcard'; // Default to the new basic view
     let sortAZ = true;
     let srsData = JSON.parse(localStorage.getItem('tinyVocabSRS')) || {};
-    
-    // Global States
-    let currentModalCardId = null;
-    let modalPassive = false;
-    let currentIndex = 0;
 
-    // Native Pronoun Maps
-    const pronMap = {
-        'en': ['I', 'you', 'he/she/it', 'we', 'you', 'they'],
-        'fr': ['je', 'tu', 'il/elle/on', 'nous', 'vous', 'ils/elles'],
-        'de': ['ich', 'du', 'er/sie/es', 'wir', 'ihr', 'sie/Sie'],
-        'it': ['io', 'tu', 'lui/lei', 'noi', 'voi', 'loro'],
-        'ru': ['я', 'ты', 'он/она/оно', 'мы', 'вы', 'они'],
-        'default': ['1st Sg', '2nd Sg', '3rd Sg', '1st Pl', '2nd Pl', '3rd Pl']
-    };
+    const pronLabels = ['I', 'You', 'He/She/It', 'We', 'You (pl)', 'They'];
+    const pronMap = { /* ... keep your existing pronMap ... */ };
 
     let state = { ipa: false, pinyin: false, latin: false, hiragana: false, hanja: false, traditional: false, show_gender: false, show_opp: false, article: false, plural_noun: false };
 
@@ -284,7 +274,13 @@
     };
 
     const soundToggles = ['ipa', 'latin', 'pinyin', 'hiragana', 'hanja', 'traditional'];
-    const modeConfig = { 'vocab': [...soundToggles], 'grammar': [...soundToggles, 'show_gender', 'show_opp', 'article', 'plural_noun'] };
+    
+    // NEW 3-WAY CONFIG
+    const modeConfig = { 
+        'flashcard': [...soundToggles], 
+        'vocab': [...soundToggles], 
+        'grammar': [...soundToggles, 'show_gender', 'show_opp', 'article', 'plural_noun'] 
+    };
 
     const langConfig = {
         'en': ['plural_noun', 'ipa'],
@@ -335,13 +331,16 @@
 
     window.setMode = function(mode) {
         currentMode = mode;
+        document.getElementById('mode-flashcard').className = `mode-btn ${mode === 'flashcard' ? 'active' : ''}`;
         document.getElementById('mode-vocab').className = `mode-btn ${mode === 'vocab' ? 'active' : ''}`;
         document.getElementById('mode-grammar').className = `mode-btn ${mode === 'grammar' ? 'active' : ''}`;
-        if(mode === 'vocab') { modeConfig.grammar.forEach(k => { if(!soundToggles.includes(k)) state[k] = false; }); }
+        
+        // Reset grammar toggles if leaving grammar mode
+        if(mode === 'flashcard' || mode === 'vocab') { 
+            modeConfig.grammar.forEach(k => { if(!soundToggles.includes(k)) state[k] = false; }); 
+        }
         updateUI();
     };
-
-    function getFontClass() { return {'zh':'font-zh-cn', 'ru':'font-ru', 'ja': 'font-ja', 'ko': 'font-ko'}[currentLang] || 'font-en'; }
 
     function updateUI() {
         const c = document.getElementById('header-toggles');
@@ -353,7 +352,14 @@
                 c.insertAdjacentHTML('beforeend', `<label class="toggle-group"><span class="switch"><input type="checkbox" onchange="setSwitch('${key}', this.checked)" ${state[key]?'checked':''}><span class="slider"></span></span>${toggleLabels[key]}</label>`);
             });
         }
-        if (currentMode === 'grammar') c.insertAdjacentHTML('beforeend', `<span style="font-size:0.8rem; color:#888; font-style:italic; margin-left:10px;">Click 📊 for Master Matrix.</span>`);
+        
+        // Add Universal Grammar Matrix Button ONLY in Grammar View
+        if (currentMode === 'grammar') {
+            c.insertAdjacentHTML('beforeend', `
+                <button class="btn btn-primary" style="margin-left:15px; background:#1976d2; border-color:#1976d2; font-size:0.75rem;" onclick="openUniMatrix()">
+                    📊 Universal Grammar Matrix
+                </button>`);
+        }
         renderGrid();
     }
 
@@ -435,15 +441,33 @@
             let btnClass = card.pos === 'verb' ? 'btn-verb' : (card.pos === 'adj' ? 'btn-adj' : 'btn-noun');
             const matrixBtn = (currentMode === 'grammar') ? `<div class="matrix-btn ${btnClass}" onclick="event.stopPropagation(); openMatrix('${card.id}')">📊</div>` : '';
 
-            let backHTML = `<div class="back-title">Grammar Profile</div>`;
-            if (currentMode === 'vocab') {
-                backHTML = buildVocabBack(card, raw);
-            } else {
+            // --- DYNAMIC CARD BACK CONSTRUCTION ---
+            let backHTML = '';
+            
+            // 1. Basic Flashcard Mode
+            if (currentMode === 'flashcard') {
+                backHTML = `<div class="back-title">Translation</div>
+                            <div style="font-size:1.8rem; font-weight:bold; color:#333; margin-top:30px;">${card.translations['en'].n}</div>
+                            <p style="font-size:0.85rem; color:#888; margin-top:10px;">(Root Meaning)</p>`;
+            } 
+            // 2. Rich Vocab Mode
+            else if (currentMode === 'vocab') {
+                const d = raw.syn || raw.ex_kid ? raw : (card.translations['en'] || {});
+                backHTML = `<div class="back-title">Dictionary Profile</div>`;
+                if(d.syn) backHTML += `<div class="dict-section"><div class="dict-lbl">Synonyms</div><div class="dict-val">${d.syn}</div></div>`;
+                if(d.ant) backHTML += `<div class="dict-section"><div class="dict-lbl">Antonyms</div><div class="dict-val">${d.ant}</div></div>`;
+                if(d.ex_kid) backHTML += `<div class="dict-section"><div class="dict-lbl">Example (Simple)</div><div class="dict-val ex-kid">"${d.ex_kid}"</div></div>`;
+                if(d.ex_adv) backHTML += `<div class="dict-section"><div class="dict-lbl">Example (Classic)</div><div class="dict-val ex-adv">${d.ex_adv}</div></div>`;
+                if(!d.syn && !d.ex_kid) backHTML += `<div class="dict-section" style="color:#888; text-align:center;">More semantic details coming soon.</div>`;
+            } 
+            // 3. Grammar Mode
+            else if (currentMode === 'grammar') {
+                backHTML = `<div class="back-title">Grammar Profile</div>`;
                 if(card.pos === 'noun' && raw.g) {
                     backHTML += `<div class="dict-section"><div class="dict-lbl">Base Gender</div><div class="dict-val">${raw.g}</div></div>`;
                     if(raw.n_opp) backHTML += `<div class="dict-section"><div class="dict-lbl">Opposite Gender Form</div><div class="dict-val font-${currentLang}">${raw.n_opp} (${raw.g_opp})</div></div>`;
                 }
-                backHTML += `<p style="font-size:0.8rem; color:#666; text-align:center; margin-top:20px;">Click the 📊 button on the front to open the Master Matrix.</p>`;
+                backHTML += `<p style="font-size:0.8rem; color:#666; text-align:center; margin-top:20px;">Click the 📊 button on the front to open the specific Master Matrix.</p>`;
             }
 
             return `
