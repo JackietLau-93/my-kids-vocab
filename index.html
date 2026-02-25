@@ -221,20 +221,17 @@
     </div>
 </div>
 
-<div id="matrix-modal" class="modal-overlay" onclick="closeMatrix(event)">
-    <div class="modal-content" onclick="event.stopPropagation()">
-        <button class="modal-close" onclick="closeMatrix(event)">✕</button>
-        <div class="modal-header">
-            <h2 id="modal-title">Word</h2>
-            <p id="modal-subtitle">Grammar Matrix</p>
-            <div class="modal-top-controls" id="modal-passive-container" style="display:none;">
-                 <label class="toggle-group" style="border-color:#1976d2; color:#1976d2;">
-                    <span class="switch"><input type="checkbox" id="modal-passive-chk" onchange="toggleModalPassive(this.checked)"><span class="slider" style="background:#1976d2"></span></span> Show Passive Voice
-                </label>
-            </div>
-        </div>
-        <div id="modal-body"></div>
-    </div>
+<div class="modal-header">
+    <h2 id="modal-title">Word</h2>
+    <p id="modal-subtitle">Grammar Matrix</p>
+        
+    <div class="mode-switch-container" style="margin-top:15px;">
+         <div class="mode-switch" style="font-size:0.8rem; padding: 3px;">
+            <div class="mode-btn active" id="m-voice-act" onclick="setMatrixVoice('active')" style="padding: 6px 15px;">Active Voice</div>
+            <div class="mode-btn" id="m-voice-pass" onclick="setMatrixVoice('passive')" style="padding: 6px 15px;">Passive Voice</div>
+            <div class="mode-btn" id="m-voice-comp" onclick="setMatrixVoice('compare')" style="padding: 6px 15px;">Active vs Passive</div>
+         </div>
+     </div>
 </div>
 
 <div id="child-mode" style="display:none;">
@@ -687,127 +684,113 @@
     };
 
 // --- UNIVERSAL MATRIX V2 DATA ENGINE ---
-    // --- UNIVERSAL MATRIX V2 DATA ENGINE ---
-    const uniLangs = [
-        { id: 'en', name: 'EN' }, { id: 'fr', name: 'FR' }, 
-        { id: 'de', name: 'DE' }, { id: 'it', name: 'IT' }, { id: 'ru', name: 'RU' }
-    ];
+    const uniLangs = [ { id: 'en', name: 'EN' }, { id: 'fr', name: 'FR' }, { id: 'de', name: 'DE' }, { id: 'it', name: 'IT' }, { id: 'ru', name: 'RU' } ];
 
     const universalDataV2 = [
         {
             aspect: "Simple",
             en: {
-                past: [{n: "Past Simple", r: "verb + ed / irregular", u: "completed action"}],
-                present: [{n: "Present Simple", r: "base verb (+s)", u: "habits, facts"}],
-                future: [{n: "Future Simple", r: "will + infinitive", u: "predictions, decisions"}]
+                past: [{n: "Past Simple", r: "verb + ed / irregular", pn: "Past Simple Passive", pr: "was/were + past participle"}],
+                present: [{n: "Present Simple", r: "base verb (+s)", pn: "Present Simple Passive", pr: "am/is/are + past participle"}],
+                future: [{n: "Future Simple", r: "will + infinitive", pn: "Future Simple Passive", pr: "will be + past participle"}]
             },
             fr: {
                 past: [
-                    {n: "Passé Récent", r: "venir de + infinitive", u: "spoken, immediate past"},
-                    {n: "Passé Composé", r: "avoir/être + past participle", u: "spoken, completed"},
-                    {n: "Imparfait", r: "nous stem + -ais, -ait...", u: "habits, continuous states"},
-                    {n: "Passé Simple", r: "verb + specific endings", u: "literary, historical"}
+                    {n: "Passé Récent", r: "venir de + infin.", pn: "Passé Récent Passif", pr: "venir d'être + part. passé"},
+                    {n: "Passé Composé", r: "avoir/être + part. passé", pn: "Passé Composé Passif", pr: "avoir/être + été + part. passé"},
+                    {n: "Imparfait", r: "stem + -ais...", pn: "Imparfait Passif", pr: "être (imparfait) + part. passé"},
+                    {n: "Passé Simple", r: "verb + specific endings", pn: "Passé Simple Passif", pr: "être (passé simple) + part. passé"}
                 ],
-                present: [{n: "Présent", r: "stem + present endings", u: "current actions, habits"}],
+                present: [{n: "Présent", r: "stem + endings", pn: "Présent Passif", pr: "être (présent) + part. passé"}],
                 future: [
-                    {n: "Futur Proche", r: "aller + infinitive", u: "near future, planned"},
-                    {n: "Futur Simple", r: "infinitive + avoir endings", u: "distant future, formal"}
+                    {n: "Futur Proche", r: "aller + infin.", pn: "Futur Proche Passif", pr: "aller être + part. passé"},
+                    {n: "Futur Simple", r: "inf + avoir endings", pn: "Futur Simple Passif", pr: "être (futur) + part. passé"}
                 ]
             },
             de: {
                 past: [
-                    {n: "Perfekt", r: "haben/sein + past participle", u: "spoken, completed"},
-                    {n: "Präteritum", r: "stem + -te / irregular", u: "literary, written narratives"}
+                    {n: "Perfekt", r: "haben/sein + part. II", pn: "Perfekt Passiv", pr: "sein + part. II + worden"},
+                    {n: "Präteritum", r: "stem + -te", pn: "Präteritum Passiv", pr: "wurden + part. II"}
                 ],
-                present: [{n: "Präsens", r: "stem + present endings", u: "current actions, near future"}],
-                future: [{n: "Futur I", r: "werden + infinitive", u: "intentions, predictions"}]
+                present: [{n: "Präsens", r: "stem + endings", pn: "Präsens Passiv", pr: "werden + part. II"}],
+                future: [{n: "Futur I", r: "werden + infin.", pn: "Futur I Passiv", pr: "werden + part. II + werden"}]
             },
             it: {
                 past: [
-                    {n: "Passato Prossimo", r: "avere/essere + past participle", u: "spoken, completed"},
-                    {n: "Imperfetto", r: "stem + -avo, -avi...", u: "habits, ongoing past states"},
-                    {n: "Passato Remoto", r: "specific endings", u: "literary, distant historical past"}
+                    {n: "Passato Prossimo", r: "avere/essere + part. pass.", pn: "Passato Prossimo Passivo", pr: "essere stato + part. pass."},
+                    {n: "Imperfetto", r: "stem + -avo...", pn: "Imperfetto Passivo", pr: "essere/venire (imp) + part. pass."},
+                    {n: "Passato Remoto", r: "specific endings", pn: "Passato Remoto Passivo", pr: "essere (pass. rem.) + part. pass."}
                 ],
-                present: [{n: "Presente", r: "stem + present endings", u: "current actions, habits"}],
-                future: [{n: "Futuro Semplice", r: "infinitive stem + endings", u: "future actions, probability"}]
+                present: [{n: "Presente", r: "stem + endings", pn: "Presente Passivo", pr: "essere/venire (pres) + part. pass."}],
+                future: [{n: "Futuro Semplice", r: "inf stem + endings", pn: "Futuro Semplice Passivo", pr: "essere/venire (futuro) + part. pass."}]
             },
             ru: {
                 past: [
-                    {n: "Past Imperfective", r: "stem + л (НСВ)", u: "habitual, ongoing process"},
-                    {n: "Past Perfective", r: "stem + л (СВ)", u: "completed result"}
+                    {n: "Past Imperfective", r: "stem + л (НСВ)", pn: "Past Passive (Impf)", pr: "verb + -ся (ongoing action)"},
+                    {n: "Past Perfective", r: "stem + л (СВ)", pn: "Past Passive (Perf)", pr: "быть (past) + short pass. participle"}
                 ],
-                present: [{n: "Present (Imperfective)", r: "stem + present endings", u: "current actions"}],
-                future: [{n: "Future (Perfective)", r: "stem + future endings", u: "simple conjugation, completed action"}]
+                present: [{n: "Present (Impf)", r: "stem + endings", pn: "Present Passive (Impf)", pr: "verb + -ся (ongoing)"}],
+                future: [{n: "Future (Perf)", r: "stem + future endings", pn: "Future Passive (Perf)", pr: "быть (fut) + short pass. participle"}]
             }
         },
         {
             aspect: "Continuous",
             en: {
-                past: [{n: "Past Continuous", r: "was/were + verb-ing", u: "interrupted past actions"}],
-                present: [{n: "Present Continuous", r: "am/is/are + verb-ing", u: "happening right now"}],
-                future: [{n: "Future Continuous", r: "will be + verb-ing", u: "ongoing at future time"}]
+                past: [{n: "Past Continuous", r: "was/were + verb-ing", pn: "Past Cont. Passive", pr: "was/were + being + past part."}],
+                present: [{n: "Present Continuous", r: "am/is/are + verb-ing", pn: "Present Cont. Passive", pr: "am/is/are + being + past part."}],
+                future: [{n: "Future Continuous", r: "will be + verb-ing", pn: "Future Cont. Passive", pr: "will be + being + past part. (rare)"}]
             },
-            fr: {
-                past: [{n: "N/A", r: "Covered by Imparfait", u: "Contextual continuous"}],
-                present: [{n: "N/A", r: "Covered by Présent", u: "Or use 'être en train de' + inf."}],
-                future: [{n: "N/A", r: "Covered by Futur Simple", u: "Contextual continuous"}]
-            },
-            de: {
-                past: [{n: "N/A", r: "Covered by Präteritum/Perfekt", u: "Contextual continuous"}],
-                present: [{n: "N/A", r: "Covered by Präsens", u: "Often paired with 'gerade' (currently)"}],
-                future: [{n: "N/A", r: "Covered by Futur I", u: "Contextual continuous"}]
-            },
+            fr: { past: [{n: "N/A", r: "Covered by Imparfait"}], present: [{n: "N/A", r: "Covered by Présent"}], future: [{n: "N/A", r: "Covered by Futur"}] },
+            de: { past: [{n: "N/A", r: "Covered by Präteritum/Perfekt"}], present: [{n: "N/A", r: "Covered by Präsens"}], future: [{n: "N/A", r: "Covered by Futur I"}] },
             it: {
-                past: [{n: "Passato Progressivo", r: "stare (imperfetto) + gerundio", u: "was doing"}],
-                present: [{n: "Presente Progressivo", r: "stare (presente) + gerundio", u: "doing right now"}],
-                future: [{n: "Futuro Progressivo", r: "stare (futuro) + gerundio", u: "will be doing"}]
+                past: [{n: "Passato Progressivo", r: "stare (imp) + gerundio", pn: "Passato Prog. Passivo", pr: "stare (imp) + venendo + part. pass."}],
+                present: [{n: "Presente Progressivo", r: "stare (pres) + gerundio", pn: "Presente Prog. Passivo", pr: "stare (pres) + venendo + part. pass."}],
+                future: [{n: "Futuro Progressivo", r: "stare (fut) + gerundio", pn: "Futuro Prog. Passivo", pr: "stare (fut) + venendo + part. pass."}]
             },
             ru: {
-                past: [{n: "Past Imperfective", r: "stem + л", u: "acts as continuous contextually"}],
-                present: [{n: "Present Imperfective", r: "stem + endings", u: "inherently continuous"}],
-                future: [{n: "Future Imperfective", r: "быть (will be) + infinitive", u: "will be doing (compound)"}]
+                past: [{n: "Past Imperfective", r: "stem + л"}], present: [{n: "Present Imperfective", r: "stem + endings"}], future: [{n: "Future Imperfective", r: "быть + inf."}]
             }
         },
         {
             aspect: "Perfect",
             en: {
-                past: [{n: "Past Perfect", r: "had + past participle", u: "action before another past action"}],
-                present: [{n: "Present Perfect", r: "have/has + past participle", u: "past action affecting present"}],
-                future: [{n: "Future Perfect", r: "will have + past participle", u: "completed before future point"}]
+                past: [{n: "Past Perfect", r: "had + past part.", pn: "Past Perfect Passive", pr: "had been + past part."}],
+                present: [{n: "Present Perfect", r: "have/has + past part.", pn: "Present Perfect Passive", pr: "have/has been + past part."}],
+                future: [{n: "Future Perfect", r: "will have + past part.", pn: "Future Perfect Passive", pr: "will have been + past part."}]
             },
             fr: {
                 past: [
-                    {n: "Plus-que-parfait", r: "avoir/être (imparfait) + past participle", u: "spoken/written"},
-                    {n: "Passé Antérieur", r: "avoir/être (passé simple) + past participle", u: "literary only"}
+                    {n: "Plus-que-parfait", r: "avoir/être (imp) + part.", pn: "Plus-que-parfait Passif", pr: "avoir/être (imp) + été + part. passé"},
+                    {n: "Passé Antérieur", r: "avoir/être (pass. simple) + part.", pn: "Passé Antérieur Passif", pr: "avoir/être (pass. simp) + été + part. passé"}
                 ],
-                present: [{n: "N/A", r: "Passé Composé acts as Present Perfect", u: "Contextual"}],
-                future: [{n: "Futur Antérieur", r: "avoir/être (futur) + past participle", u: "completed before future point"}]
+                present: [{n: "N/A", r: "Passé Composé acts as Present Perfect"}],
+                future: [{n: "Futur Antérieur", r: "avoir/être (fut) + part.", pn: "Futur Antérieur Passif", pr: "avoir/être (fut) + été + part. passé"}]
             },
             de: {
-                past: [{n: "Plusquamperfekt", r: "hatte/war + past participle", u: "action before another past action"}],
-                present: [{n: "N/A", r: "Perfekt acts as Present Perfect", u: "Contextual"}],
-                future: [{n: "Futur II", r: "werden + past participle + haben/sein", u: "completed before future point"}]
+                past: [{n: "Plusquamperfekt", r: "hatte/war + part. II", pn: "Plusquamperfekt Passiv", pr: "waren + part. II + worden"}],
+                present: [{n: "N/A", r: "Perfekt acts as Present Perfect"}],
+                future: [{n: "Futur II", r: "werden + part. II + haben/sein", pn: "Futur II Passiv", pr: "werden + part. II + worden + sein"}]
             },
             it: {
                 past: [
-                    {n: "Trapassato Prossimo", r: "avere/essere (imperfetto) + past participle", u: "spoken/written"},
-                    {n: "Trapassato Remoto", r: "avere/essere (pass. remoto) + past participle", u: "literary only"}
+                    {n: "Trapassato Prossimo", r: "avere/essere (imp) + part.", pn: "Trapass. Prossimo Passivo", pr: "essere (imp) + stato + part. pass."},
+                    {n: "Trapassato Remoto", r: "avere/essere (pass. rem) + part.", pn: "Trapass. Remoto Passivo", pr: "essere (pass. rem) + stato + part. pass."}
                 ],
-                present: [{n: "N/A", r: "Passato Prossimo acts as Present Perfect", u: "Contextual"}],
-                future: [{n: "Futuro Anteriore", r: "avere/essere (futuro) + past participle", u: "completed before future point"}]
+                present: [{n: "N/A", r: "Passato Prossimo acts as Present Perfect"}],
+                future: [{n: "Futuro Anteriore", r: "avere/essere (fut) + part.", pn: "Futuro Ant. Passivo", pr: "essere (futuro) + stato + part. pass."}]
             },
             ru: {
-                past: [{n: "Past Perfective", r: "stem + л (СВ)", u: "Action completely finished/result achieved"}],
-                present: [{n: "N/A", r: "No Present Perfect", u: "Perfective verbs have no present tense"}],
-                future: [{n: "Future Perfective", r: "stem + future endings (СВ)", u: "Will have completed"}]
+                past: [{n: "Past Perfective", r: "stem + л (СВ)", pn: "Past Perfective Passive", pr: "быть (past) + short pass. participle"}],
+                present: [{n: "N/A", r: "Perfective verbs have no present tense"}],
+                future: [{n: "Future Perfective", r: "stem + endings (СВ)", pn: "Future Perfective Passive", pr: "быть (fut) + short pass. participle"}]
             }
         },
-	{
+        {
             aspect: "Perfect Continuous",
             en: {
-                past: [{n: "Past Perfect Continuous", r: "had been + verb-ing", u: "duration before past point"}],
-                present: [{n: "Present Perfect Continuous", r: "have/has been + verb-ing", u: "duration up to now"}],
-                future: [{n: "Future Perfect Continuous", r: "will have been + verb-ing", u: "duration up to future point"}]
+                past: [{n: "Past Perfect Continuous", r: "had been + verb-ing", pn: "N/A", pr: "Passive generally unused"}],
+                present: [{n: "Present Perfect Continuous", r: "have/has been + verb-ing", pn: "N/A", pr: "Passive generally unused"}],
+                future: [{n: "Future Perfect Continuous", r: "will have been + verb-ing", pn: "N/A", pr: "Passive generally unused"}]
             },
             fr: { past: [], present: [], future: [] },
             de: { past: [], present: [], future: [] },
@@ -817,160 +800,140 @@
         {
             aspect: "Subjunctive",
             en: {
-                past: [{n: "Past Subjunctive", r: "same as past simple ('were' for 'to be')", u: "hypotheticals, wishes"}],
-                present: [{n: "Present Subjunctive", r: "bare infinitive", u: "necessity (I insist he go)"}],
+                past: [{n: "Past Subjunctive", r: "same as past simple", pn: "Past Subj. Passive", pr: "were + past part."}],
+                present: [{n: "Present Subjunctive", r: "bare infinitive", pn: "Present Subj. Passive", pr: "be + past part."}],
                 future: []
             },
             fr: {
                 past: [
-                    {n: "Subjonctif Passé", r: "avoir/être (subj) + past participle", u: "spoken/written"},
-                    {n: "Subjonctif Imparfait", r: "Specific literary endings", u: "strictly literary"},
-                    {n: "Subjonctif Plus-que-parfait", r: "avoir/être (subj imparfait) + past part.", u: "strictly literary"}
+                    {n: "Subjonctif Passé", r: "avoir/être (subj) + part. passé", pn: "Subj. Passé Passif", pr: "avoir/être (subj) + été + part. passé"},
+                    {n: "Subjonctif Imparfait", r: "Specific literary endings", pn: "Subj. Imparfait Passif", pr: "être (subj imp) + part. passé"},
+                    {n: "Subj. Plus-que-parfait", r: "avoir/être (subj imp) + part.", pn: "Subj. Plus-que-parf. Passif", pr: "avoir/être (subj imp) + été + part. passé"}
                 ],
-                present: [{n: "Subjonctif Présent", r: "stem + subj endings (-e, -es, -e, -ions...)", u: "doubt, emotion, will"}],
+                present: [{n: "Subjonctif Présent", r: "stem + subj endings", pn: "Subj. Présent Passif", pr: "être (subj pres) + part. passé"}],
                 future: []
             },
-            de: {
-                past: [],
-                present: [],
-                future: [] // Subjunctive in DE is handled under Reported (Konj I) and Conditional (Konj II)
-            },
+            de: { past: [], present: [], future: [] },
             it: {
                 past: [
-                    {n: "Congiuntivo Passato", r: "avere/essere (subj) + past part.", u: "recent past"},
-                    {n: "Congiuntivo Imperfetto", r: "stem + -assi, -assi, -asse...", u: "ongoing past, hypotheticals"},
-                    {n: "Congiuntivo Trapassato", r: "avere/essere (imp subj) + past part.", u: "distant past"}
+                    {n: "Congiuntivo Passato", r: "avere/essere (subj) + part.", pn: "Congiuntivo Passato Passivo", pr: "essere (subj) + stato + part. pass."},
+                    {n: "Congiuntivo Imperfetto", r: "stem + -assi...", pn: "Cong. Imperfetto Passivo", pr: "essere (subj imp) + part. pass."},
+                    {n: "Congiuntivo Trapassato", r: "avere/essere (imp subj) + part.", pn: "Cong. Trapassato Passivo", pr: "essere (subj imp) + stato + part. pass."}
                 ],
-                present: [{n: "Congiuntivo Presente", r: "stem + subj endings (-i, -a, -iamo...)", u: "doubt, emotion"}],
+                present: [{n: "Congiuntivo Presente", r: "stem + subj endings", pn: "Cong. Presente Passivo", pr: "essere (subj pres) + part. pass."}],
                 future: []
             },
             ru: {
-                past: [{n: "Subjunctive (Past)", r: "past tense + бы", u: "Identical to Conditional"}],
-                present: [{n: "Subjunctive (Present)", r: "past tense + бы", u: "Identical to Conditional"}],
-                future: [{n: "Subjunctive (Future)", r: "past tense + бы", u: "Identical to Conditional"}]
+                past: [{n: "Subjunctive", r: "past tense + бы", pn: "Subjunctive Passive", pr: "быть (past) бы + short part."}],
+                present: [{n: "Subjunctive", r: "past tense + бы", pn: "Subjunctive Passive", pr: "быть (past) бы + short part."}],
+                future: [{n: "Subjunctive", r: "past tense + бы", pn: "Subjunctive Passive", pr: "быть (past) бы + short part."}]
             }
         },
         {
             aspect: "Conditional",
             en: {
-                past: [{n: "Past Conditional", r: "would have + past participle", u: "impossible past situations"}],
-                present: [{n: "Present Conditional", r: "would + bare infinitive", u: "imagined present/future"}],
+                past: [{n: "Past Conditional", r: "would have + past participle", pn: "Past Cond. Passive", pr: "would have been + past part."}],
+                present: [{n: "Present Conditional", r: "would + bare infinitive", pn: "Present Cond. Passive", pr: "would be + past part."}],
                 future: []
             },
             fr: {
-                past: [{n: "Conditionnel Passé", r: "avoir/être (cond) + past participle", u: "regrets, missed opportunities"}],
-                present: [{n: "Conditionnel Présent", r: "infinitive stem + imparfait endings", u: "politeness, hypotheticals"}],
+                past: [{n: "Conditionnel Passé", r: "avoir/être (cond) + part. passé", pn: "Cond. Passé Passif", pr: "avoir/être (cond) + été + part. passé"}],
+                present: [{n: "Conditionnel Présent", r: "inf stem + imparfait endings", pn: "Cond. Présent Passif", pr: "être (cond) + part. passé"}],
                 future: []
             },
             de: {
-                past: [{n: "Konjunktiv II (Vergangenheit)", r: "hätte/wäre + past participle", u: "impossible past"}],
-                present: [{n: "Konjunktiv II (Präsens)", r: "würde + infinitive (or special stem)", u: "hypotheticals"}],
+                past: [{n: "Konjunktiv II (Vergangenheit)", r: "hätte/wäre + part. II", pn: "Konj. II (Verg.) Passiv", pr: "wären + part. II + worden"}],
+                present: [{n: "Konjunktiv II (Präsens)", r: "würde + infin.", pn: "Konj. II (Präsens) Passiv", pr: "würden + part. II + werden"}],
                 future: [
-                    {n: "Konjunktiv II (Futur I)", r: "würde + infinitive", u: "future hypotheticals"},
-                    {n: "Konjunktiv II (Futur II)", r: "würde + past part. + haben/sein", u: "future completed hypotheticals"}
+                    {n: "Konjunktiv II (Futur I)", r: "würde + infin.", pn: "Konj. II (Futur I) Passiv", pr: "würden + part. II + werden"},
+                    {n: "Konjunktiv II (Futur II)", r: "würde + part. II + haben/sein", pn: "Konj. II (Futur II) Passiv", pr: "würden + part. II + worden + sein"}
                 ]
             },
             it: {
-                past: [{n: "Condizionale Passato", r: "avere/essere (cond) + past participle", u: "unrealized past actions"}],
-                present: [{n: "Condizionale Presente", r: "infinitive stem + cond. endings", u: "wishes, politeness"}],
+                past: [{n: "Condizionale Passato", r: "avere/essere (cond) + part.", pn: "Cond. Passato Passivo", pr: "essere (cond) + stato + part. pass."}],
+                present: [{n: "Condizionale Presente", r: "inf stem + cond. endings", pn: "Cond. Presente Passivo", pr: "essere (cond) + part. pass."}],
                 future: []
             },
             ru: {
-                past: [{n: "Conditional", r: "past tense + бы", u: "Identical across all timeframes"}],
-                present: [{n: "Conditional", r: "past tense + бы", u: "Identical across all timeframes"}],
-                future: [{n: "Conditional", r: "past tense + бы", u: "Identical across all timeframes"}]
+                past: [{n: "Conditional", r: "past tense + бы", pn: "Conditional Passive", pr: "быть (past) бы + short part."}],
+                present: [{n: "Conditional", r: "past tense + бы", pn: "Conditional Passive", pr: "быть (past) бы + short part."}],
+                future: [{n: "Conditional", r: "past tense + бы", pn: "Conditional Passive", pr: "быть (past) бы + short part."}]
             }
         },
         {
             aspect: "Reported Speech",
-            en: {
-                past: [{n: "Backshift (Past)", r: "Past Simple -> Past Perfect", u: "Indirect discourse"}],
-                present: [{n: "Backshift (Present)", r: "Present -> Past Simple", u: "Indirect discourse"}],
-                future: [{n: "Backshift (Future)", r: "Will -> Would", u: "Indirect discourse"}]
-            },
-            fr: {
-                past: [{n: "Concordance des temps", r: "Passé Composé -> Plus-que-parfait", u: "Indirect discourse"}],
-                present: [{n: "Concordance des temps", r: "Présent -> Imparfait", u: "Indirect discourse"}],
-                future: [{n: "Concordance des temps", r: "Futur -> Conditionnel Présent", u: "Indirect discourse"}]
-            },
+            en: { past: [{n: "Backshift (Past)", r: "Past Simple -> Past Perfect"}], present: [{n: "Backshift (Present)", r: "Present -> Past Simple"}], future: [{n: "Backshift (Future)", r: "Will -> Would"}] },
+            fr: { past: [{n: "Concordance des temps", r: "Passé Comp. -> Plus-que-parfait"}], present: [{n: "Concordance des temps", r: "Présent -> Imparfait"}], future: [{n: "Concordance des temps", r: "Futur -> Cond. Présent"}] },
             de: {
-                past: [{n: "Konjunktiv I (Perfekt)", r: "habe/sei + past participle", u: "Journalism, indirect speech"}],
-                present: [{n: "Konjunktiv I (Präsens)", r: "infinitive stem + e, est, e...", u: "Journalism, indirect speech"}],
-                future: [{n: "Konjunktiv I (Futur I / II)", r: "werde/werdest + infinitive / perf.", u: "Journalism, indirect speech"}]
+                past: [{n: "Konjunktiv I (Perfekt)", r: "habe/sei + part. II", pn: "Konj I (Perfekt) Passiv", pr: "sei + part. II + worden"}],
+                present: [{n: "Konjunktiv I (Präsens)", r: "inf stem + e, est...", pn: "Konj I (Präsens) Passiv", pr: "werden (konj I) + part. II"}],
+                future: [{n: "Konjunktiv I (Futur I / II)", r: "werde + infin. / perf.", pn: "Konj I (Futur) Passiv", pr: "werden (konj I) + part. II + werden"}]
             },
-            it: {
-                past: [{n: "Concordanza", r: "Passato -> Trapassato", u: "Indirect discourse"}],
-                present: [{n: "Concordanza", r: "Presente -> Imperfetto", u: "Indirect discourse"}],
-                future: [{n: "Concordanza", r: "Futuro -> Condizionale Passato", u: "Indirect discourse"}]
-            },
-            ru: {
-                past: [{n: "No Shift", r: "Uses exact tense spoken originally", u: "Russian does not backshift"}],
-                present: [{n: "No Shift", r: "Uses exact tense spoken originally", u: "Russian does not backshift"}],
-                future: [{n: "No Shift", r: "Uses exact tense spoken originally", u: "Russian does not backshift"}]
-            }
+            it: { past: [{n: "Concordanza", r: "Passato -> Trapassato"}], present: [{n: "Concordanza", r: "Presente -> Imperfetto"}], future: [{n: "Concordanza", r: "Futuro -> Cond. Passato"}] },
+            ru: { past: [{n: "No Shift", r: "Uses exact tense spoken originally"}], present: [{n: "No Shift", r: "Uses exact tense"}], future: [{n: "No Shift", r: "Uses exact tense"}] }
         },
         {
             aspect: "Imperative",
-            en: {
-                past: [],
-                present: [{n: "Imperative", r: "Base verb (No subject pronoun)", u: "Commands, requests"}],
-                future: []
-            },
-            fr: {
-                past: [],
-                present: [{n: "Impératif", r: "Tu, Nous, Vous forms (No pronoun)", u: "Commands (Singular, Plural, Formal)"}],
-                future: []
-            },
-            de: {
-                past: [],
-                present: [{n: "Imperativ", r: "Du, Ihr, Wir, Sie forms", u: "Commands (Informal, Plural, Formal)"}],
-                future: []
-            },
-            it: {
-                past: [],
-                present: [{n: "Imperativo", r: "Specific endings for Tu, Lei, Noi, Voi, Loro", u: "Commands"}],
-                future: []
-            },
-            ru: {
-                past: [],
-                present: [
-                    {n: "Imperative (Imperfective)", r: "Base + и / йте", u: "General commands, ongoing"},
-                    {n: "Imperative (Perfective)", r: "Base + и / йте", u: "Specific, one-time commands"}
-                ],
-                future: []
-            }
+            en: { past: [], present: [{n: "Imperative", r: "Base verb", pn: "Passive Imperative", pr: "be + past participle"}], future: [] },
+            fr: { past: [], present: [{n: "Impératif", r: "Tu, Nous, Vous forms", pn: "Impératif Passif", pr: "sois/soyons/soyez + part. passé"}], future: [] },
+            de: { past: [], present: [{n: "Imperativ", r: "Du, Ihr, Wir, Sie forms", pn: "Imperativ Passiv", pr: "werde/werdet/werden + part. II"}], future: [] },
+            it: { past: [], present: [{n: "Imperativo", r: "Specific endings", pn: "Imperativo Passivo", pr: "sii/sia/siamo/siate/siano + part. pass."}], future: [] },
+            ru: { past: [], present: [ {n: "Imperative (Impf)", r: "Base + и / йте", pn: "N/A", pr: "Rarely used in passive"}, {n: "Imperative (Perf)", r: "Base + и / йте", pn: "N/A", pr: "Rarely used in passive"} ], future: [] }
         }
     ];
-
     // Helper to format cells gracefully & detect N/A
+    let matrixVoice = 'active'; // 'active', 'passive', 'compare'
+
+    window.setMatrixVoice = function(voice) {
+        matrixVoice = voice;
+        document.getElementById('m-voice-act').classList.toggle('active', voice === 'active');
+        document.getElementById('m-voice-pass').classList.toggle('active', voice === 'passive');
+        document.getElementById('m-voice-comp').classList.toggle('active', voice === 'compare');
+        openUniMatrix(); // Re-render table with new mode
+    };
+
     function buildUniCell(dataArray) {
-        // Standardize completely empty cells to N/A
-        if (!dataArray || dataArray.length === 0) {
-            return { html: '<div style="color:#999; text-align:center; font-weight:bold;">N/A</div>', isNA: true };
-        }
-        
-        // Check if the cell explicitly declares itself as N/A but has an explanation
+        if (!dataArray || dataArray.length === 0) return { html: '<div style="color:#999; text-align:center; font-weight:bold;">N/A</div>', isNA: true };
         let isNA = dataArray.every(t => t.n === "N/A" || t.n === "-");
         
         let html = dataArray.length === 1 ? '' : '<ol class="tense-list">';
         dataArray.forEach(t => {
-            let titleColor = isNA ? '#777' : '#d32f2f'; // Mute title if N/A
-            let itemHtml = `<span class="tense-title" style="color:${titleColor};">${t.n}</span>
-                            ${t.r ? `<span class="tense-rule" style="color:${isNA?'#666':'#333'};">: ${t.r}</span>` : ''}
-                            ${t.u ? `<div class="tense-usage">(${t.u})</div>` : ''}`;
+            let titleColor = isNA ? '#777' : '#d32f2f';
             
-            if (dataArray.length === 1) {
-                html += `<div class="tense-single">${itemHtml}</div>`;
-            } else {
-                html += `<li>${itemHtml}</li>`;
+            // Generate Active HTML
+            let activeHtml = `<span class="tense-title" style="color:${titleColor};">${t.n}</span>
+                              ${t.r ? `<span class="tense-rule" style="color:${isNA?'#666':'#333'};">: ${t.r}</span>` : ''}
+                              ${t.u && matrixVoice === 'active' ? `<div class="tense-usage">(${t.u})</div>` : ''}`;
+            
+            // Generate Passive HTML
+            let passiveHtml = '';
+            if (t.pn || t.pr) {
+                passiveHtml = `<span class="tense-title" style="color:#1976d2;">${t.pn || t.n + ' (Passive)'}</span>
+                               ${t.pr ? `<span class="tense-rule" style="color:#333;">: ${t.pr}</span>` : ''}`;
+            } else if (!isNA) {
+                passiveHtml = `<span class="tense-title" style="color:#777;">Passive N/A</span>`;
             }
+
+            // Assemble based on Toggle Mode
+            let itemHtml = '';
+            if (matrixVoice === 'active') {
+                itemHtml = activeHtml;
+            } else if (matrixVoice === 'passive') {
+                itemHtml = isNA ? activeHtml : (passiveHtml || `<span style="color:#777">N/A</span>`);
+            } else if (matrixVoice === 'compare') {
+                if (isNA) itemHtml = activeHtml;
+                else itemHtml = `<div style="margin-bottom:6px;"><b style="color:#d32f2f">Act:</b> ${activeHtml}</div>
+                                 <div><b style="color:#1976d2">Pass:</b> ${passiveHtml}</div>`;
+            }
+
+            if (dataArray.length === 1) html += `<div class="tense-single">${itemHtml}</div>`;
+            else html += `<li style="${matrixVoice==='compare'?'margin-bottom:12px; border-bottom:1px dashed #ddd; padding-bottom:5px;':''}">${itemHtml}</li>`;
         });
         if (dataArray.length > 1) html += '</ol>';
         
         return { html: html, isNA: isNA };
     }
 
-    // Opens and constructs the dynamic, color-coded Subrow Matrix
     window.openUniMatrix = function() {
         let html = `<table class="uni-matrix-table">
                         <tr>
@@ -981,36 +944,24 @@
                             <th style="width:30%">Future</th>
                         </tr>`;
         
-        // Map each Aspect to a Base Hue (0-360)
-        const hueMap = {
-            "Simple": 210,              // Blue
-            "Continuous": 120,          // Green
-            "Perfect": 280,             // Purple
-            "Perfect Continuous": 180,  // Teal
-            "Subjunctive": 30,          // Orange
-            "Conditional": 330,         // Pink
-            "Reported Speech": 45,      // Gold/Brown
-            "Imperative": 0             // Red
-        };
+        const hueMap = { "Simple": 210, "Continuous": 120, "Perfect": 280, "Perfect Continuous": 180, "Subjunctive": 30, "Conditional": 330, "Reported Speech": 45, "Imperative": 0 };
 
         universalDataV2.forEach(row => {
             let activeLangs = uniLangs.filter(l => row[l.id]);
             if (activeLangs.length === 0) return;
 
-            // Generate the Shaded Color Palette for this row
             let hue = hueMap[row.aspect] || 200;
-            let cAspect = `hsl(${hue}, 70%, 35%)`;    // Darkest (Header)
-            let cPast = `hsl(${hue}, 50%, 85%)`;      // Medium Light
-            let cPres = `hsl(${hue}, 50%, 92%)`;      // Lighter
-            let cFut = `hsl(${hue}, 50%, 96%)`;       // Lightest
-            let cNA = `#eeeeee`;                      // Grey out for N/A
+            let cAspect = `hsl(${hue}, 70%, 35%)`;
+            let cPast = `hsl(${hue}, 50%, 85%)`; 
+            let cPres = `hsl(${hue}, 50%, 92%)`; 
+            let cFut = `hsl(${hue}, 50%, 96%)`;  
+            let cNA = `#eeeeee`;                 
 
             let firstLang = activeLangs[0].id;
             let p1 = buildUniCell(row[firstLang].past);
             let pr1 = buildUniCell(row[firstLang].present);
             let f1 = buildUniCell(row[firstLang].future);
 
-            // First Language Row (includes the Aspect Header spanning multiple rows)
             html += `<tr>
                 <td rowspan="${activeLangs.length}" class="aspect-cell" style="background:${cAspect}; color:white; text-shadow: 1px 1px 2px rgba(0,0,0,0.4);">${row.aspect}</td>
                 <td class="lang-cell">${uniLangs.find(l=>l.id===firstLang).name}</td>
@@ -1019,7 +970,6 @@
                 <td style="background:${f1.isNA ? cNA : cFut}">${f1.html}</td>
             </tr>`;
 
-            // Subsequent Language Rows
             for (let i = 1; i < activeLangs.length; i++) {
                 let lang = activeLangs[i].id;
                 let pX = buildUniCell(row[lang].past);
