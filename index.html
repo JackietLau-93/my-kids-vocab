@@ -126,6 +126,21 @@
     .controls { margin-top: 30px; display: flex; gap: 20px; }
     .nav-btn { width: 70px; height: 70px; border-radius: 50%; border: none; font-size: 2rem; background: #f5f5f5; cursor: pointer; color: #333; }
     .play-btn { width: 90px; height: 90px; font-size: 3rem; background: #333; color: white; }
+
+    /* --- UNIVERSAL MATRIX V2 STYLES --- */
+.uni-matrix-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; background: white;}
+.uni-matrix-table th { background: #e3f2fd; color: #1976d2; padding: 12px; border: 1px solid #c8e1f5; text-align: left; font-family: 'Fredoka One'; text-transform: uppercase; font-size: 0.8rem;}
+.uni-matrix-table td { border: 1px solid #eee; padding: 12px; vertical-align: top; }
+.aspect-cell { font-weight: bold; background: #f8fbfd; color: #334e68; text-transform: uppercase; font-size: 0.95rem; text-align: center; vertical-align: middle !important; writing-mode: vertical-rl; transform: rotate(180deg); width: 40px;}
+.lang-cell { font-weight: bold; background: #fafafa; text-align: center; color: #555; vertical-align: middle !important; width: 40px; font-size: 1rem;}
+
+.tense-list { margin: 0; padding-left: 1.2rem; display: flex; flex-direction: column; gap: 8px;}
+.tense-list li { margin-bottom: 2px; }
+.tense-single { display: flex; flex-direction: column; gap: 2px; }
+
+.tense-title { font-weight: bold; color: #d32f2f; }
+.tense-rule { color: #333; font-weight: 500;}
+.tense-usage { color: #757575; font-style: italic; font-size: 0.75rem; }
 </style>
 </head>
 <body>
@@ -671,62 +686,193 @@
         const u = new SpeechSynthesisUtterance(txt.main); u.voice=voice; u.rate=0.9; window.speechSynthesis.speak(u);
     };
 
-// --- 5-LANGUAGE UNIVERSAL MATRIX ENGINE (From CSV) ---
-    const universalData = [
+// --- UNIVERSAL MATRIX V2 DATA ENGINE ---
+    const uniLangs = [
+        { id: 'en', flag: '🇬🇧' }, { id: 'fr', flag: '🇫🇷' }, 
+        { id: 'de', flag: '🇩🇪' }, { id: 'it', flag: '🇮🇹' }, { id: 'ru', flag: '🇷🇺' }
+    ];
+
+    const universalDataV2 = [
         {
             aspect: "Simple",
-            past: "<b>EN:</b> Past Simple<br><b>DE:</b> Perfekt (spoken); Präteritum (lit)<br><b>FR:</b> Passé Récent (spoken, immediate past); Passé Composé (spoken, completed); Imparfait (habits, continuous); Passé Simple (lit)<br><b>IT:</b> Passato Prossimo (spoken/completed); Imperfetto (habits/descriptions); Passato Remoto (lit/distant past)<br><b>RU:</b> Past Perfective (completed) or Past Imperfective (habit)",
-            present: "<b>EN:</b> Present Simple<br><b>DE:</b> Präsens<br><b>FR:</b> Présent<br><b>IT:</b> Presente<br><b>RU:</b> Present (Imperfective)",
-            future: "<b>EN:</b> Future Simple<br><b>DE:</b> Futur I<br><b>FR:</b> Futur Proche (near); Futur Simple (distant, formal)<br><b>IT:</b> Futuro Semplice<br><b>RU:</b> Future Perfective (simple conjugation)"
+            en: {
+                past: [{n: "Past Simple", r: "verb + ed / irregular", u: "completed action"}],
+                present: [{n: "Present Simple", r: "base verb (+s)", u: "habits, facts"}],
+                future: [{n: "Future Simple", r: "will + infinitive", u: "predictions, decisions"}]
+            },
+            fr: {
+                past: [
+                    {n: "Passé Récent", r: "venir de + infinitive", u: "spoken, immediate past"},
+                    {n: "Passé Composé", r: "avoir/être + past participle", u: "spoken, completed"},
+                    {n: "Imparfait", r: "nous stem + -ais, -ait...", u: "habits, descriptions"},
+                    {n: "Passé Simple", r: "verb + specific endings", u: "literary, historical"}
+                ],
+                present: [{n: "Présent", r: "stem + present endings", u: "current actions, habits"}],
+                future: [
+                    {n: "Futur Proche", r: "aller + infinitive", u: "near future, planned"},
+                    {n: "Futur Simple", r: "infinitive + avoir endings", u: "distant future, formal"}
+                ]
+            },
+            de: {
+                past: [
+                    {n: "Perfekt", r: "haben/sein + past participle", u: "spoken, completed"},
+                    {n: "Präteritum", r: "stem + -te / irregular", u: "literary, written narratives"}
+                ],
+                present: [{n: "Präsens", r: "stem + present endings", u: "current actions, near future"}],
+                future: [{n: "Futur I", r: "werden + infinitive", u: "intentions, predictions"}]
+            },
+            it: {
+                past: [
+                    {n: "Passato Prossimo", r: "avere/essere + past participle", u: "spoken, completed"},
+                    {n: "Imperfetto", r: "stem + -avo, -avi...", u: "habits, ongoing past states"},
+                    {n: "Passato Remoto", r: "specific endings", u: "literary, distant historical past"}
+                ],
+                present: [{n: "Presente", r: "stem + present endings", u: "current actions, habits"}],
+                future: [{n: "Futuro Semplice", r: "infinitive stem + endings", u: "future actions, probability"}]
+            },
+            ru: {
+                past: [
+                    {n: "Past Imperfective", r: "stem + л (НСВ)", u: "habitual, ongoing process"},
+                    {n: "Past Perfective", r: "stem + л (СВ)", u: "completed result"}
+                ],
+                present: [{n: "Present (Imperfective)", r: "stem + present endings", u: "current actions"}],
+                future: [{n: "Future (Perfective)", r: "stem + future endings", u: "simple conjugation, completed action"}]
+            }
         },
         {
             aspect: "Continuous",
-            past: "<b>EN:</b> Past Continuous<br><b>FR:</b> -<br><b>DE:</b> -<br><b>IT:</b> Passato Progressivo<br><b>RU:</b> Past Imperfective",
-            present: "<b>EN:</b> Present Continuous<br><b>FR:</b> -<br><b>DE:</b> -<br><b>IT:</b> Presente Progressivo<br><b>RU:</b> -",
-            future: "<b>EN:</b> Future Continuous<br><b>FR:</b> -<br><b>DE:</b> -<br><b>IT:</b> Futuro Progressivo<br><b>RU:</b> Future Imperfective (Compound: 'will be' + infinitive)"
+            en: {
+                past: [{n: "Past Continuous", r: "was/were + verb-ing", u: "interrupted past actions"}],
+                present: [{n: "Present Continuous", r: "am/is/are + verb-ing", u: "happening right now"}],
+                future: [{n: "Future Continuous", r: "will be + verb-ing", u: "ongoing at future time"}]
+            },
+            it: {
+                past: [{n: "Passato Progressivo", r: "stare (imperfetto) + gerundio", u: "was doing"}],
+                present: [{n: "Presente Progressivo", r: "stare (presente) + gerundio", u: "doing right now"}],
+                future: [{n: "Futuro Progressivo", r: "stare (futuro) + gerundio", u: "will be doing"}]
+            },
+            ru: {
+                past: [{n: "Past Imperfective", r: "stem + л", u: "acts as continuous contextually"}],
+                present: [],
+                future: [{n: "Future Imperfective", r: "быть (will be) + infinitive", u: "will be doing (compound)"}]
+            }
         },
         {
             aspect: "Perfect",
-            past: "<b>EN:</b> Past Perfect<br><b>DE:</b> Plusquamperfekt<br><b>FR:</b> Plus-que-parfait (spoken); Passé Antérieur (lit)<br><b>IT:</b> Trapassato Prossimo (spoken); Trapassato Remoto (lit)<br><b>RU:</b> Past Perfective",
-            present: "<b>EN:</b> Present Perfect<br><b>DE:</b> Perfekt<br><b>FR:</b> Passé Composé<br><b>IT:</b> Passato Prossimo<br><b>RU:</b> -",
-            future: "<b>EN:</b> Future Perfect<br><b>DE:</b> Futur II<br><b>FR:</b> Futur Antérieur<br><b>IT:</b> Futuro Anteriore<br><b>RU:</b> Future Perfective"
+            en: {
+                past: [{n: "Past Perfect", r: "had + past participle", u: "action before another past action"}],
+                present: [{n: "Present Perfect", r: "have/has + past participle", u: "past action affecting present"}],
+                future: [{n: "Future Perfect", r: "will have + past participle", u: "completed before future point"}]
+            },
+            fr: {
+                past: [
+                    {n: "Plus-que-parfait", r: "avoir/être (imparfait) + past participle", u: "spoken/written"},
+                    {n: "Passé Antérieur", r: "avoir/être (passé simple) + past participle", u: "literary only"}
+                ],
+                present: [{n: "Passé Composé", r: "Acts contextually as Present Perfect", u: ""}],
+                future: [{n: "Futur Antérieur", r: "avoir/être (futur) + past participle", u: "completed before future point"}]
+            },
+            de: {
+                past: [{n: "Plusquamperfekt", r: "hatte/war + past participle", u: "action before another past action"}],
+                present: [{n: "Perfekt", r: "Acts contextually as Present Perfect", u: ""}],
+                future: [{n: "Futur II", r: "werden + past participle + haben/sein", u: "completed before future point"}]
+            },
+            it: {
+                past: [
+                    {n: "Trapassato Prossimo", r: "avere/essere (imperfetto) + past participle", u: "spoken/written"},
+                    {n: "Trapassato Remoto", r: "avere/essere (pass. remoto) + past participle", u: "literary only"}
+                ],
+                present: [{n: "Passato Prossimo", r: "Acts contextually as Present Perfect", u: ""}],
+                future: [{n: "Futuro Anteriore", r: "avere/essere (futuro) + past participle", u: "completed before future point"}]
+            }
         },
         {
-            aspect: "Perfect Continuous",
-            past: "<b>EN:</b> Past Perfect Continuous<br><b>FR/DE/IT/RU:</b> -",
-            present: "<b>EN:</b> Present Perfect Continuous<br><b>FR/DE/IT/RU:</b> -",
-            future: "<b>EN:</b> Future Perfect Continuous<br><b>FR/DE/IT/RU:</b> -"
-        },
-        {
-            aspect: "Subjunctive<br><span style='font-size:0.75rem;font-weight:normal'>(Doubt, emotion, necessity)</span>",
-            past: "<b>EN:</b> Past Subjunctive (If I were...)<br><b>DE:</b> (Uses Indicative/Modals)<br><b>FR:</b> Subjonctif Passé; Subjonctif Imparfait (lit); Subjonctif Plus-que-parfait (lit)<br><b>IT:</b> Congiuntivo Passato; Congiuntivo Imperfetto; Congiuntivo Trapassato<br><b>RU:</b> Past Tense + бы",
-            present: "<b>EN:</b> Present Subjunctive (I insist he go)<br><b>DE:</b> (Uses Indicative/Modals)<br><b>FR:</b> Subjonctif Présent<br><b>IT:</b> Congiuntivo Presente<br><b>RU:</b> Past Tense + бы",
-            future: "-"
-        },
-        {
-            aspect: "Conditional<br><span style='font-size:0.75rem;font-weight:normal'>(Hypotheticals, politeness)</span>",
-            past: "<b>EN:</b> Past Conditional (would have)<br><b>DE:</b> Konjunktiv II (Perfekt)<br><b>FR:</b> Conditionnel Passé<br><b>IT:</b> Condizionale Passato<br><b>RU:</b> Past Tense + бы",
-            present: "<b>EN:</b> Present Conditional (would)<br><b>DE:</b> Konjunktiv II (Präsens)<br><b>FR:</b> Conditionnel Présent<br><b>IT:</b> Condizionale Presente<br><b>RU:</b> Past Tense + бы",
-            future: "<b>DE:</b> Konjunktiv II (Futur I / Futur II)"
-        },
-        {
-            aspect: "Reported speech",
-            past: "<b>EN:</b> Shifts back (Past Simple -> Past Perfect)<br><b>DE:</b> Konjunktiv I (Perfekt)<br><b>FR:</b> Shifts back (Past -> Pluperfect)<br><b>IT:</b> Shifts back (Present -> Pluperfect)<br><b>RU:</b> No shift. Uses exact tense originally spoken.",
-            present: "<b>EN:</b> Shifts back (Present -> Past simple; Pres Cont -> Past Cont)<br><b>DE:</b> Konjunktiv I (Präsens)<br><b>FR:</b> Shifts back (Present -> Imperfect)<br><b>IT:</b> Shifts back (Present -> Imperfect)<br><b>RU:</b> No shift. Uses exact tense originally spoken.",
-            future: "<b>EN:</b> Shifts back (Future -> Conditional)<br><b>DE:</b> Konjunktiv I (Futur I / Futur II)<br><b>FR:</b> Shifts back (Future -> Conditional)<br><b>IT:</b> Shifts back (Future -> Conditional)<br><b>RU:</b> No shift. Uses exact tense originally spoken."
+            aspect: "Subjunctive",
+            en: {
+                past: [{n: "Past Subjunctive", r: "same as past simple ('were' for 'to be')", u: "hypotheticals, wishes"}],
+                present: [{n: "Present Subjunctive", r: "bare infinitive", u: "necessity (I insist he go)"}],
+                future: []
+            },
+            fr: {
+                past: [
+                    {n: "Subjonctif Passé", r: "avoir/être (subj) + past participle", u: "spoken/written"},
+                    {n: "Subj. Imparfait / Plus-que-parfait", r: "Specific literary endings", u: "strictly literary"}
+                ],
+                present: [{n: "Subjonctif Présent", r: "stem + subj endings (-e, -es, -e, -ions...)", u: "doubt, emotion, will"}],
+                future: []
+            },
+            it: {
+                past: [
+                    {n: "Congiuntivo Passato", r: "avere/essere (subj) + past part.", u: "recent past"},
+                    {n: "Congiuntivo Imperfetto", r: "stem + -assi, -assi, -asse...", u: "ongoing past, hypotheticals"},
+                    {n: "Congiuntivo Trapassato", r: "avere/essere (imp subj) + past part.", u: "distant past"}
+                ],
+                present: [{n: "Congiuntivo Presente", r: "stem + subj endings (-i, -a, -iamo...)", u: "doubt, emotion"}],
+                future: []
+            }
         }
     ];
 
-    window.openUniMatrix = function() {
-        let html = `<tr><th style="width:15%">Aspect / Mood</th><th style="width:28%">Past</th><th style="width:28%">Present</th><th style="width:28%">Future</th></tr>`;
-        universalData.forEach(row => {
-            html += `<tr>
-                <td style="font-weight:bold; color:#334e68; background:#f8fbfd;">${row.aspect}</td>
-                <td>${row.past}</td>
-                <td>${row.present}</td>
-                <td>${row.future}</td>
-            </tr>`;
+    // Helper to format cells gracefully
+    function buildUniCell(dataArray) {
+        if (!dataArray || dataArray.length === 0) return '<div style="color:#aaa; text-align:center;">-</div>';
+        if (dataArray.length === 1) {
+            return `<div class="tense-single">
+                        <span class="tense-title">${dataArray[0].n}</span>
+                        <span class="tense-rule">${dataArray[0].r}</span>
+                        ${dataArray[0].u ? `<span class="tense-usage">(${dataArray[0].u})</span>` : ''}
+                    </div>`;
+        }
+        let html = '<ol class="tense-list">';
+        dataArray.forEach(t => {
+            html += `<li>
+                <span class="tense-title">${t.n}</span>: <span class="tense-rule">${t.r}</span>
+                ${t.u ? `<div class="tense-usage">(${t.u})</div>` : ''}
+            </li>`;
         });
+        html += '</ol>';
+        return html;
+    }
+
+    // Opens and constructs the dynamic Subrow Matrix
+    window.openUniMatrix = function() {
+        let html = `<table class="uni-matrix-table">
+                        <tr>
+                            <th>Mode</th>
+                            <th>Lang</th>
+                            <th style="width:30%">Past</th>
+                            <th style="width:30%">Present</th>
+                            <th style="width:30%">Future</th>
+                        </tr>`;
+        
+        universalDataV2.forEach(row => {
+            // Determine how many languages actually have data for this aspect
+            let activeLangs = uniLangs.filter(l => row[l.id]);
+            if (activeLangs.length === 0) return;
+
+            // First Language Row (includes the Aspect Rowspan)
+            let firstLang = activeLangs[0].id;
+            html += `<tr>
+                <td rowspan="${activeLangs.length}" class="aspect-cell">${row.aspect}</td>
+                <td class="lang-cell">${uniLangs.find(l=>l.id===firstLang).flag}</td>
+                <td>${buildUniCell(row[firstLang].past)}</td>
+                <td>${buildUniCell(row[firstLang].present)}</td>
+                <td>${buildUniCell(row[firstLang].future)}</td>
+            </tr>`;
+
+            // Subsequent Language Rows
+            for (let i = 1; i < activeLangs.length; i++) {
+                let lang = activeLangs[i].id;
+                html += `<tr>
+                    <td class="lang-cell">${uniLangs.find(l=>l.id===lang).flag}</td>
+                    <td>${buildUniCell(row[lang].past)}</td>
+                    <td>${buildUniCell(row[lang].present)}</td>
+                    <td>${buildUniCell(row[lang].future)}</td>
+                </tr>`;
+            }
+        });
+
+        html += `</table>`;
         document.getElementById('uni-table-body').innerHTML = html;
         document.getElementById('uni-matrix-modal').style.display = 'flex';
     };
