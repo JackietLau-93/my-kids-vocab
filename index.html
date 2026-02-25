@@ -262,9 +262,18 @@
     let currentMode = 'flashcard'; // Default to the new basic view
     let sortAZ = true;
     let srsData = JSON.parse(localStorage.getItem('tinyVocabSRS')) || {};
+    let modalPassive = false; // Required for verb matrix toggle
+    let currentModalCardId = null; // Required to refresh matrix on toggle
 
     const pronLabels = ['I', 'You', 'He/She/It', 'We', 'You (pl)', 'They'];
-    const pronMap = { /* ... keep your existing pronMap ... */ };
+    const pronMap = {
+    'en': ['I', 'You', 'He/She/It', 'We', 'You', 'They'],
+    'fr': ['Je', 'Tu', 'Il/Elle', 'Nous', 'Vous', 'Ils/Elles'],
+    'de': ['Ich', 'Du', 'Er/Sie/Es', 'Wir', 'Ihr', 'Sie/sie'],
+    'it': ['Io', 'Tu', 'Lui/Lei', 'Noi', 'Voi', 'Loro'],
+    'ru': ['Я', 'Ты', 'Он/Она/Оно', 'Мы', 'Вы', 'Они'],
+    'default': ['1st Sg', '2nd Sg', '3rd Sg', '1st Pl', '2nd Pl', '3rd Pl']
+};
 
     let state = { ipa: false, pinyin: false, latin: false, hiragana: false, hanja: false, traditional: false, show_gender: false, show_opp: false, article: false, plural_noun: false };
 
@@ -295,8 +304,19 @@
 
     function preloadImages(data) { data.forEach(item => { if(item.img) { const img = new Image(); img.src = item.img; } }); }
 
-    fetch('data.json').then(res => res.json()).then(data => { rawDeck = data; preloadImages(data); applyFilters(); })
-        .catch(err => { document.getElementById('grid').innerHTML = `<div style="padding:20px; text-align:center;">⚠️ Error loading data.json</div>`; });
+    fetch('data.json')
+    .then(res => res.json())
+    .then(data => { 
+        rawDeck = data; 
+        preloadImages(data); 
+        applyFilters(); 
+    })
+    .catch(err => { 
+        // ADD THIS LINE TO SEE THE REAL ERROR:
+        console.error("CRITICAL APP ERROR:", err); 
+        
+        document.getElementById('grid').innerHTML = `<div style="padding:20px; text-align:center;">⚠️ Error loading data.json<br><small>Check console for details</small></div>`; 
+    });
 
     function applyFilters() {
         const cat = document.getElementById('filt-cat').value;
@@ -373,6 +393,13 @@
         srsData[id] = cycle[nextIdx];
         localStorage.setItem('tinyVocabSRS', JSON.stringify(srsData));
         applyFilters(); 
+    };
+
+    function getFontClass() {
+    // Matches the CSS classes defined in your <style> block
+    if (['en', 'fr', 'de', 'it'].includes(currentLang)) return 'font-' + currentLang;
+    if (currentLang === 'zh') return state.traditional ? 'font-zh-tw' : 'font-zh-cn';
+    return 'font-' + currentLang;
     };
 
     function getTextDisplay(card) {
